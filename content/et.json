@@ -1,0 +1,490 @@
+{
+  "version": "v1",
+  "locale": "et",
+  "meta": {
+    "siteName": "Coachiva juhi test",
+    "description": "Coachiv juhtimine on kombinatsioon uskumustest ja tegevustest. Testi tehes saad viie minutiga teada, kus sina praegu coachiva juhina oled."
+  },
+  "footer": {
+    "about": "Mille peale test tugineb",
+    "privacy": "Privaatsus",
+    "brand": "Raimo Ülavere · Radical Simplicity · radicalsimplicity.eu"
+  },
+  "home": {
+    "title": "Coachiva juhi test",
+    "subtitle": "Coachiv juhtimine on kombinatsioon uskumustest ja tegevustest. Testi tehes saad viie minutiga teada, kus sina praegu coachiva juhina oled.",
+    "button": "Alusta testi · 5 min",
+    "smallLine": "Tasuta. Raport kohe ekraanile ja e-postile.",
+    "aboutLink": "Mille peale test tugineb →",
+    "model": {
+      "beliefs": "Uskumused",
+      "actions": "Tegevused",
+      "beliefNames": [
+        "Inimene",
+        "Suhe",
+        "Autonoomia"
+      ],
+      "actionNames": [
+        "Juhendamine",
+        "Võimestamine",
+        "Inspireerimine"
+      ]
+    }
+  },
+  "test": {
+    "intro": [
+      "Testis on 18 väidet kolme coachiva juhi võtmeuskumuse ja kolme võtmetegevuse kohta.",
+      "Vasta selle järgi, mida sa päriselt usud ja teed."
+    ],
+    "startButton": "Alusta",
+    "nextButton": "Edasi",
+    "progress": "{done} / 18",
+    "screens": {
+      "actions": {
+        "instruction": "Viimase nelja nädala jooksul, kui sageli sa…",
+        "scale": {
+          "1": "mitte kordagi",
+          "2": "korra",
+          "3": "paar korda",
+          "4": "umbes kord nädalas",
+          "5": "mitu korda nädalas",
+          "6": "peaaegu iga päev"
+        },
+        "order": [
+          "T1",
+          "T4",
+          "T7",
+          "T2",
+          "T5",
+          "T8",
+          "T3",
+          "T6",
+          "T9"
+        ]
+      },
+      "beliefs": {
+        "instruction": "Kui hästi kirjeldab see sinu tegelikke valikuid viimase poole aasta jooksul?",
+        "scale": {
+          "1": "ei kirjelda üldse",
+          "6": "kirjeldab täpselt"
+        },
+        "order": [
+          "U1",
+          "U4",
+          "U7",
+          "U2",
+          "U5",
+          "U8",
+          "U3",
+          "U6",
+          "U9"
+        ]
+      }
+    },
+    "items": {
+      "T1": "ütlesid kellelegi selgelt, millist tulemust sa temalt ootad",
+      "T2": "andsid kellelegi tagasisidet tema konkreetse tegevuse kohta",
+      "T3": "pöördusid kokkulepitud ajal tagasi selle juurde, mida kellegagi varem kokku leppisid",
+      "T4": "küsisid kellegi enda mõtteid enne, kui pakkusid oma lahenduse",
+      "T5": "kuulasid kellegi lõpuni, ilma vahele segamata",
+      "T6": "jätsid otsuse inimesele, kuigi oleksid võinud selle ise kiiremini ära teha",
+      "T7": "ütlesid kellelegi, millist arengut või võimekust sa temas näed",
+      "T8": "andsid kellelegi ülesande või väljakutse, mis nõuab temalt senisest rohkem",
+      "T9": "rääkisid kellegagi sellest, kuhu ta oma töös areneda tahab",
+      "U1": "Kui inimene ei tule ülesandega toime, uurin kõigepealt, mida ta peaks selleks õppima.",
+      "U2": "Kulutan oma aega ka nende arengule, kelle tulemused on praegu meeskonnas kõige nõrgemad.",
+      "U3": "Esimene mulje inimese võimekusest jääb mul üldjuhul püsima.",
+      "U4": "Kui keegi toob mulle halva uudise, tänan teda enne, kui hakkame lahendust otsima.",
+      "U5": "Kui ma ei jõua lubatut tähtajaks teha, ütlen seda inimesele ise enne tähtaega.",
+      "U6": "Kiirel ajal lükkan esimesena edasi silmast silma vestlused oma inimestega.",
+      "U7": "Kui inimene on töö üle võtnud, jätan tööviisi tema otsustada, ka kui ma ise teeksin teisiti.",
+      "U8": "Kui tulemus ja tähtaeg on kokku lepitud, ei kontrolli ma vahepealset tööd, kui inimene ise abi ei küsi.",
+      "U9": "Minu kogemus on, et ilma minu järelevalveta ületatakse tähtaegu."
+    },
+    "scoring": {
+      "parts": {
+        "juhendamine": [
+          "T1",
+          "T2",
+          "T3"
+        ],
+        "voimestamine": [
+          "T4",
+          "T5",
+          "T6"
+        ],
+        "inspireerimine": [
+          "T7",
+          "T8",
+          "T9"
+        ],
+        "inimene": [
+          "U1",
+          "U2",
+          "U3"
+        ],
+        "suhe": [
+          "U4",
+          "U5",
+          "U6"
+        ],
+        "autonoomia": [
+          "U7",
+          "U8",
+          "U9"
+        ]
+      },
+      "reversed": [
+        "U3",
+        "U6",
+        "U9"
+      ],
+      "levels": {
+        "low": [
+          1.0,
+          2.9
+        ],
+        "mid": [
+          3.0,
+          4.4
+        ],
+        "high": [
+          4.5,
+          6.0
+        ]
+      },
+      "pairs": {
+        "inimene": "inspireerimine",
+        "suhe": "juhendamine",
+        "autonoomia": "voimestamine"
+      }
+    },
+    "emailScreen": {
+      "title": "Kuhu raport saata?",
+      "emailLabel": "E-post",
+      "emailError": "Kontrolli e-posti aadressi.",
+      "newsletterLabel": "Tahan saada ka Raimo uudiskirja",
+      "newsletterNote": "Ainult sisu, mida saad juhina kasutada. Loobuda saad ühe klõpsuga.",
+      "privacyNote": "Raport saadetakse sellele aadressile. Loe lähemalt: Privaatsus",
+      "button": "Näita raportit"
+    }
+  },
+  "errors": {
+    "_note": "TODO: Raimo. Need laused näeb kasutaja siis, kui midagi läheb katki. Praegu on need kirjutamata.",
+    "badRequest": "TODO: Raimo — päring oli vigane",
+    "incomplete": "TODO: Raimo — kõigile väidetele ei ole vastatud",
+    "scoringFailed": "TODO: Raimo — vastuseid ei õnnestunud arvutada",
+    "saveFailed": "TODO: Raimo — salvestamine ebaõnnestus, proovi uuesti"
+  },
+  "report": {
+    "title": "Sinu coachiv juhtimine praegu",
+    "intro": "See raport näitab, kui sageli kolm coachiva juhi tegevust viimase nelja nädala jooksul sinu päeva jõudsid ja milliseid valikuid sa juhina teed. Iga tegevus ja uskumus on eraldi, sest need on erinevad asjad.",
+    "actionsHeading": "Tegevused",
+    "beliefsHeading": "Uskumused",
+    "parts": {
+      "juhendamine": {
+        "name": "Juhendamine",
+        "explain": "Inimene teab, millist tulemust temalt oodatakse, saab tagasisidet oma tegevuse kohta ja juht tuleb kokkulepete juurde tagasi.",
+        "low": "Ootused, tagasiside ja kokkulepete juurde tagasi tulemine jõudsid sinu päeva harva. Inimestele jääb siis rohkem ise ära arvata.",
+        "mid": "Ootusi ja tagasisidet jagad, aga ebaühtlaselt. Vaata, milline kolmest jääb kõige sagedamini vahele.",
+        "high": "Ootused, tagasiside ja kokkulepete juurde tagasi tulemine on sinu nädalas tavalised. Järgmine küsimus on, kas inimesed saavad sinu ootustest samamoodi aru."
+      },
+      "voimestamine": {
+        "name": "Võimestamine",
+        "explain": "Küsid inimese mõtteid enne, kui lahenduse pakud, kuulad lõpuni ja jätad otsuse talle, kui see on tema otsustada.",
+        "low": "Lahendused tulevad praegu enamasti sinult. See on kiire, aga inimestel jääb vähem võimalusi probleem ise läbi mõelda.",
+        "mid": "Küsid ja kuulad osas olukordades. Märka, millal sa lahenduse ise ette ütled.",
+        "high": "Küsimine, kuulamine ja otsuse inimesele jätmine on sinu nädalas tavalised. Kontrolli, kas inimesed saavad sinult selge suuna ka siis, kui nad seda vajavad."
+      },
+      "inspireerimine": {
+        "name": "Inspireerimine",
+        "explain": "Ütled inimesele välja, millist arengut temas näed, annad väljakutseid ja räägid temaga, kuhu ta areneda tahab.",
+        "low": "Arengust ja väljakutsetest räägid praegu harva. Inimesed ei pruugi teada, mida sa nende juures märkad.",
+        "mid": "Väljakutseid ja arengujutte tuleb ette, aga ebaühtlaselt. Vaata, kellega sa neid vestlusi pidanud ei ole.",
+        "high": "Arengu välja ütlemine ja väljakutsed on sinu nädalas tavalised. Järgmine küsimus on, kas väljakutse on igaühe jaoks õige suurusega."
+      },
+      "inimene": {
+        "name": "Inimene",
+        "explain": "Kas sinu valikud lähtuvad sellest, et inimesed saavad areneda, ka need, kes praegu on nõrgemad.",
+        "low": "Sinu valikud viitavad, et pead inimese võimekust pigem püsivaks. Siis on lihtne jätta panustamata neisse, kellest esimene mulje oli nõrk.",
+        "mid": "Usud arengusse osa inimeste puhul. Mõtle, kelle puhul sa oma esimest muljet viimati muutsid.",
+        "high": "Sinu valikud lähtuvad sellest, et inimesed saavad areneda. See on alus inspireerimisele."
+      },
+      "suhe": {
+        "name": "Suhe",
+        "explain": "Kas sinu valikud lähtuvad sellest, et töötaja usaldus sinu vastu on coachiva juhtimise eeldus.",
+        "low": "Kiirel ajal jääb usalduse hoidmine tagaplaanile. Kui usaldust napib, räägivad inimesed oma raskustest harvem.",
+        "mid": "Hoiad usaldust osas olukordades. Vaata, kas see kehtib ka siis, kui on kiire või uudis on halb.",
+        "high": "Sinu valikud hoiavad usaldust ka kiirel ajal. See on alus juhendamisele."
+      },
+      "autonoomia": {
+        "name": "Autonoomia",
+        "explain": "Kas sinu valikud lähtuvad sellest, et inimene suudab end ise juhtida, kui otsus on tema oma.",
+        "low": "Sinu valikud viitavad, et pead kontrolli tulemuse tagatiseks. Inimestel jääb siis vähem ruumi vastutust ise võtta.",
+        "mid": "Annad otsustusruumi osas olukordades. Mõtle, kelle puhul ja miks sa kontrollid.",
+        "high": "Sinu valikud jätavad inimestele otsustusruumi. Kontrolli, kas see sobib ka uutele ja vähem kogenud inimestele."
+      }
+    },
+    "pairs": {
+      "heading": "Uskumus ja tegevus koos",
+      "beliefHigher": "Sinu valikud toetavad seda tegevust rohkem, kui see praegu sinu päeva jõuab. Seda on kõige lihtsam muuta, sest põhi on olemas.",
+      "actionHigher": "Teed seda sagedamini, kui sinu valikud näitavad. Mõtle, kas tegevus tuleb veendumusest või harjumusest."
+    },
+    "ai": {
+      "heading": "Mida sinu tulemused koos näitavad",
+      "loading": "Kirjutan kokkuvõtet…"
+    },
+    "notMeaning": {
+      "heading": "Mida see ei tähenda",
+      "text": "See on sinu enda hinnang ühel ajahetkel. Test näitab, kui sageli tegevused sinu päeva jõuavad ja milliseid valikuid sa teed. Kui hästi sa neid tegevusi teed, näevad kõige paremini sinu inimesed. Teiste juhtidega test sind ei võrdle."
+    },
+    "cta": {
+      "heading": "Kolm nädalat, kuus küsimust",
+      "text": "Iga tööpäeva lõpus saad kirja kuue jah/ei küsimusega. Vastamine võtab alla minuti. Kolme nädala pärast näed, kui sageli need tegevused sinu päeva tegelikult jõudsid, ja saad seda selle testiga võrrelda.",
+      "button": "Alusta · 15 €",
+      "codeNote": "Sul on ettevõttelt kood? Sisesta see makselehel.",
+      "codeApplied": "Ettevõtte kood on lisatud.",
+      "active": "Sinu kolm nädalat on käimas. Päevakiri tuleb igal tööpäeval.",
+      "started": "Valmis. Sinu kolm nädalat algab {startDate}. Tervituskiri on teel."
+    },
+    "notFound": "Seda raportit ei leitud. Kontrolli linki oma e-postis."
+  },
+  "final": {
+    "title": "Sinu kolm nädalat",
+    "heading": "Kui sageli need tegevused sinu päeva jõudsid",
+    "perQuestion": "{yes} päeval {answered} vastatud päevast",
+    "weeksHeading": "Esimene ja viimane nädal",
+    "weeksNote": "Nädala andmeid on vähe, seega vaata suunda.",
+    "compareHeading": "Võrdlus testiga",
+    "aiHeadings": {
+      "pattern": "Muster",
+      "change": "Muutus",
+      "compare": "Võrdlus testiga"
+    },
+    "compare": {
+      "testHigher": "Testis hindasid seda tegevust sagedasemaks, kui see kolme nädala jooksul sinu päeva jõudis. See on tavaline, sest igapäevane märkamine on täpsem kui meenutamine.",
+      "daysHigher": "Kolme nädala jooksul jõudis see tegevus sinu päeva sagedamini, kui testis hindasid. Mõtle, kas see muutus programmi ajal või hindasid end testis rangelt."
+    },
+    "closing": "Kolm nädalat näitasid, kuhu sinu tähelepanu läheb. Millist neist kuuest küsimusest tahad hoida edasi ka ilma kirjata?",
+    "retestButton": "Tee test uuesti",
+    "retestNote": "Tasuta, viis minutit.",
+    "contact": "Kui tahad minna sügavamale, kirjuta: raimo@raimoulavere.com"
+  },
+  "daily": {
+    "intro": "Mõtle tänasele päevale.",
+    "questions": {
+      "q1": "Kas ütlesin täna kellelegi, millist tulemust ma ootan?",
+      "q2": "Kas andsin täna kellelegi tagasisidet konkreetse tegevuse kohta?",
+      "q3": "Kas küsisin täna kellegi enda mõtteid enne, kui pakkusin oma lahenduse?",
+      "q4": "Kas kuulasin täna kellegi lõpuni, ilma vahele segamata?",
+      "q5": "Kas ütlesin täna kellelegi, millist arengut või võimekust ma temas näen?",
+      "q6": "Kas andsin täna kellelegi ülesande või väljakutse, mis nõuab temalt senisest rohkem?"
+    },
+    "mapping": {
+      "juhendamine": [
+        "q1",
+        "q2"
+      ],
+      "voimestamine": [
+        "q3",
+        "q4"
+      ],
+      "inspireerimine": [
+        "q5",
+        "q6"
+      ]
+    },
+    "yes": "Jah",
+    "no": "Ei",
+    "footer": "Alla minuti. Vastused näed lõpuraportis."
+  },
+  "answer": {
+    "saved": "Salvestatud.",
+    "rest": "Vasta ka ülejäänud küsimustele:",
+    "done": "Tänased vastused on olemas. Homseni!",
+    "invalid": "See link ei kehti.",
+    "closed": "Selle programmi vastamise aeg on läbi."
+  },
+  "emails": {
+    "report": {
+      "subject": "Sinu coachiva juhi test",
+      "body": [
+        "Tere!",
+        "Sinu raport on siin:",
+        "{reportButton:Ava raport}",
+        "Link jääb alles, saad selle juurde hiljem tagasi tulla.",
+        "Kui tahad näha, kui sageli need tegevused sinu päeva päriselt jõuavad, leiad raporti lõpust kolme nädala programmi.",
+        "Raimo"
+      ]
+    },
+    "welcome": {
+      "subject": "Kolm nädalat algab {startDate}",
+      "body": [
+        "Tere!",
+        "Coachivast juhtimisest räägitakse palju ja väga erinevalt. Uuringute põhjal on see üsna konkreetne: kolm uskumust ja kolm tegevust. Selle üle saab arutada ja vaielda. Saab ka lihtsamalt: hoida kolm nädalat kuut konkreetset tegu tähelepanu all ja vaadata, mis juhtub.",
+        "Alates {startDate} saad igal tööpäeval kell {sendTime} kirja kuue küsimusega. Vasta jah või ei, ühe klõpsuga. „Ei“ on samuti info: see näitab, mis sinu päeva ei jõudnud. Kui mõni päev jääb vahele, jätka järgmisest.",
+        "Kolme nädala pärast saad lõpuraporti.",
+        "Raimo"
+      ]
+    },
+    "daily": {
+      "subject": "Tänased kuus küsimust · päev {dayIndex}"
+    },
+    "final": {
+      "subject": "Sinu kolm nädalat",
+      "body": [
+        "Tere!",
+        "Kolm nädalat on läbi. Sinu lõpuraport on siin:",
+        "{finalButton:Ava raport}",
+        "Kui tahad näha, mis on muutunud, tee test uuesti. See on tasuta ja võtab viis minutit.",
+        "{retestButton:Tee test}",
+        "Kui tahad minna sügavamale, kirjuta mulle.",
+        "Raimo"
+      ]
+    },
+    "footer": "Raimo Ülavere · Radical Simplicity · radicalsimplicity.eu"
+  },
+  "companyGuide": {
+    "note": "Raimo saadab selle ise oma e-postist. Seda rakendus ei saada.",
+    "subject": "Coachiva juhi test ja kolm nädalat",
+    "body": [
+      "Tere!",
+      "{company} pakub sulle coachiva juhi testi ja kolme nädala programmi. Test võtab umbes viis minutit ja programm alla minuti igal tööpäeval.",
+      "1. Ava link: {link}",
+      "2. Tee test ja vaata oma raportit.",
+      "3. Vajuta raporti lõpus „Alusta“. Kood on juba lingis, maksta ei pea.",
+      "4. Programm algab järgmisel tööpäeval ja kestab kolm nädalat.",
+      "Alusta hiljemalt {deadline}, et jõuaksid enne {followUp} lõpetada. Pärast seda kuupäeva kood enam ei tööta.",
+      "Sinu tulemusi näed ainult sina. {company} neid ei näe. Testi parandamiseks kasutatakse vastuseid anonüümselt.",
+      "Kui tekib küsimusi, kirjuta mulle: raimo@raimoulavere.com",
+      "Raimo Ülavere"
+    ]
+  },
+  "about": {
+    "title": "Mille peale test tugineb",
+    "why": {
+      "heading": "Miks see test",
+      "paragraphs": [
+        "Coachiv juhtimine on ühelt poolt ülipopulaarne ja teiselt poolt erakordselt ebamäärane. Sellest räägitakse ja sellele viidatakse üksikute tegevuste või uskumuste kaudu. Kas see on vahend või filosoofia? Igas olukorras rakendatav või pigem täppistöövahend? Pehmodele või hoopis tugevatele juhtidele?",
+        "See test ja kolme nädala programm toetuvad coachiva juhtimise baasile. Coachiv juhtimine koosneb ühelt poolt konkreetsetest tegevustest ja teiselt poolt uskumustest, mis neid tegevusi kannavad. Uuringute põhjal on need üpris konkreetsed asjad.",
+        "Coachiva juhtimise üle saab filosofeerida, arutada ja vaielda, seda saab ka coachida. Saab ka lihtsamalt, näiteks selle testi ja tähelepanu juhtimise programmiga."
+      ]
+    },
+    "model": {
+      "heading": "Mudel",
+      "intro": "Mudel põhineb coachiva juhtimise uurimuste sünteesil. Ükski uurimus ei ole neid kolme uskumust ja kolme tegevust koos testinud.",
+      "columns": [
+        "Osa",
+        "Mida see tähendab",
+        "Peamised allikad",
+        "Tõendite tugevus"
+      ],
+      "rows": [
+        [
+          "Inimene",
+          "Inimesed saavad areneda",
+          "Heslin, VandeWalle & Latham 2006; Heslin & VandeWalle 2008",
+          "Tugev"
+        ],
+        [
+          "Suhe",
+          "Töötaja usaldus juhi vastu on coachiva juhtimise eeldus",
+          "Ellinger & Bostrom 2002; McAllister 1995; Anderson 2013",
+          "Kaudne"
+        ],
+        [
+          "Autonoomia",
+          "Inimene suudab end ise juhtida, kui otsus on tema oma",
+          "Lawter, Kopelman & Prottas 2015; Gürbüz jt 2014; Slemp jt 2018",
+          "Suunav"
+        ],
+        [
+          "Juhendamine",
+          "Ootused, tagasiside, kokkulepete juurde tagasi tulemine",
+          "Heslin jt 2006; Dahling jt 2016",
+          "Tugev"
+        ],
+        [
+          "Võimestamine",
+          "Küsimine, kuulamine, otsus jääb inimesele",
+          "Heslin jt 2006; Ellinger & Bostrom 1999",
+          "Vaidlustatud"
+        ],
+        [
+          "Inspireerimine",
+          "Arengu välja ütlemine, väljakutsed",
+          "Heslin jt 2006; Kierein & Gold 2000",
+          "Keskmine"
+        ]
+      ]
+    },
+    "limits": {
+      "heading": "Mida test ei mõõda",
+      "paragraphs": [
+        "Test on enesehinnang. See näitab, kui sageli tegevused sinu päeva jõuavad ja milliseid valikuid sa teed. Kui hästi sa neid tegevusi teed, näevad kõige paremini sinu inimesed. Uuringud on näidanud, et sagedus üksi tulemusi ei paranda: madala oskusega sage coachimine mõjus tulemustele isegi halvasti (Dahling jt 2016).",
+        "Võimestamise kohta on uurimustes eri arvamusi. Osa juhte peab küsimist vähem tõhusaks kui lahenduse andmist (Anderson 2013). Seepärast on mudelis juhendamine ja võimestamine võrdväärsed."
+      ]
+    },
+    "development": {
+      "heading": "Testi arendamine",
+      "text": "Testi täpsustatakse vastuste põhjal, et kontrollida, kas väited mõõdavad seda, mida nad peavad. Vastuseid kasutatakse selleks anonüümselt."
+    },
+    "raimo": {
+      "heading": "Kes on Raimo",
+      "paragraphs": [
+        "Raimo Ülavere on juhtide ja meeskondade coach ning koolitaja. Tal on magistrikraad spordi- ja kehapsühholoogias (MSc Sports and Body Psychology, University of East London) ja ta on sertifitseeritud juhtide ja meeskondade coach. Juhte ja meeskondi on ta koolitanud ligi 20 aastat ja personaalses coachingus on tal olnud üle 300 juhi, lisaks kümned meeskonnad ja sportlased.",
+        "Ta on kirjutanud raamatud „Tagasi mängu. Võitma“ (2009) ja „Ajust, stressist ja perfektsionismi mõlutamisest ja õnneni“ (2024). Klientide hulgas on eu-LISA, Lennuliiklusteenistus, Tallinna Lennujaam, Päästeamet, Sotsiaalkindlustusamet, Luminor, Swedbank, Eesti Energia ja Telia.",
+        "Radical Simplicity: kõige paremad tegijad ei vaja rohkem ideid, nad vajavad vähem."
+      ],
+      "link": "radicalsimplicity.eu",
+      "todo": "KONTROLLIDA: teise raamatu pealkiri."
+    },
+    "companies": {
+      "heading": "Ettevõtetele",
+      "text": "Kui tahad pakkuda testi ja kolme nädala programmi oma juhtidele, saab ettevõte osta kohad ette ja juhid liituvad ettevõtte koodiga. Iga juht näeb ainult oma tulemusi.",
+      "contact": "raimo@raimoulavere.com"
+    }
+  },
+  "privacy": {
+    "todo": "MUSTAND. Viia kooskõlla Truresp'i privaatsuslehega ja lasta juriidiliselt üle vaadata.",
+    "title": "Privaatsus",
+    "sections": [
+      {
+        "heading": "Vastutav töötleja",
+        "text": "Mindsweeper OÜ, registrikood 11473411, Kammelja tn 4-2, 13516 Tallinn. Kontakt: raimo@raimoulavere.com"
+      },
+      {
+        "heading": "Mida kogume",
+        "text": "E-posti aadress, testi vastused, skoorid, igapäevased jah/ei vastused, keel, ajavöönd ja uudiskirja nõusolek. Makse puhul makse tunnus ja kasutatud sooduskood. Kaardiandmeid me ei näe, neid töötleb Stripe."
+      },
+      {
+        "heading": "Milleks",
+        "text": "Raporti koostamiseks ja saatmiseks, kolme nädala programmi kirjade saatmiseks, lõpuraporti koostamiseks, uudiskirja saatmiseks (ainult nõusoleku korral) ja testi parandamiseks anonüümsel kujul."
+      },
+      {
+        "heading": "Õiguslik alus",
+        "text": "Raport ja programm: teenuse osutamine, mida sa tellisid. Uudiskiri: sinu nõusolek, mille saad igal ajal tagasi võtta. Testi parandamine: õigustatud huvi, anonüümsetel andmetel."
+      },
+      {
+        "heading": "Kes andmeid töötleb",
+        "text": "Supabase (andmebaas, EL-i regioon), Vercel (veebileht), Brevo (e-kirjad), Stripe (maksed), Anthropic (raporti isikliku lõigu koostamine; edastatakse ainult vastused ja skoorid, mitte e-posti aadress)."
+      },
+      {
+        "heading": "Ettevõtte kood",
+        "text": "Kui liitusid ettevõtte koodiga, ei näe ettevõte sinu tulemusi. Ettevõte näeb ainult, mitu korda koodi on kasutatud."
+      },
+      {
+        "heading": "Kui kaua hoiame",
+        "text": "24 kuud pärast viimast tegevust. Seejärel muudetakse andmed anonüümseks."
+      },
+      {
+        "heading": "Sinu õigused",
+        "text": "Saad küsida oma andmete koopiat, neid parandada või kustutada ja uudiskirjast igal ajal loobuda. Kirjuta raimo@raimoulavere.com. Kaebuse saad esitada Andmekaitse Inspektsioonile (aki.ee)."
+      },
+      {
+        "heading": "Küpsised",
+        "text": "Kasutame ainult keelevaliku, sooduskoodi ja teenuse toimimiseks vajalikke küpsiseid. Jälgimisküpsiseid ei kasuta."
+      }
+    ]
+  }
+}

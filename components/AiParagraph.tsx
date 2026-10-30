@@ -1,0 +1,75 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+/**
+ * SPEC 5.1 step 5: the paragraph has a loading state that updates, polling for
+ * up to 20 seconds. After that the report stands without it.
+ *
+ * The paragraph is written after the response to POST /api/test is sent, so on
+ * a first visit it is usually still being generated when this page renders. On
+ * any later visit it is already in the row and arrives as initialText, and no
+ * polling happens at all.
+ *
+ * A failed paragraph renders nothing. There is no apology and no empty heading
+ * with a dash under it: the six parts above are the report, and this was always
+ * the part that could be missing.
+ */
+const INTERVAL_MS = 2000;
+const GIVE_UP_MS = 20000;
+
+export function AiParagraph({
+  token, initialText, initialStatus, loadingLabel,
+}: {
+  token: string;
+  initialText: string | null;
+  initialStatus: string;
+  loadingLabel: string;
+}) {
+  const [text, setText] = useState(initialText);
+  const [waiting, setWaiting] = useState(initialStatus === "pending" && !initialText);
+
+  useEffect(() => {
+    if (!waiting) return;
+
+    let stopped = false;
+    const startedAt = Date.now();
+
+    const timer = setInterval(async () => {
+      if (stopped) return;
+
+      if (Date.now() - startedAt > GIVE_UP_MS) {
+        setWaiting(false);
+        clearInterval(timer);
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/raport/${token}/ai`, { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+
+        if (data.status === "done" && data.text) {
+          setText(data.text);
+          setWaiting(false);
+          clearInterval(timer);
+        } else if (data.status === "failed") {
+          setWaiting(false);
+          clearInterval(timer);
+        }
+      } catch {
+        // A dropped poll is not worth reporting. The next one runs in two
+        // seconds, and the timeout above ends it either way.
+      }
+    }, INTERVAL_MS);
+
+    return () => {
+      stopped = true;
+      clearInterval(timer);
+    };
+  }, [waiting, token]);
+
+  if (text) return <p>{text}</p>;
+  if (waiting) return <p className="dim shimmer">{loadingLabel}</p>;
+  return null;
+}
