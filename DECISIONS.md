@@ -4,6 +4,9 @@ Iga otsus, mida SPEC.md ei kata või mis sellest erineb. Uusim on üleval.
 
 | Kuupäev | Otsus | Põhjus | Kes |
 |---|---|---|---|
+| 2026-10-30 | Kujundus hele, mitte tume | Raimo otsus. Brändi heleda paleti väärtused võetud radicalsimplicity.eu-st, mitte välja mõeldud: #FFFFFF taust, #EBEAE5 pind, #0F0F0F tekst, #6A6862 teisene, #00FA96 aktsent, #2B2B2B joon | Raimo |
+| 2026-10-30 | Tailwind 3.4.17, mitte 4.x | Raimo otsus võtta Tailwind kasutusele, et Lovable'is tehtud disaini saaks siia tõsta. Esialgu paigaldasin 4.3, aga radical-simplicity ja attfocus-v2 on mõlemad 3.4.17 ja Lovable väljastab 3.x konfiga. Sama versioon tähendab, et klassinimed ja konfiguratsioon tulevad üle ilma tõlkesammuta | Claude |
+| 2026-10-30 | Vana käsitsi kirjutatud CSS jäi alles, suunatud uutele heledatele tokenitele | Lovable'i disain asendab need klassid niikuinii. Enda disaini vahepeal ümber kirjutada oleks töö, mis läheb kohe prügikasti; samas ei tohi toode senikaua katki olla | Claude |
 | 2026-10-30 | Taust Supabase'i edge-funktsioonides, mitte Next.js API marsruutides | Raimo otsus. Kolm olemasolevat projekti töötavad nii ja saladused on seal. Kõrvalkasu: Vercelis ei ole enam ühtegi saladust, service role võti ei lahku Supabase'ist | Raimo |
 | 2026-10-30 | Uudiskiri läheb Smailysse, olemasolevasse lugejate nimekirja, mitte Brevo loendisse | SPEC 3 ütleb Brevo loend. Raimo päris uudiskiri on Smailys ja radicalsimplicity.eu liidab inimesi sinna. Brevo loend siin jagaks ühe lugejaskonna kahte süsteemi | Raimo |
 | 2026-10-30 | `temperature` eemaldatud tehisaru kutsest | SPEC 12 nõuab 0,3. Sonnet 5 vastab sellele `400 temperature is deprecated for this model`, nii et iga kutse ebaõnnestus | Claude |
