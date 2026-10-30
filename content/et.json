@@ -170,11 +170,11 @@
     }
   },
   "errors": {
-    "_note": "TODO: Raimo. Need laused näeb kasutaja siis, kui midagi läheb katki. Praegu on need kirjutamata.",
-    "badRequest": "TODO: Raimo — päring oli vigane",
-    "incomplete": "TODO: Raimo — kõigile väidetele ei ole vastatud",
-    "scoringFailed": "TODO: Raimo — vastuseid ei õnnestunud arvutada",
-    "saveFailed": "TODO: Raimo — salvestamine ebaõnnestus, proovi uuesti"
+    "_note": "Claude'i pakutud laused, Raimo kinnitab või muudab. Neid näeb kasutaja ainult siis, kui midagi läheb katki.",
+    "badRequest": "Midagi läks saatmisel katki. Proovi uuesti.",
+    "incomplete": "Osa väiteid on vastamata. Keri üles ja vaata üle.",
+    "scoringFailed": "Vastuseid ei õnnestunud kokku arvutada. Proovi uuesti.",
+    "saveFailed": "Salvestamine ei õnnestunud. Proovi natukese aja pärast uuesti."
   },
   "report": {
     "title": "Sinu coachiv juhtimine praegu",

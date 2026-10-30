@@ -92,15 +92,14 @@ export default async function ReportPage({ params }: PageProps) {
           </section>
         )}
 
-        <section className="stack">
-          <h2>{t.report.ai.heading}</h2>
-          <AiParagraph
-            token={token}
-            initialText={data.ai_paragraph as string | null}
-            initialStatus={data.ai_status as string}
-            loadingLabel={t.report.ai.loading}
-          />
-        </section>
+        {/* Renders its own heading, or nothing at all. See the component. */}
+        <AiParagraph
+          token={token}
+          initialText={data.ai_paragraph as string | null}
+          initialStatus={data.ai_status as string}
+          heading={t.report.ai.heading}
+          loadingLabel={t.report.ai.loading}
+        />
 
         <section className="card">
           <h3>{t.report.notMeaning.heading}</h3>

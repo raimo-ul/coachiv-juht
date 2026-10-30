@@ -19,11 +19,12 @@ const INTERVAL_MS = 2000;
 const GIVE_UP_MS = 20000;
 
 export function AiParagraph({
-  token, initialText, initialStatus, loadingLabel,
+  token, initialText, initialStatus, heading, loadingLabel,
 }: {
   token: string;
   initialText: string | null;
   initialStatus: string;
+  heading: string;
   loadingLabel: string;
 }) {
   const [text, setText] = useState(initialText);
@@ -69,7 +70,27 @@ export function AiParagraph({
     };
   }, [waiting, token]);
 
-  if (text) return <p>{text}</p>;
-  if (waiting) return <p className="dim shimmer">{loadingLabel}</p>;
+  // The heading lives in here rather than on the page, so it comes and goes
+  // with the paragraph. Rendered outside, a failed paragraph left "Mida sinu
+  // tulemused koos näitavad" standing over empty space, which reads as broken
+  // rather than as a section that was never there.
+  if (text) {
+    return (
+      <section className="stack">
+        <h2>{heading}</h2>
+        <p>{text}</p>
+      </section>
+    );
+  }
+
+  if (waiting) {
+    return (
+      <section className="stack">
+        <h2>{heading}</h2>
+        <p className="dim shimmer">{loadingLabel}</p>
+      </section>
+    );
+  }
+
   return null;
 }
