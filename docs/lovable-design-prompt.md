@@ -1,101 +1,97 @@
 # Lovable design prompt
 
 In English, because Lovable follows English instructions more closely. The
-Estonian copy inside it is verbatim from `content/et.json` and must not be
-rewritten.
+Estonian copy inside it is real, approved text from `content/et.json` and should
+be used as written.
 
 Paste everything below the line.
 
 ---
 
-Build a static, design-only marketing and assessment site. **No backend, no
-database, no auth, no API calls, no form submission logic.** Every screen is a
-static page with hardcoded content. I will wire the logic myself afterwards.
+You are designing a product site. Design it well. I am giving you the brand, the
+content and what each page has to achieve. The design decisions are yours.
 
-## The product
+**Build it as a static front end only.** No backend, no database, no auth, no
+form handling, no API calls. Real pages with this content hardcoded. I am wiring
+the logic myself afterwards, so what I need from you is the design.
 
-A free 18-statement self-assessment for managers called "Coachiva juhi test"
-(Coaching Leader Test). A manager answers 18 statements on a 1–6 scale across
-two screens, gives their email, and immediately sees a report with six scores:
-three **actions** (what they did in the last four weeks) and three **beliefs**
-(what their actual choices show). The report ends with an offer for a paid
-three-week programme. The audience is Estonian managers, 35–55, serious people
-with no patience for decoration.
+## What it is
 
-## Visual direction
+A free self-assessment for managers, in Estonian, called **Coachiva juhi test**
+(the Coaching Leader Test). A manager answers 18 statements on a 1 to 6 scale,
+gives their email, and immediately gets a personal report scoring six things:
+three **actions** they took over the last four weeks, and three **beliefs** their
+real choices reveal. The report ends by offering a paid three-week follow-up
+programme for 15 €.
 
-This is the Radical Simplicity brand. **Light, not dark.** Confident, spare,
-editorial. Think a well-set printed report, not a SaaS dashboard. A lot of white
-space. No gradients, no glassmorphism, no drop shadows, no rounded corners, no
-illustrations, no stock photos, no icons unless they carry meaning.
+## Who it is for
 
-### Exact palette — use these values, do not invent others
+Estonian managers, roughly 35 to 55. Experienced, busy, a little sceptical of
+leadership fashion. They will open this on a phone between meetings. They have
+seen a hundred corporate personality quizzes and this is not one: it does not
+sort anyone into a type and it never scores them against other people. It should
+feel grown-up and earned rather than playful or gamified.
 
-```
---background        #FFFFFF   page ground
---surface           #EBEAE5   warm bone, for cards and panels
---foreground        #0F0F0F   near-black, all body and heading text
---muted             #6A6862   warm grey, secondary text only
---accent            #00FA96   bright green
---border            #2B2B2B   near-black hairline
-```
+## The brand
 
-Two rules that matter more than the rest:
-
-1. **The green is a fill, never text.** `#00FA96` on white fails contrast badly.
-   Use it as a solid button background with near-black text on top, as a 3–4px
-   rule or bar, or as a small marker. Never as a text colour on white.
-2. **Borders are near-black hairlines, not light grey.** 1px `#2B2B2B`. This is
-   the single most distinctive thing about the brand: hard, printed-looking
-   rules instead of soft grey cards.
-
-### Type
-
-- Headings: **Bebas Neue**, uppercase, tight line-height (1.0–1.1), slight
-  letter-spacing. Large and confident.
-- Body: **DM Sans**, 17px base, line-height 1.6.
-- Load both from Google Fonts with latin-ext (Estonian needs ä ö ü õ š ž).
-
-### Shape and motion
-
-- `border-radius: 0` everywhere, including buttons and inputs.
-- Mobile first. It must be excellent at 390px wide before it is good at 1200px.
-- Maximum text column around 34rem. Do not let body text run full width.
-- Motion only where it helps: a progress bar filling, a button state. No
-  scroll-triggered animation, no parallax, no fade-ins.
-
-## Screens to build
-
-### 1. `/` — home · **this is a proper marketing landing page, not a thin splash**
-
-Full-width sections stacked down the page, each with its own rhythm. Every
-sentence below is real approved Estonian copy unless marked PLACEHOLDER. Keep
-the wording exactly; design around it.
-
-#### Hero
-
-Give this real presence. Bebas Neue at a genuinely large size, a lot of air
-around it, one green element and nothing else competing.
+Radical Simplicity, Raimo Ülavere's practice. **Light background.** Keep broadly
+to these. They are a starting point, not a cage.
 
 ```
-COACHIVA JUHI TEST
+#FFFFFF   white ground
+#EBEAE5   warm bone, the brand's second surface
+#0F0F0F   near-black for text
+#6A6862   warm grey for secondary text
+#00FA96   the signature green
+#2B2B2B   near-black, used for rules and edges
+```
+
+Typefaces: **Bebas Neue** for headings, **DM Sans** for body. Load them with
+latin-ext — Estonian needs ä ö ü õ š ž and a missing subset breaks words
+visibly.
+
+The character is confident and uncluttered, closer to a well-set printed report
+than to a SaaS dashboard. Within that, the look is yours to make. Extend the
+palette with tints, shades or a supporting neutral if the design wants them. Use
+depth, texture, scale, motion or imagery where they make it better. Interpret
+the green rather than ration it.
+
+Two things worth knowing rather than obeying. The green is very light: on white
+it lands near 1.5:1, so as small text it will be unreadable, which is why it
+tends to end up as a fill, a rule or an accent. And the existing brand leans on
+hard near-black lines rather than soft grey cards, which is a good part of why it
+looks like itself. Do what you think is best with both.
+
+What I will judge it on: does the home page make a sceptical manager want to
+start, and does the report look like something they would forward to a colleague.
+
+## Pages
+
+### `/` — home
+
+A real landing page. This is the page that has to earn the five minutes, so give
+it the most attention. Sections, rhythm, a proper hero. Make it attractive.
+
+Here is the material. The Estonian is approved copy, so keep the wording; the
+order, grouping, emphasis and what deserves to be large are your call. Anything
+marked PLACEHOLDER has no copy yet, so design the slot and put a sensible
+Estonian stand-in there that I will replace.
+
+**The headline and the offer**
+
+```
+Coachiva juhi test
 
 Coachiv juhtimine on kombinatsioon uskumustest ja tegevustest. Testi tehes saad
 viie minutiga teada, kus sina praegu coachiva juhina oled.
 
-[ALUSTA TESTI · 5 MIN]
+Alusta testi · 5 min
 
 Tasuta. Raport kohe ekraanile ja e-postile.
 ```
 
-No stock photography, no abstract 3D, no gradient mesh. If the hero needs a
-visual anchor beyond type, build it from the six model words themselves, or from
-hard rules and the one green block. The brand's confidence comes from space and
-typography, not from imagery.
-
-#### Section: the tension
-
-The hook. Set the opening question big enough to stop someone scrolling.
+**The tension that makes someone care.** A strong candidate for the hook. Use it
+where you think it lands best:
 
 ```
 Coachiv juhtimine on ühelt poolt ülipopulaarne ja teiselt poolt erakordselt
@@ -104,53 +100,40 @@ uskumuste kaudu. Kas see on vahend või filosoofia? Igas olukorras rakendatav v�
 pigem täppistöövahend? Pehmodele või hoopis tugevatele juhtidele?
 ```
 
-#### Section: the model — the centrepiece of the page
-
-Six parts in two groups of three. This is what the product actually is, so it
-deserves the most design thought on the page. Each row carries a name, a plain
-meaning, and how strong the research behind it is. The honesty of that last
-column is a feature, not a disclaimer: show it, do not bury it.
+**The model.** Six parts in two groups. This is what the product actually
+measures, so it probably deserves to be the visual centrepiece. Each part has a
+plain meaning and an honest label for how strong the research behind it is. That
+honesty is a selling point here, not fine print:
 
 ```
 USKUMUSED
-  Inimene        Inimesed saavad areneda                                    Tugev
-  Suhe           Töötaja usaldus juhi vastu on coachiva juhtimise eeldus    Kaudne
-  Autonoomia     Inimene suudab end ise juhtida, kui otsus on tema oma      Suunav
+  Inimene         Inimesed saavad areneda                                  Tugev
+  Suhe            Töötaja usaldus juhi vastu on coachiva juhtimise eeldus  Kaudne
+  Autonoomia      Inimene suudab end ise juhtida, kui otsus on tema oma    Suunav
 
 TEGEVUSED
-  Juhendamine    Ootused, tagasiside, kokkulepete juurde tagasi tulemine    Tugev
-  Võimestamine   Küsimine, kuulamine, otsus jääb inimesele                  Vaidlustatud
-  Inspireerimine Arengu välja ütlemine, väljakutsed                         Keskmine
+  Juhendamine     Ootused, tagasiside, kokkulepete juurde tagasi tulemine  Tugev
+  Võimestamine    Küsimine, kuulamine, otsus jääb inimesele                Vaidlustatud
+  Inspireerimine  Arengu välja ütlemine, väljakutsed                       Keskmine
 ```
 
-Make the evidence word read as a quiet label, not as a score or a rating badge.
-Must work as a readable structure on a 390px phone, not a table squeezed sideways.
-
-#### Section: what you get
+**What you get.** Show it rather than only describing it: a preview of the
+report, built from the real report design below.
 
 ```
-PLACEHOLDER — Raimo kirjutab. Lühike lõik selle kohta, mida raport sisaldab:
-kuus skoori, uskumuse ja tegevuse võrdlus, isiklik kokkuvõte.
+PLACEHOLDER — lühike lõik sellest, mida raport sisaldab
 ```
 
-Next to it, show a scaled-down preview of the report page: one or two of the
-score cards rendered small, so a visitor sees what they are about to get. Build
-it from the real report design, not a generic mockup frame.
-
-#### Section: how it works
-
-Three steps, numbered, flat. No icons, no circles, no connecting arrows.
+**How it works.** Three steps:
 
 ```
-1   PLACEHOLDER — 18 väidet, viis minutit
-2   PLACEHOLDER — raport kohe ekraanile ja e-postile
-3   PLACEHOLDER — soovi korral kolm nädalat, kuus küsimust päevas
+PLACEHOLDER — 18 väidet, viis minutit
+PLACEHOLDER — raport kohe ekraanile ja e-postile
+PLACEHOLDER — soovi korral kolm nädalat, kuus küsimust päevas
 ```
 
-#### Section: the honesty block
-
-Unusual on a landing page and deliberately kept. It is what makes the rest
-believable. Give it a distinct, quieter treatment, perhaps on the bone surface.
+**The honest limit.** Unusual on a landing page and deliberately kept, because it
+is what makes the rest believable:
 
 ```
 Test on enesehinnang. See näitab, kui sageli tegevused sinu päeva jõuavad ja
@@ -158,7 +141,8 @@ milliseid valikuid sa teed. Kui hästi sa neid tegevusi teed, näevad kõige
 paremini sinu inimesed.
 ```
 
-#### Section: the three-week programme
+**The paid programme.** Mentioned here, bought later from inside the report, so
+this section should send people into the test rather than to a payment button:
 
 ```
 Kolm nädalat, kuus küsimust
@@ -170,23 +154,13 @@ jõudsid, ja saad seda selle testiga võrrelda.
 15 € koos käibemaksuga
 ```
 
-Note the programme is bought from inside the report, not from here, so this
-section ends by pointing back at the test rather than at a payment button.
+Close the page by sending people into the test, plus a quiet link to the
+background page: `Mille peale test tugineb →`
 
-#### Closing
+This page is about the test, not about Raimo. His background and the academic
+sources live on their own page and one link to it is enough.
 
-End on the test itself, not on a brand statement. Repeat the primary call to
-action with room around it:
-
-```
-[ALUSTA TESTI · 5 MIN]
-
-Tasuta. Raport kohe ekraanile ja e-postile.
-```
-
-Then one quiet text link: `Mille peale test tugineb →`
-
-### 2. `/test` — the assessment
+### `/test` — taking the assessment
 
 An intro step:
 
@@ -194,53 +168,55 @@ An intro step:
 Testis on 18 väidet kolme coachiva juhi võtmeuskumuse ja kolme võtmetegevuse kohta.
 Vasta selle järgi, mida sa päriselt usud ja teed.
 
-[ALUSTA]
+Alusta
 ```
 
-Then two question screens, 9 statements each. A sticky progress bar at the top
-showing `0 / 18` and filling in green.
+Then two screens of nine statements each, with a running sense of progress
+(`0 / 18`).
 
-Screen 1 instruction: `Viimase nelja nädala jooksul, kui sageli sa…`
-Each statement with a 1–6 scale where **every point has a word**:
+**Screen 1** — `Viimase nelja nädala jooksul, kui sageli sa…`
+Every point on the scale carries a word:
 
 ```
-ütlesid kellelegi selgelt, millist tulemust sa temalt ootad
-
- 1              2        3            4                  5                  6
- mitte kordagi  korra    paar korda   umbes kord nädalas  mitu korda nädalas  peaaegu iga päev
+1 mitte kordagi · 2 korra · 3 paar korda · 4 umbes kord nädalas ·
+5 mitu korda nädalas · 6 peaaegu iga päev
 ```
 
-Screen 2 instruction: `Kui hästi kirjeldab see sinu tegelikke valikuid viimase
-poole aasta jooksul?`
-Same 1–6 scale, but **only the ends are labelled**: 1 `ei kirjelda üldse`,
-6 `kirjeldab täpselt`. 2–5 are bare numbers.
+Example statement: `ütlesid kellelegi selgelt, millist tulemust sa temalt ootad`
 
-Example statement for screen 2:
-`Kui inimene ei tule ülesandega toime, uurin kõigepealt, mida ta peaks selleks õppima.`
+**Screen 2** — `Kui hästi kirjeldab see sinu tegelikke valikuid viimase poole
+aasta jooksul?`
+Same 1 to 6, but only the ends are labelled: 1 `ei kirjelda üldse`, 6 `kirjeldab
+täpselt`. The numbers between carry no words.
 
-**This scale is the hardest design problem in the whole project — solve it
-properly.** Six options with six long Estonian words will not sit side by side
-on a 390px phone. Find a layout that stays readable and tappable on a phone
-without hiding the words, and that makes answering 18 of these feel fast rather
-than like a form. Selected state must be unmistakable at a glance.
+Example statement: `Kui inimene ei tule ülesandega toime, uurin kõigepealt, mida
+ta peaks selleks õppima.`
 
-Then an email step:
+**This scale is the real design problem in the project.** Six options, six long
+Estonian words, a 390px phone, and someone doing it eighteen times in a row. It
+has to stay readable, stay tappable, make the chosen answer obvious at a glance,
+and feel quick rather than like filling in a form. Solve it however you think
+best. This is the thing I most want your judgement on.
+
+Then the email step:
 
 ```
 Kuhu raport saata?
 
 E-post
-[                    ]
 
 ☐ Tahan saada ka Raimo uudiskirja
    Ainult sisu, mida saad juhina kasutada. Loobuda saad ühe klõpsuga.
 
-[NÄITA RAPORTIT]
+Näita raportit
 
 Raport saadetakse sellele aadressile. Loe lähemalt: Privaatsus
 ```
 
-### 3. `/raport` — the report (the most important screen)
+### `/raport` — the report
+
+The most important screen in the product. Someone has just spent five minutes on
+it and this is what they might forward to a colleague.
 
 ```
 Sinu coachiv juhtimine praegu
@@ -250,66 +226,51 @@ jooksul sinu päeva jõudsid ja milliseid valikuid sa juhina teed. Iga tegevus j
 uskumus on eraldi, sest need on erinevad asjad.
 ```
 
-**TEGEVUSED** — three cards. **USKUMUSED** — three cards. Each card:
+**Six results**, grouped under `TEGEVUSED` and `USKUMUSED`. Each has a name, a
+score from 1 to 6 with one decimal and an Estonian comma, a line explaining what
+the part means, and a sentence about where this person landed:
 
 ```
-JUHENDAMINE                                    4,7
+Juhendamine                                                              4,7
 Inimene teab, millist tulemust temalt oodatakse, saab tagasisidet oma tegevuse
 kohta ja juht tuleb kokkulepete juurde tagasi.
-
 Ootused, tagasiside ja kokkulepete juurde tagasi tulemine on sinu nädalas
 tavaline osa.
 ```
 
-The number is a 1–6 score with one decimal and an Estonian comma. It should read
-as the anchor of the card. **Do not add progress bars, rings, gauges or
-percentages** — this product deliberately avoids anything that looks like a
-grade. Design the score so a reader sees it instantly without it feeling like a
-mark out of six.
+One caveat: the product deliberately avoids anything that reads as a grade or a
+ranking, so a number out of six should not end up looking like a mark out of
+six. How you solve that is up to you.
 
-Then a block "Uskumus ja tegevus koos" with up to three short comparison cards,
-each headed by a pair like `Inimene · Inspireerimine`.
+**A comparison block**, `Uskumus ja tegevus koos`, with up to three short cards
+pairing a belief with its action, headed like `Inimene · Inspireerimine`.
 
-Then a block "Mida sinu tulemused koos näitavad" holding one 4–5 sentence
-paragraph of plain prose. Give it a distinct treatment — it is written
-individually for this person and should feel like it.
+**A personal paragraph**, `Mida sinu tulemused koos näitavad`: four or five
+sentences of prose written individually for this reader. It should feel written
+rather than generated, so give it a treatment that sets it apart.
 
-Then a quieter panel "Mida see ei tähenda" with a caveat paragraph.
+**A caveat panel**, `Mida see ei tähenda`, quieter than the rest.
 
-Then the offer, visually separated:
+**The offer**, using the same programme copy as the home page, with a button
+`Alusta · 15 €` and a line beneath it: `Sul on ettevõttelt kood? Sisesta see
+makselehel.`
 
-```
-Kolm nädalat, kuus küsimust
+### `/alus` — what the test is based on
 
-Iga tööpäeva lõpus saad kirja kuue jah/ei küsimusega. Vastamine võtab alla
-minuti. Kolme nädala pärast näed, kui sageli need tegevused sinu päeva tegelikult
-jõudsid, ja saad seda selle testiga võrrelda.
+A long read: why this test exists, a table of the six parts with their academic
+sources and strength of evidence, what the test does not measure, and a short
+bio. The table has four columns (`Osa`, `Mida see tähendab`, `Peamised allikad`,
+`Tõendite tugevus`) and needs to work on a phone. Editorial, generous, built for
+reading.
 
-[ALUSTA · 15 €]
+### `/privaatsus` — privacy
 
-Sul on ettevõttelt kood? Sisesta see makselehel.
-```
+Headed sections of running text. Nothing needed beyond excellent readability.
 
-### 4. `/alus` — what the test is based on
+## Practical
 
-A long-form editorial page: an intro, a four-column table of the six model parts
-with their academic sources and a strength-of-evidence column, a section on what
-the test does not measure, and a short bio. Make the table work on a phone.
-
-### 5. `/privaatsus` — privacy
-
-Plain headed sections of running text. No design needed beyond excellent
-readability.
-
-## Footer
-
-On every page: `Mille peale test tugineb · Privaatsus`, then
-`Raimo Ülavere · Radical Simplicity · radicalsimplicity.eu`
-
-## What I will judge this on
-
-- Does the report page look like something a manager would send to a colleague?
-- Does the 1–6 scale work on a phone with real Estonian words?
-- Is the green used exactly once per screen as a fill, never as text?
-- Are the borders hard near-black hairlines rather than soft grey?
-- Does it feel confident and quiet, or does it feel like a template?
+- Every page carries a footer: `Mille peale test tugineb · Privaatsus` and
+  `Raimo Ülavere · Radical Simplicity · radicalsimplicity.eu`
+- Phone first in importance, good on a laptop too.
+- Keep the Estonian exactly as written. Do not translate it, paraphrase it or
+  replace it with lorem ipsum.
