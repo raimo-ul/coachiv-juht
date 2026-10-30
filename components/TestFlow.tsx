@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Content } from "@/lib/content";
 import { fill } from "@/lib/content";
 import { LinkedText } from "@/components/LinkedText";
+import { functionHeaders, functionUrl } from "@/lib/functionsUrl";
 
 type Answers = Record<string, number>;
 type Step = "intro" | "actions" | "beliefs" | "email";
@@ -127,9 +128,9 @@ export function TestFlow({ content }: { content: Content }) {
     }
 
     try {
-      const res = await fetch("/api/test", {
+      const res = await fetch(functionUrl("submit-test"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: functionHeaders(),
         body: JSON.stringify({ answers, email: trimmed, newsletter, timezone }),
       });
       const data = await res.json().catch(() => ({}));

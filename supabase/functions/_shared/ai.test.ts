@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { stripDashes, validateParagraph } from "@/lib/ai";
+import { firstText, stripDashes, validateParagraph } from "./ai.ts";
 
 describe("stripDashes", () => {
   it("removes a dash used as punctuation between clauses", () => {
@@ -65,5 +65,25 @@ describe("validateParagraph", () => {
     // blunt: a false rejection costs one missing paragraph, a false pass puts a
     // type on the reader's screen.
     expect(validateParagraph("See on tüüpiline muster. Mis edasi?").status).toBe("failed");
+  });
+});
+
+describe("firstText", () => {
+  it("takes the text block even when a thinking block comes first", () => {
+    // Sonnet 5 answers this way. Reading content[0].text gave "" every time.
+    expect(firstText({ content: [
+      { type: "thinking", thinking: "…" },
+      { type: "text", text: "Küsid sageli." },
+    ] })).toBe("Küsid sageli.");
+  });
+
+  it("takes the text block when it is first", () => {
+    expect(firstText({ content: [{ type: "text", text: "Tere." }] })).toBe("Tere.");
+  });
+
+  it("returns nothing when there is no text block at all", () => {
+    expect(firstText({ content: [{ type: "thinking", thinking: "…" }] })).toBe("");
+    expect(firstText({})).toBe("");
+    expect(firstText(null)).toBe("");
   });
 });

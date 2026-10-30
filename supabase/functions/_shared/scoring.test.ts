@@ -12,8 +12,8 @@
 //   autonoomia     U7 U8 U9   (U9 reversed)
 
 import { describe, expect, it } from "vitest";
-import { applyReverse, forDisplay, isComplete, levelFor, scoreTest, type Answers } from "@/lib/scoring";
-import { getContent } from "@/lib/content";
+import { applyReverse, forDisplay, isComplete, levelFor, scoreTest, type Answers } from "./scoring.ts";
+import { getContent } from "./content.ts";
 
 const LEVELS = getContent("et").test.scoring.levels;
 

@@ -7,7 +7,8 @@
 // paragraph. SPEC 15 requires exactly that: a wrong API key must not cost the
 // visitor their report.
 
-import "server-only";
+
+import { env } from "./env.ts";
 
 const SYSTEM = `Sa kirjutad eesti keeles ühe lühikese lõigu juhi coachiva juhtimise testi raporti lõppu.
 Sisend on kuue osa skoorid skaalal 1–6 ja 18 väite vastused.
@@ -64,14 +65,30 @@ export function validateParagraph(raw: string): AiResult {
   return { status: "done", text };
 }
 
+/**
+ * The paragraph, out of a reply that may not begin with it.
+ *
+ * `content` is a list of blocks and the first one is not necessarily the text:
+ * Sonnet 5 puts a `thinking` block in front, whose `.text` is undefined. Taking
+ * content[0].text gave an empty string on every call, which this module then
+ * correctly reported as a failed paragraph. Picking the first block that is
+ * actually text works whether or not the model thinks first.
+ */
+export function firstText(body: unknown): string {
+  const blocks = (body as { content?: Array<{ type?: string; text?: string }> })?.content;
+  if (!Array.isArray(blocks)) return "";
+  const block = blocks.find((b) => b?.type === "text" && typeof b.text === "string");
+  return String(block?.text ?? "");
+}
+
 export async function writeReportParagraph(input: {
   scores: Record<string, number>;
   levels: Record<string, string>;
   answers: Record<string, number>;
   items: Record<string, string>;
 }): Promise<AiResult> {
-  const key = process.env.ANTHROPIC_API_KEY;
-  const model = process.env.ANTHROPIC_MODEL;
+  const key = env("ANTHROPIC_API_KEY");
+  const model = env("ANTHROPIC_MODEL");
   if (!key || !model) return { status: "failed", reason: "ANTHROPIC_API_KEY või ANTHROPIC_MODEL puudub" };
 
   try {
@@ -82,10 +99,21 @@ export async function writeReportParagraph(input: {
         "anthropic-version": "2023-06-01",
         "content-type": "application/json",
       },
+      // SPEC 12 asks for temperature 0,3 and max_tokens 400. Neither survives
+      // contact with the model this product runs on.
+      //
+      // `temperature` is deprecated for Sonnet 5 and the API answers 400
+      // "temperature is deprecated for this model", so sending it fails every
+      // single call. It is gone rather than pinned to a value.
+      //
+      // max_tokens has to cover the model's own thinking as well as the
+      // paragraph, and a 400 ceiling can be spent entirely on thinking and
+      // return no text at all. The paragraph is still four or five sentences,
+      // because the prompt says so and validateParagraph enforces it; the
+      // budget simply has room now. Both recorded in DECISIONS.md.
       body: JSON.stringify({
         model,
-        max_tokens: 400,
-        temperature: 0.3,
+        max_tokens: 4000,
         system: SYSTEM,
         messages: [{ role: "user", content: JSON.stringify(input) }],
       }),
@@ -98,7 +126,19 @@ export async function writeReportParagraph(input: {
     }
 
     const body = await res.json();
-    const raw = String(body?.content?.[0]?.text ?? "");
+
+    // A paragraph that ran out of room is not a short paragraph, it is half a
+    // sentence. The first run after raising max_tokens still ended on "kus
+    // ülesanne on ju", and validateParagraph passed it, because three complete
+    // sentences plus a fragment counts as three sentences. The budget is
+    // generous now and this should not fire, which is exactly why it is here:
+    // nothing else would have caught it.
+    if (body?.stop_reason === "max_tokens") {
+      console.warn(`[ai] tagasi lükatud (katkes): ${firstText(body).slice(0, 400)}`);
+      return { status: "failed", reason: "katkes max_tokens peal" };
+    }
+
+    const raw = firstText(body);
     const result = validateParagraph(raw);
 
     // SPEC 12: log every answer. Raimo reads the first 30 to 50, and a rejected

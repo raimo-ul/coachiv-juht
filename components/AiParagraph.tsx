@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { functionHeaders, functionUrl } from "@/lib/functionsUrl";
 
 /**
  * SPEC 5.1 step 5: the paragraph has a loading state that updates, polling for
  * up to 20 seconds. After that the report stands without it.
  *
- * The paragraph is written after the response to POST /api/test is sent, so on
- * a first visit it is usually still being generated when this page renders. On
+ * The paragraph is written after submit-test has answered, so on a first visit
+ * it is usually still being generated when this page renders. On
  * any later visit it is already in the row and arrives as initialText, and no
  * polling happens at all.
  *
@@ -15,8 +16,18 @@ import { useEffect, useState } from "react";
  * with a dash under it: the six parts above are the report, and this was always
  * the part that could be missing.
  */
-const INTERVAL_MS = 2000;
-const GIVE_UP_MS = 20000;
+// SPEC 5.1 says poll for up to 20 seconds. That number was written before
+// anyone timed the model: Sonnet 5 thinks before it writes, and a measured run
+// took 36 seconds from submit to a finished paragraph. At 20 seconds the
+// paragraph essentially never arrives on a first visit, which turns a feature
+// into a thing that only works for people who come back through the emailed
+// link. Sixty seconds covers the measured time with room to spare.
+//
+// Waiting costs the reader nothing. The six parts above are already on screen
+// and take longer than this to read; only the one paragraph is pending, and it
+// is labelled as such. Recorded in DECISIONS.md.
+const INTERVAL_MS = 3000;
+const GIVE_UP_MS = 60000;
 
 export function AiParagraph({
   token, initialText, initialStatus, heading, loadingLabel,
@@ -46,7 +57,10 @@ export function AiParagraph({
       }
 
       try {
-        const res = await fetch(`/api/raport/${token}/ai`, { cache: "no-store" });
+        const res = await fetch(functionUrl("get-report-ai", { token }), {
+          headers: functionHeaders(),
+          cache: "no-store",
+        });
         if (!res.ok) return;
         const data = await res.json();
 

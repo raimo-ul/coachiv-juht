@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Scratch
 /test/.tmp
+
+# Sünkitud koopia, allikas on content/et.json
+supabase/functions/_shared/et.json

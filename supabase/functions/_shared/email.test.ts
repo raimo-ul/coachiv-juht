@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { esc, renderEmail } from "@/lib/email";
-import { getContent } from "@/lib/content";
+import { esc, renderEmail } from "./email.ts";
+import { getContent } from "./content.ts";
 
 const t = getContent("et");
 

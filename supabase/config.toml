@@ -1,0 +1,17 @@
+project_id = "xdoniywdqrwbmatjttdo"
+
+[functions]
+
+# Every one of these is reached by a visitor with no account. SPEC 2: there is
+# no login in this product and a token in the URL is the only authority. With
+# verify_jwt on, Supabase would reject the request before the function ever saw
+# the token.
+
+[functions.submit-test]
+verify_jwt = false
+
+[functions.get-report-by-token]
+verify_jwt = false
+
+[functions.get-report-ai]
+verify_jwt = false

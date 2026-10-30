@@ -8,14 +8,14 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "sync:content": "node scripts/sync-content.mjs",
+    "deploy:functions": "node scripts/sync-content.mjs && supabase functions deploy submit-test --project-ref xdoniywdqrwbmatjttdo && supabase functions deploy get-report-by-token --project-ref xdoniywdqrwbmatjttdo && supabase functions deploy get-report-ai --project-ref xdoniywdqrwbmatjttdo"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.118.0",
     "next": "16.4.3",
     "react": "19.3.0",
-    "react-dom": "19.3.0",
-    "server-only": "^0.0.1"
+    "react-dom": "19.3.0"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",

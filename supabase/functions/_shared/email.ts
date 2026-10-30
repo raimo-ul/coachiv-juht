@@ -8,7 +8,9 @@
 // others. White with near-black text renders the same way everywhere, and the
 // one green button still carries the brand. Recorded in DECISIONS.md.
 
-import "server-only";
+import { emailDisabled, env } from "./env.ts";
+
+export { emailDisabled };
 
 const BG = "#FFFFFF";
 const FG = "#15181A";
@@ -16,18 +18,6 @@ const DIM = "#6B7280";
 const LINE = "#E5E7EB";
 const ACCENT = "#00FC99";
 const ACCENT_INK = "#06281B"; // the accent is a fill; text on it must be dark
-
-/**
- * A kill switch for outgoing mail.
- *
- * Not in SPEC. Carried over from AttFocus, where its absence meant the only way
- * to stop mail going out was revoking the Brevo key, which takes every other
- * notification down with it. Costs one environment variable and one branch.
- */
-export function emailDisabled(): boolean {
-  const raw = (process.env.EMAIL_DISABLED ?? "").toLowerCase();
-  return raw === "1" || raw === "true" || raw === "yes";
-}
 
 export function esc(value: unknown): string {
   return String(value ?? "")
@@ -118,9 +108,9 @@ export async function sendEmail(params: {
     return { ok: true, skipped: true };
   }
 
-  const key = process.env.BREVO_API_KEY;
-  const senderEmail = process.env.BREVO_SENDER_EMAIL;
-  const senderName = process.env.BREVO_SENDER_NAME;
+  const key = env("BREVO_API_KEY");
+  const senderEmail = env("BREVO_SENDER_EMAIL");
+  const senderName = env("BREVO_SENDER_NAME");
   if (!key || !senderEmail) return { ok: false, error: "BREVO_API_KEY või BREVO_SENDER_EMAIL puudub" };
 
   try {
@@ -147,36 +137,39 @@ export async function sendEmail(params: {
 }
 
 /**
- * SPEC 13: the newsletter goes through Brevo's double opt-in, never a plain
- * contact create. The confirmation mail is a template kept in Brevo, so the
- * only thing sent from here is the address and which list it is for.
+ * Newsletter sign-up, into Smaily and not Brevo.
+ *
+ * SPEC 13 says a Brevo list with a Brevo double opt-in template. That line was
+ * written before the newsletter moved: Raimo's readers live in Smaily, and
+ * radicalsimplicity.eu signs people up there from both its newsletter form and
+ * its contact form. A Brevo list here would split one readership across two
+ * systems, so that a send would reach half of them. Raimo chose Smaily and the
+ * same list his current readers are in. Recorded in DECISIONS.md.
+ *
+ * This is a request to opt in, not a subscription. Smaily answers it by mailing
+ * the person a confirmation; they join the list only when they click it. Which
+ * list, and what that confirmation says, is configured in Smaily rather than
+ * here. `allikas` is the only thing this product adds, so Raimo can tell later
+ * which readers arrived through the test.
  */
-export async function subscribeDoubleOptIn(email: string): Promise<SendResult> {
+const SMAILY_OPT_IN = "https://9ndeed0t.sendsmaily.net/api/opt-in/";
+
+export async function subscribeNewsletter(email: string): Promise<SendResult> {
   if (emailDisabled()) return { ok: true, skipped: true };
 
-  const key = process.env.BREVO_API_KEY;
-  const listId = Number(process.env.BREVO_NEWSLETTER_LIST_ID);
-  const templateId = Number(process.env.BREVO_DOI_TEMPLATE_ID);
-  const site = process.env.NEXT_PUBLIC_SITE_URL;
-  if (!key || !listId || !templateId) {
-    return { ok: false, error: "Brevo uudiskirja seaded puuduvad" };
-  }
-
   try {
-    const res = await fetch("https://api.brevo.com/v3/contacts/doubleOptinConfirmation", {
+    const res = await fetch(SMAILY_OPT_IN, {
       method: "POST",
-      headers: { "api-key": key, "content-type": "application/json", accept: "application/json" },
-      body: JSON.stringify({
-        email,
-        includeListIds: [listId],
-        templateId,
-        redirectionUrl: site ? `${site.replace(/\/+$/, "")}/` : undefined,
-      }),
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ email, allikas: "coachiv-test" }).toString(),
+      // Without a success_url Smaily answers an accepted post with a redirect
+      // of its own, so 3xx means yes just as much as 2xx does.
+      redirect: "manual",
     });
 
-    if (!res.ok) {
+    if (res.status >= 400) {
       const body = (await res.text().catch(() => "")).slice(0, 300);
-      return { ok: false, error: `Brevo DOI HTTP ${res.status} ${body}` };
+      return { ok: false, error: `Smaily HTTP ${res.status} ${body}` };
     }
     return { ok: true };
   } catch (e) {

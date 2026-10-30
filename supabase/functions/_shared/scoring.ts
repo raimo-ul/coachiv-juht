@@ -6,7 +6,7 @@
 // and keeping one copy means a later change to the bands moves the report and
 // the maths together instead of drifting apart.
 
-import { getContent, type Content, type PartKey } from "@/lib/content";
+import { getContent, type Content, type PartKey } from "./content.ts";
 
 export type { PartKey };
 export type ItemKey = string;
