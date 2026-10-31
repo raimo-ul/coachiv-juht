@@ -445,45 +445,38 @@
       "columns": [
         "Osa",
         "Mida see tähendab",
-        "Peamised allikad",
-        "Tõendite tugevus"
+        "Peamised allikad"
       ],
       "rows": [
         [
           "Inimene",
           "Inimesed saavad areneda",
-          "Heslin, VandeWalle & Latham 2006; Heslin & VandeWalle 2008",
-          "Tugev"
+          "Heslin, VandeWalle & Latham 2006; Heslin & VandeWalle 2008"
         ],
         [
           "Suhe",
           "Töötaja usaldus juhi vastu on coachiva juhtimise eeldus",
-          "Ellinger & Bostrom 2002; McAllister 1995; Anderson 2013",
-          "Kaudne"
+          "Ellinger & Bostrom 2002; McAllister 1995; Anderson 2013"
         ],
         [
           "Autonoomia",
           "Inimene suudab end ise juhtida, kui otsus on tema oma",
-          "Lawter, Kopelman & Prottas 2015; Gürbüz jt 2014; Slemp jt 2018",
-          "Suunav"
+          "Lawter, Kopelman & Prottas 2015; Gürbüz jt 2014; Slemp jt 2018"
         ],
         [
           "Juhendamine",
           "Ootused, tagasiside, kokkulepete juurde tagasi tulemine",
-          "Heslin jt 2006; Dahling jt 2016",
-          "Tugev"
+          "Heslin jt 2006; Dahling jt 2016"
         ],
         [
           "Võimestamine",
           "Küsimine, kuulamine, otsus jääb inimesele",
-          "Heslin jt 2006; Ellinger & Bostrom 1999",
-          "Vaidlustatud"
+          "Heslin jt 2006; Ellinger & Bostrom 1999"
         ],
         [
           "Inspireerimine",
           "Arengu välja ütlemine, väljakutsed",
-          "Heslin jt 2006; Kierein & Gold 2000",
-          "Keskmine"
+          "Heslin jt 2006; Kierein & Gold 2000"
         ]
       ]
     },
@@ -511,7 +504,7 @@
         "Radical Simplicity: kõige paremad tegijad ei vaja rohkem ideid, nad vajavad vähem."
       ],
       "link": "radicalsimplicity.eu",
-      "todo": "KONTROLLIDA: teise raamatu pealkiri."
+      "todo": "KONTROLLIDA: mõlema raamatu pealkiri ja aasta. Veebist ei leidnud kinnitust. Teine leiti kujul „Ajust, stressist, perfektsionismist molutamise ja õnneni“ (e-raamat), esimene kujul „Tagasi Mängu: Kuidas ennast ja oma meeskonda tagasi platsile tuua“ (2009). Praegu failis on kolmandad variandid. Allikaviited on üle kontrollitud ja korras."
     },
     "companies": {
       "heading": "Ettevõtetele",

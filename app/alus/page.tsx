@@ -11,10 +11,15 @@ export const metadata: Metadata = {
 };
 
 /**
- * The sources table keeps the four columns from et.json, including the
- * strength-of-evidence column the Lovable build dropped. That column is a
- * selling point rather than fine print: it is the page saying out loud which
- * parts of the model rest on strong research and which are contested.
+ * Three columns: the part, what it means, and the sources.
+ *
+ * There was a fourth, labelling each part's evidence as Tugev, Kaudne, Suunav,
+ * Vaidlustatud or Keskmine. Raimo took it out: standing alone next to a part
+ * name, a word like "Vaidlustatud" reads as a verdict on that part of the model
+ * rather than as a note about the state of the literature, and the reader has
+ * no way to tell which was meant. The honesty it was carrying is still on the
+ * page, in the intro line and in "Mida test ei mõõda", as sentences that can
+ * say what they mean.
  */
 export default function AboutPage() {
   const a = t.about;
@@ -36,14 +41,14 @@ export default function AboutPage() {
         <div className="mx-auto max-w-5xl px-5 py-12">
           <p className="mb-8 max-w-2xl text-muted-foreground">{a.model.intro}</p>
 
-          <div className="hidden grid-cols-[1fr_1.6fr_1.6fr_0.7fr] gap-6 border-b-4 border-rule pb-3 md:grid">
+          <div className="hidden grid-cols-[1fr_1.6fr_1.6fr] gap-6 border-b-4 border-rule pb-3 md:grid">
             {a.model.columns.map((h) => <span key={h} className="eyebrow">{h}</span>)}
           </div>
 
-          {a.model.rows.map(([name, meaning, sources, strength]) => (
+          {a.model.rows.map(([name, meaning, sources]) => (
             <div
               key={name}
-              className="grid gap-2 border-b-2 border-rule py-6 last:border-b-0 md:grid-cols-[1fr_1.6fr_1.6fr_0.7fr] md:gap-6"
+              className="grid gap-2 border-b-2 border-rule py-6 last:border-b-0 md:grid-cols-[1fr_1.6fr_1.6fr] md:gap-6"
             >
               <div>
                 <span className="eyebrow text-muted-foreground">{groupOf(name)}</span>
@@ -56,10 +61,6 @@ export default function AboutPage() {
               <p className="text-sm text-muted-foreground">
                 <span className="eyebrow mb-1 block md:hidden">{a.model.columns[2]}</span>
                 {sources}
-              </p>
-              <p className="text-sm">
-                <span className="eyebrow mb-1 block text-muted-foreground md:hidden">{a.model.columns[3]}</span>
-                <span className="border-2 border-rule bg-bone px-2 py-1 text-xs font-semibold">{strength}</span>
               </p>
             </div>
           ))}
