@@ -154,3 +154,103 @@ export async function writeReportParagraph(input: {
     return { status: "failed", reason: "erind" };
   }
 }
+
+// ── The final report's three paragraphs ──────────────────────────────────────
+
+const SYSTEM_FINAL = `Sa kirjutad eesti keeles juhi kolme nädala programmi lõpuraporti tekstiosa.
+Juht vastas igal tööpäeval kuuele jah/ei küsimusele. Sisend: iga päeva vastused, küsimuste tekstid, iga küsimuse jah-vastuste arv vastatud päevadest, esimese ja viimase nädala võrdlus ning testi tegevuste skoorid enne programmi.
+
+Kirjuta kolm lõiku, igaüks 2-3 lauset, ja nende järel üks küsimus:
+1. Muster: millised tegevused jõudsid päeva sageli, millised harva ja millised tulid sageli samal päeval koos.
+2. Muutus: mis muutus esimese ja viimase nädala vahel. Kui muutust pole, ütle seda.
+3. Võrdlus testiga: kus erineb kolme nädala pilt sellest, mida juht testis enda kohta hindas.
+Küsimus: mida juht tahab neist tegevustest edasi hoida.
+
+Reeglid:
+- Kirjelda ainult andmetes nähtavat. Andmeid on vähe, seega kirjelda suunda ja ära tee põhjuslikke järeldusi.
+- Kui vastatud päevi on alla viie, ütle esimeses lauses, et pilt on ligikaudne.
+- „Ei" vastus on info sellest, mis päeva ei jõudnud. Ära käsitle seda ebaõnnestumisena.
+- Ära nimeta tüüpe, isiksuseomadusi ega diagnoose. Ära kiida ega hinda.
+- Ära kasuta mõttekriipsu, vastandust kujul „ei …, vaid …" ega koma sõna „ja" ees.
+Vasta JSON-ina: {"pattern": "...", "change": "...", "compare": "...", "question": "..."}`;
+
+export type FinalParagraphs = {
+  pattern: string;
+  change: string;
+  compare: string;
+  question: string;
+};
+
+/**
+ * SPEC 11: when this fails the report still goes out, with the template
+ * sentences from final.compare.* standing in. The numbers are the report; this
+ * is the part that can be missing.
+ */
+export async function writeFinalParagraphs(input: unknown): Promise<FinalParagraphs | null> {
+  const key = env("ANTHROPIC_API_KEY");
+  const model = env("ANTHROPIC_MODEL");
+  if (!key || !model) return null;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+      },
+      // Same two lessons as the test paragraph: temperature is deprecated for
+      // this model and returns 400, and max_tokens has to cover the thinking
+      // as well as the answer.
+      body: JSON.stringify({
+        model,
+        max_tokens: 4000,
+        system: SYSTEM_FINAL,
+        messages: [{ role: "user", content: JSON.stringify(input) }],
+      }),
+    });
+
+    if (!res.ok) {
+      console.error("[ai-final] anthropic", res.status, (await res.text()).slice(0, 300));
+      return null;
+    }
+
+    const body = await res.json();
+    if (body?.stop_reason === "max_tokens") {
+      console.warn("[ai-final] katkes max_tokens peal");
+      return null;
+    }
+
+    const raw = firstText(body);
+    // The model is asked for JSON and usually gives it, sometimes wrapped in a
+    // fence. Anything else is a failure rather than something to repair.
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) {
+      console.warn(`[ai-final] JSON-i ei leidnud: ${raw.slice(0, 300)}`);
+      return null;
+    }
+
+    const parsed = JSON.parse(match[0]) as Record<string, unknown>;
+    const out: FinalParagraphs = {
+      pattern: stripDashes(String(parsed.pattern ?? "")),
+      change: stripDashes(String(parsed.change ?? "")),
+      compare: stripDashes(String(parsed.compare ?? "")),
+      question: stripDashes(String(parsed.question ?? "")),
+    };
+
+    if (!out.pattern || !out.change || !out.compare || !out.question) {
+      console.warn("[ai-final] mõni lõik on tühi");
+      return null;
+    }
+    if (/\barhetüüp|\btüüp/i.test(Object.values(out).join(" "))) {
+      console.warn("[ai-final] nimetab tüüpi, tagasi lükatud");
+      return null;
+    }
+
+    console.info(`[ai-final] ok: ${out.pattern.slice(0, 200)}`);
+    return out;
+  } catch (e) {
+    console.error("[ai-final] threw:", String(e));
+    return null;
+  }
+}

@@ -18,3 +18,31 @@ verify_jwt = false
 
 [functions.request-contact]
 verify_jwt = false
+
+# Called from the report page by someone with no account.
+[functions.create-checkout]
+verify_jwt = false
+
+# Stripe calls this. Its own signature is the authority, not a JWT.
+[functions.stripe-webhook]
+verify_jwt = false
+
+# pg_cron calls this hourly, with CRON_SECRET.
+[functions.dispatch-daily]
+verify_jwt = false
+
+# Reached from a signed link in an email.
+[functions.submit-answer]
+verify_jwt = false
+
+# Reached from a signed link in an email.
+[functions.get-day-by-signed]
+verify_jwt = false
+
+# pg_cron calls this hourly, with CRON_SECRET.
+[functions.dispatch-final]
+verify_jwt = false
+
+# Reached with the final report token.
+[functions.get-final-by-token]
+verify_jwt = false

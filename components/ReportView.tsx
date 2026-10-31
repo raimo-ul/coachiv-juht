@@ -8,6 +8,7 @@ import { ResultRow } from "@/components/ResultRow";
 import { AiParagraph } from "@/components/AiParagraph";
 import { ContactOptIn } from "@/components/ContactOptIn";
 import { LinkedText } from "@/components/LinkedText";
+import { StartProgramme } from "@/components/StartProgramme";
 
 type Level = "low" | "mid" | "high";
 type PartKey = keyof Content["report"]["parts"];
@@ -150,9 +151,7 @@ export function ReportView({ token, content }: { token: string; content: Content
               <h2 className="text-6xl md:text-8xl">{content.programme.title}</h2>
               <p className="mt-6 text-lg leading-relaxed">{content.programme.body}</p>
               <p className="display mt-6 text-4xl">{content.programme.price}</p>
-              <button className="mt-8 w-full border-2 border-rule bg-ink py-5 text-lg font-semibold text-background shadow-[5px_5px_0_0_var(--background)] md:w-auto md:px-12">
-                {t.cta.button}
-              </button>
+              <StartProgramme token={token} content={content} />
               <p className="mt-4 text-sm">{t.cta.codeNote}</p>
               <p className="mt-4 text-sm">
                 <LinkedText
