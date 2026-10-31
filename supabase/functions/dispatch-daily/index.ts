@@ -123,7 +123,7 @@ serve(async (req) => {
           content.daily.footer,
         ],
       },
-      { links: { day: dayLink }, footer: content.emails.footer },
+      { links: { day: dayLink }, footer: content.emails.footer, siteName: content.meta.siteName },
     );
 
     const res = await sendEmail({ to: p.email, ...mail });

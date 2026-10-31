@@ -126,7 +126,11 @@ serve(async (req) => {
       subject: fill(content.emails.welcome.subject, { startDate }),
       lines: content.emails.welcome.body.map((l) => fill(l, { startDate, sendTime: `${hour}:00` })),
     },
-    { links: { report: `${site}/raport/` }, footer: content.emails.footer },
+    {
+      links: { report: `${site}/raport/` },
+      footer: content.emails.footer,
+      siteName: content.meta.siteName,
+    },
   );
 
   const sent = await sendEmail({ to: participant.data.email, ...mail });

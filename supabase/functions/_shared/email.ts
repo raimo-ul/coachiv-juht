@@ -1,29 +1,21 @@
-// Building and sending the mail.
+// Sending mail, and turning et.json into the shell AttFocus already uses.
 //
-// SPEC 13 lets the letters be dark or light, "whichever works better in Gmail
-// and Outlook". They are light with dark text. A dark email is the harder one
-// to get right: Outlook on Windows drops body background colours, and Gmail's
-// own dark mode re-colours text it thinks is too close to the background, which
-// turns a carefully dark letter into grey on grey for some readers and not
-// others. White with near-black text renders the same way everywhere, and the
-// one green button still carries the brand. Recorded in DECISIONS.md.
+// The HTML comes from _shared/emailLayout.ts, lifted from AttFocus rather than
+// rewritten. What stays here is the one thing that could not come across: this
+// product keeps every user-visible sentence in content/et.json, while AttFocus
+// writes its letters in TypeScript. So the body is assembled from content keys
+// and handed to AttFocus's layout primitives.
+//
+// sendEmail is AttFocus's sendEmailBrevo with two differences. It returns a
+// result instead of throwing, because the callers here are crons working
+// through a list and one bad address must not end the run. And the sender comes
+// from BREVO_SENDER_EMAIL and BREVO_SENDER_NAME, which is what SPEC 4 names,
+// rather than AttFocus's EMAIL_FROM.
 
 import { emailDisabled, env } from "./env.ts";
+import { button, esc, layout, linkLine, p, small } from "./emailLayout.ts";
 
-export { emailDisabled };
-
-const BG = "#FFFFFF";
-const FG = "#15181A";
-const DIM = "#6B7280";
-const LINE = "#E5E7EB";
-const ACCENT = "#00FC99";
-const ACCENT_INK = "#06281B"; // the accent is a fill; text on it must be dark
-
-export function esc(value: unknown): string {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-}
+export { emailDisabled, esc };
 
 /**
  * A line in an email body array is either text or a button.
@@ -37,15 +29,26 @@ export type EmailBody = { subject: string; lines: readonly string[] };
 
 export function renderEmail(
   body: EmailBody,
-  opts: { links: Record<string, string>; footer: string },
+  opts: {
+    links: Record<string, string>;
+    footer: string;
+    siteName: string;
+    /** Defaults to the subject, which is what every letter here wants. */
+    heading?: string;
+  },
 ): { subject: string; html: string; text: string } {
   const htmlParts: string[] = [];
   const textParts: string[] = [];
+  let buttonsSoFar = 0;
 
-  for (const line of body.lines) {
-    const button = BUTTON.exec(line.trim());
-    if (button) {
-      const [, name, label] = button;
+  const lines = body.lines;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const match = BUTTON.exec(line.trim());
+
+    if (match) {
+      const [, name, label] = match;
       const url = opts.links[name];
       if (!url) {
         // A button with no URL is dropped rather than rendered dead. A letter
@@ -53,44 +56,28 @@ export function renderEmail(
         console.warn(`[email] nupul puudub link: ${name}`);
         continue;
       }
-      htmlParts.push(
-        `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:26px 0">
-           <tr><td style="background:${ACCENT};">
-             <a href="${esc(url)}" style="display:inline-block;padding:14px 30px;font-family:Helvetica,Arial,sans-serif;
-                font-size:16px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;
-                color:${ACCENT_INK};text-decoration:none">${esc(label)}</a>
-           </td></tr>
-         </table>`,
-      );
+      // The first button in a letter is the action; a second one is quieter,
+      // which is the distinction AttFocus's linkLine exists for.
+      htmlParts.push(buttonsSoFar === 0 ? button(url, label) : linkLine(url, label));
+      buttonsSoFar += 1;
       textParts.push(`${label}: ${url}`, "");
       continue;
     }
 
-    htmlParts.push(
-      `<p style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;color:${FG};margin:0 0 14px">${esc(line)}</p>`,
-    );
+    // A short closing line, the signature, is set quieter than the body.
+    const isLast = i === lines.length - 1;
+    htmlParts.push(isLast && line.length < 40 ? small(esc(line)) : p(esc(line)));
     textParts.push(line, "");
   }
 
-  const html = `<!doctype html>
-<html lang="et"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:${BG};">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BG};padding:28px 14px">
-    <tr><td align="center">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:540px">
-        <tr><td style="padding:0 6px">
-          ${htmlParts.join("\n")}
-          <hr style="border:0;border-top:1px solid ${LINE};margin:28px 0 14px">
-          <p style="font-family:Helvetica,Arial,sans-serif;font-size:12px;line-height:1.6;color:${DIM};margin:0">${esc(opts.footer)}</p>
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body></html>`;
-
   return {
     subject: body.subject,
-    html,
+    html: layout({
+      heading: opts.heading ?? body.subject,
+      bodyHtml: htmlParts.join("\n"),
+      siteName: opts.siteName,
+      footer: opts.footer,
+    }),
     text: [...textParts, opts.footer].join("\n").replace(/\n{3,}/g, "\n\n").trim(),
   };
 }
@@ -108,15 +95,15 @@ export async function sendEmail(params: {
     return { ok: true, skipped: true };
   }
 
-  const key = env("BREVO_API_KEY");
+  const apiKey = env("BREVO_API_KEY");
   const senderEmail = env("BREVO_SENDER_EMAIL");
   const senderName = env("BREVO_SENDER_NAME");
-  if (!key || !senderEmail) return { ok: false, error: "BREVO_API_KEY või BREVO_SENDER_EMAIL puudub" };
+  if (!apiKey || !senderEmail) return { ok: false, error: "BREVO_API_KEY või BREVO_SENDER_EMAIL puudub" };
 
   try {
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
-      headers: { "api-key": key, "content-type": "application/json", accept: "application/json" },
+      headers: { "Content-Type": "application/json", "api-key": apiKey, accept: "application/json" },
       body: JSON.stringify({
         sender: { email: senderEmail, name: senderName || undefined },
         to: [{ email: params.to }],
@@ -126,10 +113,8 @@ export async function sendEmail(params: {
       }),
     });
 
-    if (!res.ok) {
-      const body = (await res.text().catch(() => "")).slice(0, 300);
-      return { ok: false, error: `Brevo HTTP ${res.status} ${body}` };
-    }
+    const text = await res.text().catch(() => "");
+    if (!res.ok) return { ok: false, error: `Brevo HTTP ${res.status} ${text.slice(0, 300)}` };
     return { ok: true };
   } catch (e) {
     return { ok: false, error: String(e) };
@@ -143,14 +128,11 @@ export async function sendEmail(params: {
  * written before the newsletter moved: Raimo's readers live in Smaily, and
  * radicalsimplicity.eu signs people up there from both its newsletter form and
  * its contact form. A Brevo list here would split one readership across two
- * systems, so that a send would reach half of them. Raimo chose Smaily and the
- * same list his current readers are in. Recorded in DECISIONS.md.
+ * systems, so a send would reach half of them. Raimo chose Smaily and the same
+ * list his current readers are in. Recorded in DECISIONS.md.
  *
  * This is a request to opt in, not a subscription. Smaily answers it by mailing
- * the person a confirmation; they join the list only when they click it. Which
- * list, and what that confirmation says, is configured in Smaily rather than
- * here. `allikas` is the only thing this product adds, so Raimo can tell later
- * which readers arrived through the test.
+ * the person a confirmation; they join the list only when they click it.
  */
 const SMAILY_OPT_IN = "https://9ndeed0t.sendsmaily.net/api/opt-in/";
 

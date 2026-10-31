@@ -30,3 +30,14 @@ Kui sul pole nendele kaustadele ligipääsu, palu Raimol käivitada sind lisakau
   - **Jooned on peaaegu mustad juuksekarvad, mitte hall.** 1px #2B2B2B. See on brändi kõige iseloomulikum osa ja esimene asi, mille tüüpiline mall valesti teeb.
   - Stiilimine käib **Tailwind 3.4-ga**, sama versioon mis radical-simplicity's ja attfocus-v2-s, et Lovable'is tehtud disain tuleks siia ilma tõlkesammuta. Värvid on HSL-kanalid CSS-muutujates, loetakse `hsl(var(--x))` kaudu.
 - Commit'i sõnumid ja kood on inglise keeles, kasutajale nähtav sisu on eesti keeles.
+
+## AttFocus ja muud olemasolevad projektid
+
+Kui mõni asi on AttFocuses (või truresp'is, radical-simplicity's) juba olemas ja
+töötab, **tõsta see üle, ära kirjuta ümber**. Raimo viitab nendele projektidele
+just sellepärast. Kirjuta kommentaari, kust tõstetud ja mis teel muutus.
+
+Siiani üle tõstetud: `_shared/emailLayout.ts` (AttFocuse kirjakest, Outlookis
+läbi proovitud), `sendEmail` (AttFocuse `sendEmailBrevo`), `EMAIL_DISABLED`
+hädapidur, päevalehe kuju (`attfocus-v2/src/pages/TokenDaily.tsx`),
+`lib/functionsUrl.ts` (AttFocuse oma eeskujul).

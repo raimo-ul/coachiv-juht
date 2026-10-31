@@ -191,7 +191,11 @@ serve(async (req) => {
     if (site) {
       const mail = renderEmail(
         { subject: content.emails.report.subject, lines: content.emails.report.body },
-        { links: { report: `${site}${reportPath}` }, footer: content.emails.footer },
+        {
+          links: { report: `${site}${reportPath}` },
+          footer: content.emails.footer,
+          siteName: content.meta.siteName,
+        },
       );
       const sent = await sendEmail({ to: email, ...mail });
       if (!sent.ok) console.error("[submit-test] raporti kiri:", sent.error);

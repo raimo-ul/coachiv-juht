@@ -21,7 +21,7 @@ describe("renderEmail", () => {
   it("turns {reportButton:Label} into a link in both versions", () => {
     const out = renderEmail(
       { subject: "S", lines: ["Tere!", "{reportButton:Ava raport}"] },
-      { links: { report: "https://example.test/raport/abc" }, footer },
+      { links: { report: "https://example.test/raport/abc" }, footer, siteName: "Coachiva juhi test" },
     );
 
     expect(out.html).toContain("https://example.test/raport/abc");
@@ -32,7 +32,7 @@ describe("renderEmail", () => {
   it("drops a button whose link was not supplied rather than linking nowhere", () => {
     const out = renderEmail(
       { subject: "S", lines: ["Tere!", "{reportButton:Ava raport}"] },
-      { links: {}, footer },
+      { links: {}, footer, siteName: "Coachiva juhi test" },
     );
 
     expect(out.html).not.toContain("Ava raport");
@@ -42,7 +42,7 @@ describe("renderEmail", () => {
   it("escapes text coming from content", () => {
     const out = renderEmail(
       { subject: "S", lines: ["5 < 6 & nii edasi"] },
-      { links: {}, footer },
+      { links: {}, footer, siteName: "Coachiva juhi test" },
     );
     expect(out.html).toContain("5 &lt; 6 &amp; nii edasi");
     // The plain-text version is not HTML and keeps the characters as written.
@@ -52,7 +52,7 @@ describe("renderEmail", () => {
   it("carries the real report letter end to end", () => {
     const out = renderEmail(
       { subject: t.emails.report.subject, lines: t.emails.report.body },
-      { links: { report: "https://example.test/raport/tok" }, footer },
+      { links: { report: "https://example.test/raport/tok" }, footer, siteName: "Coachiva juhi test" },
     );
 
     expect(out.subject).toBe("Sinu coachiva juhi test");

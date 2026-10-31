@@ -141,8 +141,9 @@ serve(async (req) => {
       const mail = renderEmail(
         { subject: content.emails.final.subject, lines: content.emails.final.body },
         {
-          links: { final: `${site}/lopp/${e.final_token}`, retest: `${site}/test` },
+          links: { final: `${site}/lopp/${e.final_token}` },
           footer: content.emails.footer,
+          siteName: content.meta.siteName,
         },
       );
       const sent = await sendEmail({ to: p.email, ...mail });
