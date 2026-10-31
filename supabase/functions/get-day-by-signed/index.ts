@@ -8,7 +8,7 @@ import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 import { getContent } from "../_shared/content.ts";
-import { sign, verify } from "../_shared/signing.ts";
+import { verify } from "../_shared/signing.ts";
 import { env } from "../_shared/env.ts";
 
 const corsHeaders = {
@@ -65,23 +65,14 @@ serve(async (req) => {
 
   if (day.error || !day.data) return json(400, { error: content.answer.invalid });
 
-  // Every question gets its own freshly signed pair, so the page can offer the
-  // rest of the day without the reader going back to the email.
-  const questions = [];
-  for (let q = 1; q <= 6; q++) {
-    questions.push({
-      q,
-      text: content.daily.questions[`q${q}` as keyof typeof content.daily.questions],
-      answer: (day.data as Record<string, unknown>)[`q${q}`] as boolean | null,
-      yes: await sign({ e: payload.e, d: payload.d, q, v: 1 }),
-      no: await sign({ e: payload.e, d: payload.d, q, v: 0 }),
-    });
-  }
+  // Just the questions and what was said. The page keeps the answers in its
+  // own state and submits them together, so there is nothing per question to
+  // sign: the day link already proves who is answering.
+  const questions = [1, 2, 3, 4, 5, 6].map((q) => ({
+    q,
+    text: content.daily.questions[`q${q}` as keyof typeof content.daily.questions],
+    answer: (day.data as Record<string, unknown>)[`q${q}`] as boolean | null,
+  }));
 
-  return json(200, {
-    day: payload.d,
-    dayIndex: day.data.day_index,
-    clicked: payload.q,
-    questions,
-  });
+  return json(200, { day: payload.d, dayIndex: day.data.day_index, questions });
 });

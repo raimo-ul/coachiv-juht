@@ -31,8 +31,8 @@ verify_jwt = false
 [functions.dispatch-daily]
 verify_jwt = false
 
-# Reached from a signed link in an email.
-[functions.submit-answer]
+# Reached from the page a signed link opens.
+[functions.submit-day]
 verify_jwt = false
 
 # Reached from a signed link in an email.

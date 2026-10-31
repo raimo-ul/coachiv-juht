@@ -360,8 +360,9 @@
     "footer": "Alla minuti. Vastused näed lõpuraportis."
   },
   "answer": {
+    "submit": "Saada",
+    "submitting": "Salvestan…",
     "saved": "Salvestatud.",
-    "rest": "Vasta ka ülejäänud küsimustele:",
     "done": "Tänased vastused on olemas. Homseni!",
     "invalid": "See link ei kehti.",
     "closed": "Selle programmi vastamise aeg on läbi."
