@@ -48,6 +48,14 @@ function StartButton({ big = false }: { big?: boolean }) {
 export default function Home() {
   const beliefs = ["inimene", "suhe", "autonoomia"] as const;
   const actions = ["juhendamine", "voimestamine", "inspireerimine"] as const;
+
+  // One source for the six meanings: about.model.rows, which is also what the
+  // basis-page table prints. They were briefly held in two places, and the
+  // table kept showing the older wording after Raimo had rewritten them.
+  const meaningOf = (key: string) => {
+    const name = t.about.model.keys[key as keyof typeof t.about.model.keys];
+    return t.about.model.rows.find((r) => r[0] === name)?.[1] ?? "";
+  };
   const groups = [
     { label: t.home.model.beliefs, hint: t.home.model.beliefsHint, keys: beliefs, tone: "bg-bone" },
     { label: t.home.model.actions, hint: t.home.model.actionsHint, keys: actions, tone: "bg-background" },
@@ -112,7 +120,7 @@ export default function Home() {
                       <span className="display mt-1 text-xl text-muted-foreground">0{gi * 3 + i + 1}</span>
                       <div className="flex-1">
                         <h3 className="text-4xl md:text-5xl">{t.report.parts[key].name}</h3>
-                        <p className="mt-2 text-base">{t.home.model.meanings[key]}</p>
+                        <p className="mt-2 text-base">{meaningOf(key)}</p>
                       </div>
                     </div>
                   </div>

@@ -31,15 +31,7 @@
       ],
       "heading": "Coachiv juhtimine – võtmeuskumused ja võtmetegevused",
       "beliefsHint": "mida usud",
-      "actionsHint": "mida teed",
-      "meanings": {
-        "inimene": "Inimene on võimeline enamaks kui hetkel välja paistab",
-        "suhe": "Töötaja usaldus juhi vastu on coachiva juhtimise eeldus",
-        "autonoomia": "Inimene suudab end ise juhtida, kui tal on suurem kontroll oma valikute üle",
-        "juhendamine": "Ootuste kokkuleppimine, tagasiside korraldamine, kokkulepete kontroll",
-        "voimestamine": "Küsimine, kuulamine, otsus jääb inimesele",
-        "inspireerimine": "Arengu potentsiaali välja ütlemine, väljakutsete esitamine"
-      }
+      "actionsHint": "mida teed"
     },
     "eyebrow": "Enesehinnang juhile · 18 väidet",
     "heroCardLabel": "Sinu raport",
@@ -452,7 +444,7 @@
       "rows": [
         [
           "Inimene",
-          "Inimesed saavad areneda",
+          "Inimene on võimeline enamaks kui hetkel välja paistab",
           "Heslin, VandeWalle & Latham 2006; Heslin & VandeWalle 2008"
         ],
         [
@@ -462,12 +454,12 @@
         ],
         [
           "Autonoomia",
-          "Inimene suudab end ise juhtida, kui otsus on tema oma",
+          "Inimene suudab end ise juhtida, kui tal on suurem kontroll oma valikute üle",
           "Lawter, Kopelman & Prottas 2015; Gürbüz jt 2014; Slemp jt 2018"
         ],
         [
           "Juhendamine",
-          "Ootused, tagasiside, kokkulepete juurde tagasi tulemine",
+          "Ootuste kokkuleppimine, tagasiside korraldamine, kokkulepete kontroll",
           "Heslin jt 2006; Dahling jt 2016"
         ],
         [
@@ -477,10 +469,18 @@
         ],
         [
           "Inspireerimine",
-          "Arengu välja ütlemine, väljakutsed",
+          "Arengu potentsiaali välja ütlemine, väljakutsete esitamine",
           "Heslin jt 2006; Kierein & Gold 2000"
         ]
-      ]
+      ],
+      "keys": {
+        "inimene": "Inimene",
+        "suhe": "Suhe",
+        "autonoomia": "Autonoomia",
+        "juhendamine": "Juhendamine",
+        "voimestamine": "Võimestamine",
+        "inspireerimine": "Inspireerimine"
+      }
     },
     "limits": {
       "heading": "Mida test ei mõõda",
