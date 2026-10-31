@@ -110,15 +110,20 @@ serve(async (req) => {
 
     // Twelve links, two per question. Each carries its own meaning and its own
     // signature, so none of them needs a row anywhere.
-    const lines: string[] = [content.daily.intro, ""];
+    const lines: Array<string | {
+      question: string;
+      yes: { label: string; url: string };
+      no: { label: string; url: string };
+    }> = [content.daily.intro];
+
     for (let q = 1; q <= 6; q++) {
-      const text = questions[`q${q}` as keyof typeof questions];
       const yes = await sign({ e: e.id, d: today, q, v: 1 });
       const no = await sign({ e: e.id, d: today, q, v: 0 });
-      lines.push(text);
-      lines.push(`${content.daily.yes}: ${site}/v/${yes}`);
-      lines.push(`${content.daily.no}: ${site}/v/${no}`);
-      lines.push("");
+      lines.push({
+        question: questions[`q${q}` as keyof typeof questions],
+        yes: { label: content.daily.yes, url: `${site}/v/${yes}` },
+        no: { label: content.daily.no, url: `${site}/v/${no}` },
+      });
     }
     lines.push(content.daily.footer);
 

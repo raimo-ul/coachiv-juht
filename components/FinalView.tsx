@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import type { Content } from "@/lib/content";
 import { fill } from "@/lib/content";
 import { functionHeaders, functionUrl } from "@/lib/functionsUrl";
@@ -199,15 +198,12 @@ export function FinalView({ token, content }: { token: string; content: Content 
 
       <section className="bg-signal">
         <div className="mx-auto max-w-3xl px-5 py-16 md:py-20">
+          {/* No invitation to take the test again. Raimo's call: three weeks of
+              daily attention is the thing being sold, and following it with
+              "now do the quiz once more" makes the whole programme read as a
+              funnel back to its own front door. */}
           <p className="text-2xl leading-snug md:text-3xl">{t.closing}</p>
-          <Link
-            href="/test"
-            className="mt-8 inline-block border-2 border-rule bg-ink px-10 py-4 text-lg font-semibold text-background shadow-[5px_5px_0_0_var(--background)]"
-          >
-            {t.retestButton}
-          </Link>
-          <p className="mt-3 text-sm">{t.retestNote}</p>
-          <p className="mt-8 border-t-2 border-rule pt-6 text-sm">{t.contact}</p>
+          <p className="mt-10 border-t-2 border-rule pt-6 text-sm">{t.contact}</p>
         </div>
       </section>
     </Page>

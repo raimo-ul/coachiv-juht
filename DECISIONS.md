@@ -4,6 +4,8 @@ Iga otsus, mida SPEC.md ei kata või mis sellest erineb. Uusim on üleval.
 
 | Kuupäev | Otsus | Põhjus | Kes |
 |---|---|---|---|
+| 2026-10-31 | Lõpuraport ei paku enam uut testi, ei kirjas ega lehel | Raimo otsus. SPEC 11 ütleb, et kirjas on link uuele testile. Kolm nädalat igapäevast tähelepanu on see, mida müüakse; sellele järgnev „tee nüüd test uuesti" muudab kogu programmi lehtriks tagasi oma esiukse juurde | Raimo |
+| 2026-10-31 | Päevakirja kuus küsimust on nupupaarid, mitte tekstina trükitud URL-id | Esimene päriselt saadetud kiri näitas kaksteist korda „Jah: http://…/v/eyJlIjoiNzk5…", neli rida base64 vastuse kohta. Aadress kuulub sõna taha, selleks e-posti klient ongi | Claude |
 | 2026-10-31 | Vastuselingid on HMAC-allkirjastatud, mitte tabelis hoitavad tokenid | SPEC 10 nõuab HMAC-i; AttFocus kasutab juhutokeneid tabelis. Siin on 12 linki päevas × 15 päeva × iga osaleja kohta, kõik ühekordsed. Tokenitabel tähendaks 180 rida inimese kohta, millest igaüks loetakse korra | Claude |
 | 2026-10-31 | Stripe'i SDK asemel otsene fetch ja käsitsi tehtud webhooki allkirjakontroll | Node SDK `constructEvent` on sünkroonne ja ei saa Denos töötada. Kogu vajadus on üks sessiooni loomine, üks koodiotsing ja üks allkirjakontroll, mis on vähem koodi kui SDK ühendamine | Claude |
 | 2026-10-31 | Lõpuraporti lõike ei kirjutata cronis, vaid `get-final-by-token` sees esimesel vaatamisel | Mõõdetud: üks kutse võtab 56 sekundit ja cron käib programme järjest. Kolm samal tunnil lõppevat programmi viiks funktsiooni ajalimiidist üle ja viimane inimene ei saaks raportit kunagi. Cron võtab nüüd 2 sekundit | Claude |

@@ -329,8 +329,6 @@
       "daysHigher": "Kolme nädala jooksul jõudis see tegevus sinu päeva sagedamini, kui testis hindasid. Mõtle, kas see muutus programmi ajal või hindasid end testis rangelt."
     },
     "closing": "Kolm nädalat näitasid, kuhu sinu tähelepanu läheb. Millist neist kuuest küsimusest tahad hoida edasi ka ilma kirjata?",
-    "retestButton": "Tee test uuesti",
-    "retestNote": "Tasuta, viis minutit.",
     "contact": "Kui tahad minna sügavamale, kirjuta: raimo@raimoulavere.com"
   },
   "daily": {
@@ -399,8 +397,6 @@
         "Tere!",
         "Kolm nädalat on läbi. Sinu lõpuraport on siin:",
         "{finalButton:Ava raport}",
-        "Kui tahad näha, mis on muutunud, tee test uuesti. See on tasuta ja võtab viis minutit.",
-        "{retestButton:Tee test}",
         "Kui tahad minna sügavamale, kirjuta mulle.",
         "Raimo"
       ]
