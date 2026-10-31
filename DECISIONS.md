@@ -4,6 +4,7 @@ Iga otsus, mida SPEC.md ei kata või mis sellest erineb. Uusim on üleval.
 
 | Kuupäev | Otsus | Põhjus | Kes |
 |---|---|---|---|
+| 2026-10-31 | Jaluses ei ole linki alusele, ainult privaatsusele | SPEC 14 ütleb, et igas jaluses on mõlemad. Raimo otsus. Alus jääb kättesaadavaks esilehelt („Vaata teadust testi taga →“) | Raimo |
 | 2026-10-31 | Lovable'i disain toodi üle tervikuna, aga 16 väidet 18-st ja kõik kuus allikarida jäeti maha | Lovable märkis need ise koodis PLACEHOLDER-iks. Kolm ümberpööratud uskumuse väidet olid asendatud positiivselt sõnastatutega, mis oleks pööranud kõigi kolme uskumuse skoori tagurpidi ilma et numbrid seda välja näitaksid. Allikad olid asendatud teiste päris töödega (Dweck, Deci & Ryan jt), mis ei ole need, millele mudel tugineb | Claude |
 | 2026-10-31 | Tailwind 3.4 asemel 4.x | Lovable'i väljund on Tailwind 4 CSS-põhise @theme konfiga. Eile valisin 3.4 eeldusel, et Lovable annab v3; eeldus oli vale | Claude |
 | 2026-10-31 | Skaala: kuus numbrit reas, valitud vastuse sõna ilmub alla | Lovable'i lahendus, parem kui minu virn kuuest laiast nupust. Telefonis on korraga ekraanil ainult üks pikk eestikeelne sõna, mitte kuus | Lovable |

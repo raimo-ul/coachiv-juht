@@ -37,11 +37,10 @@ export function Footer() {
   return (
     <footer className="mt-auto border-t-2 border-rule bg-bone">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-10 text-sm md:flex-row md:items-end md:justify-between">
+        {/* SPEC 14 asks for a link to the basis page here too. Raimo took it
+            out: the home page already sends people there, and a footer with one
+            link reads as a footer rather than as a menu. */}
         <div className="flex gap-3">
-          <Link href="/alus" className="underline decoration-2 underline-offset-4 hover:decoration-signal">
-            {t.footer.about}
-          </Link>
-          <span aria-hidden>·</span>
           <Link href="/privaatsus" className="underline decoration-2 underline-offset-4 hover:decoration-signal">
             {t.footer.privacy}
           </Link>
