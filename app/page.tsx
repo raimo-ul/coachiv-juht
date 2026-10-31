@@ -4,6 +4,7 @@ import { getContent } from "@/lib/content";
 import { Page } from "@/components/site";
 import { ResultRow } from "@/components/ResultRow";
 import { PromoCapture } from "@/components/PromoCapture";
+import { LinkedText } from "@/components/LinkedText";
 
 const t = getContent();
 
@@ -180,6 +181,14 @@ export default function Home() {
             <p className="text-lg leading-relaxed">{t.programme.body}</p>
             <p className="display mt-6 text-4xl">{t.programme.price}</p>
             <p className="mt-2 text-sm">{t.programme.note}</p>
+            <p className="mt-6 border-t-2 border-rule pt-4 text-sm">
+              <LinkedText
+                text={t.programme.groupNote}
+                label={t.about.companies.contact}
+                href={`mailto:${t.about.companies.contact}`}
+                className="font-semibold underline underline-offset-4"
+              />
+            </p>
           </div>
         </div>
       </section>

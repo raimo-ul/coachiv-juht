@@ -7,6 +7,7 @@ import { Page } from "@/components/site";
 import { ResultRow } from "@/components/ResultRow";
 import { AiParagraph } from "@/components/AiParagraph";
 import { ContactOptIn } from "@/components/ContactOptIn";
+import { LinkedText } from "@/components/LinkedText";
 
 type Level = "low" | "mid" | "high";
 type PartKey = keyof Content["report"]["parts"];
@@ -153,6 +154,14 @@ export function ReportView({ token, content }: { token: string; content: Content
                 {t.cta.button}
               </button>
               <p className="mt-4 text-sm">{t.cta.codeNote}</p>
+              <p className="mt-4 text-sm">
+                <LinkedText
+                  text={content.programme.groupNote}
+                  label={content.about.companies.contact}
+                  href={`mailto:${content.about.companies.contact}`}
+                  className="font-semibold underline underline-offset-4"
+                />
+              </p>
             </>
           )}
           <ContactOptIn token={token} content={content} />

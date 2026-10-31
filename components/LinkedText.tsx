@@ -9,16 +9,34 @@ import Link from "next/link";
  *
  * This only locates a label that is already in the sentence. If the label is
  * not there, the sentence renders exactly as written and nothing is lost.
+ *
+ * mailto: and https: get a plain anchor; next/link is for routes within the
+ * app and would prefetch an address that is not a page.
  */
-export function LinkedText({ text, label, href }: { text: string; label: string; href: string }) {
+export function LinkedText({
+  text, label, href, className,
+}: {
+  text: string;
+  label: string;
+  href: string;
+  className?: string;
+}) {
   const at = text.lastIndexOf(label);
   if (at === -1) return <>{text}</>;
 
+  const before = text.slice(0, at);
+  const after = text.slice(at + label.length);
+  const external = !href.startsWith("/");
+
   return (
     <>
-      {text.slice(0, at)}
-      <Link href={href}>{label}</Link>
-      {text.slice(at + label.length)}
+      {before}
+      {external ? (
+        <a href={href} className={className}>{label}</a>
+      ) : (
+        <Link href={href} className={className}>{label}</Link>
+      )}
+      {after}
     </>
   );
 }
