@@ -314,19 +314,30 @@
   },
   "final": {
     "title": "Sinu kolm nädalat",
-    "heading": "Kui sageli need tegevused sinu päeva jõudsid",
-    "perQuestion": "{yes} päeval {answered} vastatud päevast",
-    "weeksHeading": "Esimene ja viimane nädal",
-    "weeksNote": "Nädala andmeid on vähe, seega vaata suunda.",
-    "compareHeading": "Võrdlus testiga",
-    "aiHeadings": {
-      "pattern": "Muster",
-      "change": "Muutus",
-      "compare": "Võrdlus testiga"
+    "eyebrow": "Kolm nädalat",
+    "consistency": {
+      "heading": "Sinu järjepidevus",
+      "intro": "Vastasid {answered} tööpäeval {workdays}-st.",
+      "meaning": "See näitab, kui järjepidevalt sa igapäevase küsimuse juurde tulid, mitte seda, kas sul läks hästi.",
+      "chart": "Vastatud päevad ja „jah“-ide arv nendel päevadel"
     },
-    "compare": {
-      "testHigher": "Testis hindasid seda tegevust sagedasemaks, kui see kolme nädala jooksul sinu päeva jõudis. See on tavaline, sest igapäevane märkamine on täpsem kui meenutamine.",
-      "daysHigher": "Kolme nädala jooksul jõudis see tegevus sinu päeva sagedamini, kui testis hindasid. Mõtle, kas see muutus programmi ajal või hindasid end testis rangelt."
+    "strongest": {
+      "heading": "Kõige sagedasemad „JAH“ signaalid",
+      "framing": "See kirjeldab, mis jõudis sinu päeva kõige sagedamini, mitte hinnangut sinu edukusele."
+    },
+    "weakest": {
+      "heading": "Kõige sagedasem „EI“ signaal",
+      "note": "See ei tähenda automaatselt probleemi. Olukorda võis ka mitte tekkida või ei sobi küsimus iga päeva juurde."
+    },
+    "perQuestion": "{yes} päeval {answered} vastatud päevast",
+    "ai": {
+      "heading": "Mida sinu kolm nädalat näitavad",
+      "loading": "Kirjutan kokkuvõtet…",
+      "signature": "— kirjutatud sinu vastuste põhjal"
+    },
+    "notMeaning": {
+      "heading": "Mida see ei tähenda",
+      "text": "See ei ole hinne ega võrdlus teiste juhtidega, ega ka mõõt sellest, kas sa kolme nädalaga paremaks said. Kolm nädalat juhtisid tähelepanu kuuele tegevusele. Raport näitab, kuhu see tähelepanu läks."
     },
     "closing": "Kolm nädalat näitasid, kuhu sinu tähelepanu läheb. Millist neist kuuest küsimusest tahad hoida edasi ka ilma kirjata?",
     "contact": "Kui tahad minna sügavamale, kirjuta: raimo@raimoulavere.com"

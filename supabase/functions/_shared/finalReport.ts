@@ -1,14 +1,25 @@
-// SPEC 11: turning fifteen days of yes and no into a final report.
+// What three weeks of yes and no add up to.
+//
+// Built on AttFocus's personal report, which is the right model and which I had
+// misread. That report compares nothing with anything. It says how consistently
+// someone answered, which questions were most often true, and which was least
+// often true, and it says in its own words that none of this is a judgement:
+//
+//   "See näitab, kui järjepidevalt sa igapäevast kontrolli tegid, mitte seda,
+//    kas sul läks hästi."
+//   "See kirjeldab, mis oli sinu jaoks kõige sagedamini tõene, mitte hinnang
+//    sinu edukusele."
+//
+// The sprint directs attention. It does not measure development. So there is no
+// first-week-against-last-week here and no comparison with the test score,
+// though SPEC 11 asks for both: a number that moved would be read as progress
+// or as failure, and fifteen days of self-report cannot carry either meaning.
 //
 // Pure arithmetic, no database and no network, so the tests can walk every
-// awkward case: a day nobody answered, a question answered on some days and
-// not others, a programme with almost nothing in it.
+// awkward case.
 //
 // Unanswered is not no. A null means the question never reached the day, and
-// counting it as a no would quietly punish someone for being on holiday. Every
-// percentage below is out of the days that were actually answered.
-
-import type { PartKey } from "./content.ts";
+// counting it as a no would quietly punish someone for being away.
 
 export type DayRow = {
   day: string;
@@ -17,22 +28,25 @@ export type DayRow = {
   q4: boolean | null; q5: boolean | null; q6: boolean | null;
 };
 
-export type QuestionResult = { q: number; yes: number; answered: number };
-
-/** SPEC 11: q1+q2 juhendamine, q3+q4 voimestamine, q5+q6 inspireerimine. */
-export const ACTION_OF_QUESTION: Record<number, PartKey> = {
-  1: "juhendamine", 2: "juhendamine",
-  3: "voimestamine", 4: "voimestamine",
-  5: "inspireerimine", 6: "inspireerimine",
+export type QuestionResult = {
+  q: number;
+  yes: number;
+  answered: number;
+  /** Share of answered days that were yes, 0..1. Null when nothing was answered. */
+  yesRate: number | null;
 };
 
 export type FinalNumbers = {
+  /** SPEC 11 and AttFocus both lead with this: how many days, out of how many. */
+  workdays: number;
   answeredDays: number;
+  /** Per day, for the consistency chart: how many of the six were yes. */
+  consistency: Array<{ day: string; dayIndex: number; yesCount: number; answered: boolean }>;
   questions: QuestionResult[];
-  actions: Array<{ key: PartKey; yes: number; answered: number; pct: number | null }>;
-  weeks: { first: QuestionResult[]; last: QuestionResult[] };
-  /** Null when a part has no answered days at all. */
-  levels: Record<PartKey, "low" | "mid" | "high" | null>;
+  /** The two most often true. AttFocus shows exactly two. */
+  strongest: QuestionResult[];
+  /** The one least often true, or null when nothing was answered. */
+  weakest: QuestionResult | null;
 };
 
 function tally(rows: DayRow[], q: number): QuestionResult {
@@ -43,78 +57,35 @@ function tally(rows: DayRow[], q: number): QuestionResult {
     answered += 1;
     if (v) yes += 1;
   }
-  return { q, yes, answered };
+  return { q, yes, answered, yesRate: answered ? yes / answered : null };
 }
 
-/**
- * SPEC 11: under 30% is low, 30 to 59 is mid, 60 and over is high.
- *
- * This is the mapping that lets three weeks of behaviour be set beside a test
- * taken before them. SPEC calls it provisional and it is recorded in
- * DECISIONS.md as such: the boundaries are a reasonable first guess, not a
- * measured threshold, and they should move once there are real distributions
- * to look at.
- */
-export function levelFromPct(pct: number | null): "low" | "mid" | "high" | null {
-  if (pct === null) return null;
-  if (pct < 30) return "low";
-  if (pct < 60) return "mid";
-  return "high";
-}
+export function computeFinal(rows: DayRow[], workdays = 15): FinalNumbers {
+  const answeredOn = (r: DayRow) =>
+    [1, 2, 3, 4, 5, 6].some((q) => (r[`q${q}` as keyof DayRow] as boolean | null) !== null);
 
-export function computeFinal(rows: DayRow[]): FinalNumbers {
-  const answeredDays = rows.filter((r) =>
-    [1, 2, 3, 4, 5, 6].some((q) => (r[`q${q}` as keyof DayRow] as boolean | null) !== null)
-  ).length;
+  const consistency = rows.map((r) => ({
+    day: r.day,
+    dayIndex: r.day_index,
+    yesCount: [1, 2, 3, 4, 5, 6]
+      .filter((q) => (r[`q${q}` as keyof DayRow] as boolean | null) === true).length,
+    answered: answeredOn(r),
+  }));
 
   const questions = [1, 2, 3, 4, 5, 6].map((q) => tally(rows, q));
+  const withAnswers = questions.filter((q) => q.yesRate !== null);
 
-  const actions = (["juhendamine", "voimestamine", "inspireerimine"] as PartKey[]).map((key) => {
-    const qs = questions.filter((r) => ACTION_OF_QUESTION[r.q] === key);
-    const yes = qs.reduce((a, r) => a + r.yes, 0);
-    const answered = qs.reduce((a, r) => a + r.answered, 0);
-    return { key, yes, answered, pct: answered ? (yes / answered) * 100 : null };
-  });
-
-  // SPEC 11: days 1 to 5 against days 11 to 15.
-  const first = rows.filter((r) => r.day_index >= 1 && r.day_index <= 5);
-  const last = rows.filter((r) => r.day_index >= 11 && r.day_index <= 15);
-
-  const levels = {} as Record<PartKey, "low" | "mid" | "high" | null>;
-  for (const a of actions) levels[a.key] = levelFromPct(a.pct);
+  // Sorted by how often each was true. Ties keep question order, so the same
+  // data always produces the same report.
+  const ranked = [...withAnswers].sort((a, b) =>
+    (b.yesRate as number) - (a.yesRate as number) || a.q - b.q);
 
   return {
-    answeredDays,
+    workdays,
+    answeredDays: consistency.filter((c) => c.answered).length,
+    consistency,
     questions,
-    actions,
-    weeks: {
-      first: [1, 2, 3, 4, 5, 6].map((q) => tally(first, q)),
-      last: [1, 2, 3, 4, 5, 6].map((q) => tally(last, q)),
-    },
-    levels,
+    strongest: ranked.slice(0, 2),
+    weakest: ranked.length ? ranked[ranked.length - 1] : null,
   };
-}
-
-/**
- * How the three weeks sit against the test, per action.
- *
- * Levels are compared, never the numbers: the test is a 1 to 6 self-rating and
- * this is a percentage of days, so the two have nothing in common except the
- * three bands they both fall into. Subtracting one from the other would be the
- * kind of comparison that looks precise and means nothing.
- */
-export function compareWithTest(
-  final: FinalNumbers,
-  testLevels: Record<PartKey, "low" | "mid" | "high">,
-): Array<{ key: PartKey; direction: "testHigher" | "daysHigher" | "same" }> {
-  const order = { low: 0, mid: 1, high: 2 } as const;
-  const out: Array<{ key: PartKey; direction: "testHigher" | "daysHigher" | "same" }> = [];
-
-  for (const { key } of final.actions) {
-    const days = final.levels[key];
-    if (!days) continue;   // nothing answered for this one
-    const diff = order[testLevels[key]] - order[days];
-    out.push({ key, direction: diff > 0 ? "testHigher" : diff < 0 ? "daysHigher" : "same" });
-  }
-  return out;
 }

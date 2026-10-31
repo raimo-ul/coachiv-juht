@@ -1,10 +1,13 @@
 // The final report is the last thing a person sees and the one place where a
-// quiet arithmetic error would be invisible: nobody can check a percentage of
-// fifteen days in their head. So the cases are written out, with the numbers
-// worked by hand in the comments.
+// quiet arithmetic error would be invisible: nobody checks a count of fifteen
+// days in their head. The numbers below are worked out in the comments.
+//
+// Note what is not tested, because it is no longer computed: there is no
+// before-and-after and no comparison with the test. The sprint directs
+// attention; it does not measure development.
 
 import { describe, expect, it } from "vitest";
-import { compareWithTest, computeFinal, levelFromPct, type DayRow } from "./finalReport.ts";
+import { computeFinal, type DayRow } from "./finalReport.ts";
 
 /** A day where every question got the same answer. */
 function day(index: number, value: boolean | null): DayRow {
@@ -15,126 +18,77 @@ function day(index: number, value: boolean | null): DayRow {
   };
 }
 
-describe("levelFromPct", () => {
-  it("uses the boundaries SPEC 11 names", () => {
-    expect(levelFromPct(0)).toBe("low");
-    expect(levelFromPct(29.9)).toBe("low");
-    expect(levelFromPct(30)).toBe("mid");
-    expect(levelFromPct(59.9)).toBe("mid");
-    expect(levelFromPct(60)).toBe("high");
-    expect(levelFromPct(100)).toBe("high");
-  });
-
-  it("has no level when nothing was answered", () => {
-    expect(levelFromPct(null)).toBeNull();
-  });
-});
-
 describe("computeFinal", () => {
   it("counts fifteen days of yes", () => {
-    const rows = Array.from({ length: 15 }, (_, i) => day(i + 1, true));
-    const f = computeFinal(rows);
+    const f = computeFinal(Array.from({ length: 15 }, (_, i) => day(i + 1, true)));
 
     expect(f.answeredDays).toBe(15);
-    expect(f.questions.every((q) => q.yes === 15 && q.answered === 15)).toBe(true);
-    // Each action is two questions: 30 of 30.
-    expect(f.actions.every((a) => a.yes === 30 && a.answered === 30 && a.pct === 100)).toBe(true);
-    expect(f.levels.juhendamine).toBe("high");
+    expect(f.workdays).toBe(15);
+    expect(f.questions.every((q) => q.yes === 15 && q.answered === 15 && q.yesRate === 1)).toBe(true);
+    expect(f.consistency.every((c) => c.yesCount === 6 && c.answered)).toBe(true);
   });
 
   it("does not count an unanswered day as a no", () => {
-    // Ten answered yes, five never opened. 100% of what was answered, not 67%.
-    const rows = [
+    // Ten answered yes, five never opened. Every question is 10 of 10, not
+    // 10 of 15: a day away is not a day of noes.
+    const f = computeFinal([
       ...Array.from({ length: 10 }, (_, i) => day(i + 1, true)),
       ...Array.from({ length: 5 }, (_, i) => day(i + 11, null)),
-    ];
-    const f = computeFinal(rows);
+    ]);
 
     expect(f.answeredDays).toBe(10);
-    expect(f.actions[0].answered).toBe(20);   // 10 days x 2 questions
-    expect(f.actions[0].pct).toBe(100);
-    expect(f.levels.juhendamine).toBe("high");
+    expect(f.questions[0]).toMatchObject({ yes: 10, answered: 10, yesRate: 1 });
+    expect(f.consistency[14]).toMatchObject({ answered: false, yesCount: 0 });
   });
 
-  it("handles a question answered on only some days", () => {
-    // q1 answered on three days, yes twice. q2 never answered.
-    const rows: DayRow[] = [
-      { day: "2026-11-02", day_index: 1, q1: true,  q2: null, q3: null, q4: null, q5: null, q6: null },
-      { day: "2026-11-03", day_index: 2, q1: false, q2: null, q3: null, q4: null, q5: null, q6: null },
-      { day: "2026-11-04", day_index: 3, q1: true,  q2: null, q3: null, q4: null, q5: null, q6: null },
-    ];
-    const f = computeFinal(rows);
-
-    expect(f.questions[0]).toEqual({ q: 1, yes: 2, answered: 3 });
-    expect(f.questions[1]).toEqual({ q: 2, yes: 0, answered: 0 });
-
-    // juhendamine is q1 and q2 together: 2 of 3, because q2 contributes nothing.
-    expect(f.actions[0]).toMatchObject({ key: "juhendamine", yes: 2, answered: 3 });
-    expect(f.actions[0].pct).toBeCloseTo(66.67, 1);
-    expect(f.levels.juhendamine).toBe("high");
-  });
-
-  it("leaves a part without a level when none of its days were answered", () => {
-    const rows = Array.from({ length: 15 }, (_, i) => ({
-      ...day(i + 1, null), q1: true, q2: true,   // only juhendamine answered
+  it("ranks the two most often true and the one least often true", () => {
+    // Over ten days:
+    //   q1 yes  9  → 0,9   q2 yes 8 → 0,8   q3 yes 5 → 0,5
+    //   q4 yes  2  → 0,2   q5 yes 7 → 0,7   q6 yes 1 → 0,1
+    const rows: DayRow[] = Array.from({ length: 10 }, (_, i) => ({
+      day: `2026-11-${String(i + 2).padStart(2, "0")}`,
+      day_index: i + 1,
+      q1: i < 9, q2: i < 8, q3: i < 5, q4: i < 2, q5: i < 7, q6: i < 1,
     }));
-    const f = computeFinal(rows);
 
-    expect(f.levels.juhendamine).toBe("high");
-    expect(f.levels.voimestamine).toBeNull();
-    expect(f.actions[1].pct).toBeNull();
+    const f = computeFinal(rows);
+    expect(f.strongest.map((q) => q.q)).toEqual([1, 2]);
+    expect(f.weakest?.q).toBe(6);
+    expect(f.weakest?.yes).toBe(1);
   });
 
-  it("splits the first and last week by day index, not by date", () => {
-    // Days 1-5 all yes, 6-10 all no, 11-15 all yes.
-    const rows = [
-      ...Array.from({ length: 5 }, (_, i) => day(i + 1, true)),
-      ...Array.from({ length: 5 }, (_, i) => day(i + 6, false)),
-      ...Array.from({ length: 5 }, (_, i) => day(i + 11, true)),
-    ];
-    const f = computeFinal(rows);
+  it("breaks a tie by question order, so the same data gives the same report", () => {
+    const rows: DayRow[] = Array.from({ length: 4 }, (_, i) => ({
+      day: `2026-11-0${i + 2}`,
+      day_index: i + 1,
+      q1: true, q2: true, q3: true, q4: false, q5: false, q6: false,
+    }));
 
-    expect(f.weeks.first[0]).toEqual({ q: 1, yes: 5, answered: 5 });
-    expect(f.weeks.last[0]).toEqual({ q: 1, yes: 5, answered: 5 });
-    // The middle week is in the totals but in neither comparison window.
-    expect(f.questions[0]).toEqual({ q: 1, yes: 10, answered: 15 });
+    const f = computeFinal(rows);
+    expect(f.strongest.map((q) => q.q)).toEqual([1, 2]);
+    expect(f.weakest?.q).toBe(6);
+  });
+
+  it("leaves a question out of the ranking when it was never answered", () => {
+    // q1 and q2 answered, the rest never. Only those two can be ranked, so the
+    // same question is both the most and the least often true.
+    const rows: DayRow[] = Array.from({ length: 5 }, (_, i) => ({
+      day: `2026-11-0${i + 2}`,
+      day_index: i + 1,
+      q1: true, q2: i < 2, q3: null, q4: null, q5: null, q6: null,
+    }));
+
+    const f = computeFinal(rows);
+    expect(f.strongest.map((q) => q.q)).toEqual([1, 2]);
+    expect(f.weakest?.q).toBe(2);
+    expect(f.questions[2].yesRate).toBeNull();
   });
 
   it("survives a programme with nothing in it", () => {
     const f = computeFinal([]);
     expect(f.answeredDays).toBe(0);
-    expect(f.actions.every((a) => a.pct === null)).toBe(true);
-    expect(Object.values(f.levels).every((l) => l === null)).toBe(true);
-  });
-});
-
-describe("compareWithTest", () => {
-  const test = { juhendamine: "high", voimestamine: "mid", inspireerimine: "low" } as const;
-
-  it("reports which side sits higher, by level", () => {
-    // juhendamine 20%  → low   against test high → the test said more
-    // voimestamine 50% → mid   against test mid  → the same
-    // inspireerimine 80% → high against test low → the days said more
-    const rows: DayRow[] = Array.from({ length: 10 }, (_, i) => ({
-      day: `2026-11-${String(i + 2).padStart(2, "0")}`,
-      day_index: i + 1,
-      q1: i < 2, q2: i < 2,      // 2 of 10 → 20%
-      q3: i < 5, q4: i < 5,      // 5 of 10 → 50%
-      q5: i < 8, q6: i < 8,      // 8 of 10 → 80%
-    }));
-
-    const f = computeFinal(rows);
-    expect(f.levels).toEqual({ juhendamine: "low", voimestamine: "mid", inspireerimine: "high" });
-
-    expect(compareWithTest(f, { ...test })).toEqual([
-      { key: "juhendamine", direction: "testHigher" },
-      { key: "voimestamine", direction: "same" },
-      { key: "inspireerimine", direction: "daysHigher" },
-    ]);
-  });
-
-  it("says nothing about a part with no answered days", () => {
-    const f = computeFinal([]);
-    expect(compareWithTest(f, { ...test })).toEqual([]);
+    expect(f.strongest).toEqual([]);
+    expect(f.weakest).toBeNull();
+    expect(f.questions.every((q) => q.yesRate === null)).toBe(true);
   });
 });

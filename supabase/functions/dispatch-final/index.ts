@@ -12,8 +12,7 @@ import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 import { getContent } from "../_shared/content.ts";
-import { computeFinal, compareWithTest, type DayRow } from "../_shared/finalReport.ts";
-import { scoreTest } from "../_shared/scoring.ts";
+import { computeFinal, type DayRow } from "../_shared/finalReport.ts";
 import { renderEmail, sendEmail } from "../_shared/email.ts";
 import { localDate, localHour } from "../_shared/workdays.ts";
 import { env } from "../_shared/env.ts";
@@ -97,35 +96,13 @@ serve(async (req) => {
 
       const rows = (days.data ?? []) as DayRow[];
       const numbers = computeFinal(rows);
-
-      // The test that the programme was bought from, so the comparison is
-      // against what this person said before they started.
-      const test = await supabase
-        .from("tests")
-        .select("answers, locale")
-        .eq("id", e.test_id)
-        .maybeSingle();
-
       const content = getContent(p.locale);
-      let comparison: ReturnType<typeof compareWithTest> = [];
-      let testLevels: Record<string, string> = {};
 
-      if (test.data) {
-        const scored = scoreTest(test.data.answers as Record<string, number>, test.data.locale as string);
-        testLevels = scored.levels;
-        comparison = compareWithTest(numbers, scored.levels as never);
-      }
-
-      // The three paragraphs are not written here. One of them takes around
-      // 56 seconds, measured, and this loop is sequential: three programmes
-      // ending in the same hour would put the function past its wall clock and
-      // the last person would never get a report. get-final-by-token writes
-      // them on first view instead, claiming the row so two open tabs produce
-      // one set. Same answer as the test report, for the same reason.
+      // No comparison with the test and no first-week-against-last. The sprint
+      // directs attention; it does not measure development, and a number that
+      // moved would be read as progress or as failure. See finalReport.ts.
       const report = {
         numbers,
-        comparison,
-        testLevels,
         ai: null,
         aiStatus: "pending",
         generatedAt: new Date().toISOString(),

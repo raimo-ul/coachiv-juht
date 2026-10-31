@@ -17,7 +17,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 import { getContent } from "../_shared/content.ts";
 import { looksLikeToken } from "../_shared/tokens.ts";
-import { writeFinalParagraphs } from "../_shared/ai.ts";
+import { writeFinalParagraph } from "../_shared/ai.ts";
 import { env } from "../_shared/env.ts";
 
 const corsHeaders = {
@@ -96,23 +96,30 @@ serve(async (req) => {
 
   const content = getContent();
   const numbers = report.numbers as {
-    questions: unknown;
-    weeks: unknown;
+    workdays: number;
     answeredDays: number;
+    questions: Array<{ q: number; yes: number; answered: number; yesRate: number | null }>;
+    strongest: Array<{ q: number; yes: number; answered: number }>;
+    weakest: { q: number; yes: number; answered: number } | null;
   };
 
-  const ai = await writeFinalParagraphs({
-    questions: content.daily.questions,
-    perQuestion: numbers.questions,
-    weeks: numbers.weeks,
+  // Only what the paragraph may describe: the counts and the question texts.
+  // No test scores, because there is nothing here to compare them against.
+  const q = (n: number) =>
+    content.daily.questions[`q${n}` as keyof typeof content.daily.questions];
+
+  const ai = await writeFinalParagraph({
+    workdays: numbers.workdays,
     answeredDays: numbers.answeredDays,
-    testLevels: report.testLevels ?? {},
+    perQuestion: numbers.questions.map((x) => ({ ...x, text: q(x.q) })),
+    strongest: numbers.strongest.map((x) => ({ ...x, text: q(x.q) })),
+    weakest: numbers.weakest ? { ...numbers.weakest, text: q(numbers.weakest.q) } : null,
   });
 
   const finished = {
     ...report,
-    ai,
-    aiStatus: ai ? "done" : "failed",
+    ai: ai.status === "done" ? ai.text : null,
+    aiStatus: ai.status === "done" ? "done" : "failed",
     aiStartedAt: undefined,
   };
 

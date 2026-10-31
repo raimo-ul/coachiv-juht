@@ -6,34 +6,40 @@ import { fill } from "@/lib/content";
 import { functionHeaders, functionUrl } from "@/lib/functionsUrl";
 import { Page } from "@/components/site";
 
-type PartKey = keyof Content["report"]["parts"];
-type QuestionResult = { q: number; yes: number; answered: number };
+type QuestionResult = { q: number; yes: number; answered: number; yesRate: number | null };
 
 type Final = {
   period: { start: string; end: string };
   numbers: {
+    workdays: number;
     answeredDays: number;
+    consistency: Array<{ day: string; dayIndex: number; yesCount: number; answered: boolean }>;
     questions: QuestionResult[];
-    actions: Array<{ key: PartKey; yes: number; answered: number; pct: number | null }>;
-    weeks: { first: QuestionResult[]; last: QuestionResult[] };
+    strongest: QuestionResult[];
+    weakest: QuestionResult | null;
   };
-  comparison: Array<{ key: PartKey; direction: "testHigher" | "daysHigher" | "same" }>;
-  ai: { pattern: string; change: string; compare: string; question: string } | null;
+  ai: string | null;
   aiStatus?: "pending" | "generating" | "done" | "failed";
 };
 
 /** SPEC 11: below five answered days the picture is called approximate. */
 const FEW_DAYS = 5;
 
+/**
+ * The final report, built on AttFocus's personal report.
+ *
+ * Three blocks and no comparison: how consistently they came back, which
+ * questions reached the day most often, and which reached it least. Each one
+ * says in its own words that it is not a judgement, because the obvious
+ * reading of a number like 9 of 15 is "I failed", and that is not what it
+ * means. The sprint directed attention for three weeks; this shows where the
+ * attention went.
+ */
 export function FinalView({ token, content }: { token: string; content: Content }) {
   const t = content.final;
   const [data, setData] = useState<Final | null>(null);
   const [missing, setMissing] = useState(false);
 
-  // The numbers arrive at once. The three written paragraphs are produced on
-  // the first view and take about a minute, so this keeps asking while they
-  // are on the way. The report is readable throughout; only the last section
-  // is pending.
   useEffect(() => {
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout>;
@@ -52,9 +58,7 @@ export function FinalView({ token, content }: { token: string; content: Content 
         setData(json);
 
         const waiting = json.aiStatus === "pending" || json.aiStatus === "generating";
-        if (waiting && Date.now() - startedAt < 150_000) {
-          timer = setTimeout(load, 4000);
-        }
+        if (waiting && Date.now() - startedAt < 150_000) timer = setTimeout(load, 4000);
       } catch {
         if (!cancelled) setMissing(true);
       }
@@ -75,15 +79,18 @@ export function FinalView({ token, content }: { token: string; content: Content 
   }
   if (!data) return <Page><div className="min-h-[60vh]" /></Page>;
 
-  const { numbers, comparison, ai } = data;
+  const { numbers, ai } = data;
   const few = numbers.answeredDays < FEW_DAYS;
+  const questionText = (q: number) =>
+    content.daily.questions[`q${q}` as keyof typeof content.daily.questions];
+  const pct = (r: QuestionResult) => (r.yesRate ?? 0) * 100;
 
   return (
     <Page>
       <section className="border-b-2 border-rule">
         <div className="mx-auto max-w-3xl px-5 pb-10 pt-12 md:pt-16">
           <p className="eyebrow mb-6 text-muted-foreground">
-            {data.period.start} – {data.period.end}
+            {t.eyebrow} · {data.period.start} – {data.period.end}
           </p>
           <h1 className="text-6xl leading-[0.9] md:text-8xl">
             Sinu kolm <span className="marker">nädalat</span>
@@ -91,75 +98,56 @@ export function FinalView({ token, content }: { token: string; content: Content 
         </div>
       </section>
 
-      {/* Per question: how often it reached the day */}
+      {/* Consistency. AttFocus leads with this and says outright that it is not
+          about doing well, because 9 of 15 reads as a failing mark otherwise. */}
       <section className="border-b-2 border-rule">
         <div className="mx-auto max-w-3xl px-5 py-12">
-          <h2 className="mb-8 text-4xl md:text-5xl">{t.heading}</h2>
-          {few && <p className="mb-6 text-muted-foreground">{t.weeksNote}</p>}
-
-          {numbers.questions.map((q) => {
-            const text = content.daily.questions[`q${q.q}` as keyof typeof content.daily.questions];
-            const pct = q.answered ? (q.yes / q.answered) * 100 : 0;
-            return (
-              <div key={q.q} className="border-t-2 border-rule py-5 first:border-t-0">
-                <p className="text-lg leading-snug">{text}</p>
-                <div className="mt-3 flex items-center gap-4">
-                  <div className="h-2 flex-1 border-2 border-rule bg-background">
-                    <div className="h-full bg-signal" style={{ width: `${pct}%` }} />
-                  </div>
-                  <span className="display shrink-0 text-xl tabular-nums">
-                    {fill(t.perQuestion, { yes: q.yes, answered: q.answered })}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* First week against last */}
-      <section className="grain border-b-2 border-rule bg-bone">
-        <div className="mx-auto max-w-3xl px-5 py-12">
-          <h2 className="mb-2 text-4xl md:text-5xl">{t.weeksHeading}</h2>
-          <p className="mb-8 text-muted-foreground">{t.weeksNote}</p>
-
-          <div className="grid gap-3">
-            {numbers.questions.map((q, i) => {
-              const first = numbers.weeks.first[i];
-              const last = numbers.weeks.last[i];
-              const text = content.daily.questions[`q${q.q}` as keyof typeof content.daily.questions];
-              return (
-                <div key={q.q} className="border-2 border-rule bg-background p-4">
-                  <p className="text-sm leading-snug">{text}</p>
-                  <div className="mt-2 flex gap-6 text-sm">
-                    <span className="display text-lg tabular-nums">
-                      {fill(t.perQuestion, { yes: first.yes, answered: first.answered })}
-                    </span>
-                    <span aria-hidden className="text-muted-foreground">→</span>
-                    <span className="display text-lg tabular-nums">
-                      {fill(t.perQuestion, { yes: last.yes, answered: last.answered })}
-                    </span>
-                  </div>
-                </div>
-              );
+          <h2 className="mb-6 text-4xl md:text-5xl">{t.consistency.heading}</h2>
+          <p className="text-lg">
+            {fill(t.consistency.intro, {
+              answered: numbers.answeredDays,
+              workdays: numbers.workdays,
             })}
+          </p>
+          <p className="mt-3 text-muted-foreground">{t.consistency.meaning}</p>
+
+          <div className="mt-8 border-2 border-rule p-5">
+            <p className="eyebrow mb-5 text-muted-foreground">{t.consistency.chart}</p>
+            <div className="flex items-end gap-1" style={{ height: "9rem" }}>
+              {numbers.consistency.map((d) => (
+                <div
+                  key={d.dayIndex}
+                  className="flex h-full flex-1 flex-col justify-end"
+                  title={`${d.day}: ${d.yesCount}/6`}
+                >
+                  <div
+                    className={d.answered ? "bg-signal" : "bg-bone"}
+                    style={{ height: d.answered ? `${Math.max(4, (d.yesCount / 6) * 100)}%` : "4%" }}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="mt-2 flex justify-between text-[0.68rem] text-muted-foreground">
+              <span>1</span>
+              <span>{numbers.workdays}</span>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Against the test */}
-      {comparison.length > 0 && (
-        <section className="border-b-2 border-rule">
+      {/* What reached the day most often */}
+      {numbers.strongest.length > 0 && (
+        <section className="grain border-b-2 border-rule bg-bone">
           <div className="mx-auto max-w-3xl px-5 py-12">
-            <h2 className="mb-8 text-4xl md:text-5xl">{t.compareHeading}</h2>
-            <div className="grid gap-4 md:grid-cols-3">
-              {comparison.map((c) => (
-                <div key={c.key} className="border-2 border-rule p-5">
-                  <p className="eyebrow border-b-2 border-rule pb-2 text-muted-foreground">
-                    {content.report.parts[c.key].name}
-                  </p>
-                  <p className="mt-3 text-sm leading-relaxed">
-                    {c.direction === "same" ? content.report.pairs.same : t.compare[c.direction]}
+            <h2 className="text-4xl md:text-5xl">{t.strongest.heading}</h2>
+            <p className="mb-8 mt-3 text-muted-foreground">{t.strongest.framing}</p>
+            <div className="grid gap-4 md:grid-cols-2">
+              {numbers.strongest.map((r) => (
+                <div key={r.q} className="border-2 border-rule bg-background p-5">
+                  <p className="leading-snug">{questionText(r.q)}</p>
+                  <p className="display mt-4 text-4xl">{Math.round(pct(r))}%</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {fill(t.perQuestion, { yes: r.yes, answered: r.answered })}
                   </p>
                 </div>
               ))}
@@ -168,40 +156,75 @@ export function FinalView({ token, content }: { token: string; content: Content 
         </section>
       )}
 
-      {/* The three paragraphs, when they were written. SPEC 11: the numbers
-          above are the report, and this is the part that can be missing. */}
-      {!ai && (data.aiStatus === "pending" || data.aiStatus === "generating") && (
+      {/* What reached it least, with the note that this is not a problem */}
+      {numbers.weakest && (
         <section className="border-b-2 border-rule">
-          <div className="mx-auto max-w-3xl px-5 py-14">
-            <p className="border-l-4 border-signal pl-6 text-lg italic text-muted-foreground">
-              {content.report.ai.loading}
-            </p>
+          <div className="mx-auto max-w-3xl px-5 py-12">
+            <h2 className="mb-6 text-4xl md:text-5xl">{t.weakest.heading}</h2>
+            <div className="border-l-4 border-signal pl-6">
+              <p className="text-lg leading-snug">{questionText(numbers.weakest.q)}</p>
+              <p className="display mt-4 text-4xl">{Math.round(pct(numbers.weakest))}%</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {fill(t.perQuestion, { yes: numbers.weakest.yes, answered: numbers.weakest.answered })}
+              </p>
+              <p className="mt-5 text-muted-foreground">{t.weakest.note}</p>
+            </div>
           </div>
         </section>
       )}
 
-      {ai && (
+      {/* All six, for someone who wants the whole picture */}
+      <section className="border-b-2 border-rule">
+        <div className="mx-auto max-w-3xl px-5 py-12">
+          {few && <p className="mb-6 text-muted-foreground">{t.consistency.meaning}</p>}
+          {numbers.questions.map((r) => (
+            <div key={r.q} className="border-t-2 border-rule py-5 first:border-t-0">
+              <p className="leading-snug">{questionText(r.q)}</p>
+              <div className="mt-3 flex items-center gap-4">
+                <div className="h-2 flex-1 border-2 border-rule bg-background">
+                  <div className="h-full bg-signal" style={{ width: `${pct(r)}%` }} />
+                </div>
+                <span className="display shrink-0 text-lg tabular-nums">
+                  {fill(t.perQuestion, { yes: r.yes, answered: r.answered })}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {ai ? (
         <section className="border-b-2 border-rule">
           <div className="mx-auto max-w-3xl px-5 py-14">
-            {(["pattern", "change", "compare"] as const).map((k) => (
-              <div key={k} className="mb-10 last:mb-0">
-                <h2 className="mb-4 text-3xl md:text-4xl">{t.aiHeadings[k]}</h2>
-                <p className="border-l-4 border-signal pl-6 text-lg leading-relaxed">{ai[k]}</p>
-              </div>
-            ))}
-            <p className="mt-10 border-t-2 border-rule pt-8 text-2xl leading-snug md:text-3xl">
-              {ai.question}
+            <h2 className="mb-8 text-4xl md:text-5xl">{t.ai.heading}</h2>
+            <div className="border-l-4 border-signal pl-6">
+              <p className="text-xl italic leading-relaxed md:text-2xl md:leading-relaxed">{ai}</p>
+              <p className="mt-6 text-sm text-muted-foreground">{t.ai.signature}</p>
+            </div>
+          </div>
+        </section>
+      ) : (data.aiStatus === "pending" || data.aiStatus === "generating") ? (
+        <section className="border-b-2 border-rule">
+          <div className="mx-auto max-w-3xl px-5 py-14">
+            <h2 className="mb-8 text-4xl md:text-5xl">{t.ai.heading}</h2>
+            <p className="border-l-4 border-signal pl-6 text-lg italic text-muted-foreground">
+              {t.ai.loading}
             </p>
           </div>
         </section>
-      )}
+      ) : null}
+
+      <section className="border-b-2 border-rule">
+        <div className="mx-auto max-w-3xl px-5 py-12">
+          <div className="bg-bone p-6 text-muted-foreground">
+            <p className="eyebrow mb-3 text-foreground">{t.notMeaning.heading}</p>
+            <p>{t.notMeaning.text}</p>
+          </div>
+        </div>
+      </section>
 
       <section className="bg-signal">
         <div className="mx-auto max-w-3xl px-5 py-16 md:py-20">
-          {/* No invitation to take the test again. Raimo's call: three weeks of
-              daily attention is the thing being sold, and following it with
-              "now do the quiz once more" makes the whole programme read as a
-              funnel back to its own front door. */}
           <p className="text-2xl leading-snug md:text-3xl">{t.closing}</p>
           <p className="mt-10 border-t-2 border-rule pt-6 text-sm">{t.contact}</p>
         </div>
