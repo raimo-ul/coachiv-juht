@@ -8,14 +8,14 @@ import { Page } from "@/components/site";
 type Question = { q: number; text: string; answer: boolean | null; yes: string; no: string };
 
 /**
- * SPEC 10: the page behind a yes/no link.
+ * The page the daily letter's single button opens.
  *
- * The click in the email is a GET and changes nothing, because mail scanners
- * open every link they are sent and would otherwise answer the whole day on
- * someone's behalf. This page loads, then posts the answer the link carried.
+ * The letter carries one link and no answers. Opening it records nothing:
+ * mail scanners follow every link they are sent, and a letter holding twelve
+ * yes/no links hands them the power to answer somebody's whole day. The
+ * answering happens here, on buttons the reader presses themselves.
  *
- * It shows all six questions rather than only the one clicked, so the rest of
- * the day can be finished here instead of going back to the email.
+ * Same shape as AttFocus, which solved this before.
  */
 export function AnswerView({ signed, content }: { signed: string; content: Content }) {
   const t = content.answer;
@@ -52,21 +52,9 @@ export function AnswerView({ signed, content }: { signed: string; content: Conte
     }
   }
 
-  // On arrival: read the day, then post the answer the link was carrying. The
-  // order matters only for the error message, so a dead link says so before
-  // anything is written.
+  // Read the day and show it. Nothing is written until a button is pressed.
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const loaded = await load();
-      if (cancelled || !loaded) return;
-      await fetch(functionUrl("submit-answer"), {
-        method: "POST",
-        headers: functionHeaders(),
-        body: JSON.stringify({ signed }),
-      }).then(() => { if (!cancelled) load(); }).catch(() => {});
-    })();
-    return () => { cancelled = true; };
+    load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signed]);
 
@@ -88,12 +76,11 @@ export function AnswerView({ signed, content }: { signed: string; content: Conte
   return (
     <Page minimal>
       <section className="mx-auto max-w-xl px-5 py-12 md:py-16">
-        <p className="eyebrow mb-4 text-muted-foreground">
-          {allDone ? t.done : t.saved}
-        </p>
+        {answered > 0 && (
+          <p className="eyebrow mb-4 text-muted-foreground">{allDone ? t.done : t.saved}</p>
+        )}
         <h1 className="text-5xl md:text-6xl">{content.daily.intro}</h1>
-
-        {!allDone && <p className="mt-6 text-lg">{t.rest}</p>}
+        {answered > 0 && !allDone && <p className="mt-6 text-lg">{t.rest}</p>}
 
         <div className="mt-8 space-y-4">
           {questions.map((q) => (

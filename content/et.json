@@ -389,7 +389,9 @@
       ]
     },
     "daily": {
-      "subject": "Tänased kuus küsimust · päev {dayIndex}"
+      "subject": "Tänased kuus küsimust · päev {dayIndex}",
+      "button": "Vasta siin",
+      "lead": "Mõtle tänasele päevale."
     },
     "final": {
       "subject": "Sinu kolm nädalat",

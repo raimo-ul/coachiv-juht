@@ -33,22 +33,7 @@ export function esc(value: unknown): string {
  */
 const BUTTON = /^\{(\w+)Button:([^}]+)\}$/;
 
-/**
- * A question with its two answers, rendered as a pair of buttons.
- *
- * The daily letter carries six of these. Written as plain lines they came out
- * as "Jah: http://…/v/eyJlIjoiNzk5OGViZGEt…" twelve times over, four lines of
- * base64 per answer, and the letter was unreadable. The address belongs behind
- * the word, which is what an email client is for.
- */
-export type QuestionBlock = {
-  question: string;
-  yes: { label: string; url: string };
-  no: { label: string; url: string };
-};
-
-export type EmailLine = string | QuestionBlock;
-export type EmailBody = { subject: string; lines: readonly EmailLine[] };
+export type EmailBody = { subject: string; lines: readonly string[] };
 
 export function renderEmail(
   body: EmailBody,
@@ -58,28 +43,6 @@ export function renderEmail(
   const textParts: string[] = [];
 
   for (const line of body.lines) {
-    if (typeof line !== "string") {
-      const pill = (url: string, label: string, filled: boolean) =>
-        `<td style="padding:0 8px 0 0">
-           <a href="${esc(url)}" style="display:inline-block;padding:12px 28px;
-              font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:700;
-              text-transform:uppercase;letter-spacing:0.04em;text-decoration:none;
-              border:2px solid ${FG};
-              background:${filled ? ACCENT : BG};color:${FG}">${esc(label)}</a>
-         </td>`;
-
-      htmlParts.push(
-        `<p style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;color:${FG};margin:22px 0 10px">${esc(line.question)}</p>
-         <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 6px"><tr>
-           ${pill(line.yes.url, line.yes.label, true)}
-           ${pill(line.no.url, line.no.label, false)}
-         </tr></table>`,
-      );
-      // The plain-text alternative has nowhere to hide a URL, so it keeps them.
-      textParts.push(line.question, `${line.yes.label}: ${line.yes.url}`, `${line.no.label}: ${line.no.url}`, "");
-      continue;
-    }
-
     const button = BUTTON.exec(line.trim());
     if (button) {
       const [, name, label] = button;

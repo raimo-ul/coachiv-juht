@@ -4,6 +4,7 @@ Iga otsus, mida SPEC.md ei kata või mis sellest erineb. Uusim on üleval.
 
 | Kuupäev | Otsus | Põhjus | Kes |
 |---|---|---|---|
+| 2026-10-31 | Päevakiri kannab üht linki, mitte kahteteist. Küsimustele vastatakse lehel | Raimo otsus, AttFocuse eeskujul. Kaksteist allkirjastatud linki tegi kirja loetamatuks, aga tõsisem on teine asi: e-posti skännerid avavad iga saadetud lingi, ja kaheteistkümne jah/ei lingiga kirjas tähendaks see, et skänner vastab inimese terve päeva ära | Raimo |
 | 2026-10-31 | Lõpuraport ei paku enam uut testi, ei kirjas ega lehel | Raimo otsus. SPEC 11 ütleb, et kirjas on link uuele testile. Kolm nädalat igapäevast tähelepanu on see, mida müüakse; sellele järgnev „tee nüüd test uuesti" muudab kogu programmi lehtriks tagasi oma esiukse juurde | Raimo |
 | 2026-10-31 | Päevakirja kuus küsimust on nupupaarid, mitte tekstina trükitud URL-id | Esimene päriselt saadetud kiri näitas kaksteist korda „Jah: http://…/v/eyJlIjoiNzk5…", neli rida base64 vastuse kohta. Aadress kuulub sõna taha, selleks e-posti klient ongi | Claude |
 | 2026-10-31 | Vastuselingid on HMAC-allkirjastatud, mitte tabelis hoitavad tokenid | SPEC 10 nõuab HMAC-i; AttFocus kasutab juhutokeneid tabelis. Siin on 12 linki päevas × 15 päeva × iga osaleja kohta, kõik ühekordsed. Tokenitabel tähendaks 180 rida inimese kohta, millest igaüks loetakse korra | Claude |

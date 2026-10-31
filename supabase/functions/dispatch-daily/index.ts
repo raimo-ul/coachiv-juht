@@ -106,30 +106,24 @@ serve(async (req) => {
     if (dryRun) { sent.push(`${e.id} (dry_run)`); continue; }
 
     const content = getContent(p.locale);
-    const questions = content.daily.questions;
 
-    // Twelve links, two per question. Each carries its own meaning and its own
-    // signature, so none of them needs a row anywhere.
-    const lines: Array<string | {
-      question: string;
-      yes: { label: string; url: string };
-      no: { label: string; url: string };
-    }> = [content.daily.intro];
-
-    for (let q = 1; q <= 6; q++) {
-      const yes = await sign({ e: e.id, d: today, q, v: 1 });
-      const no = await sign({ e: e.id, d: today, q, v: 0 });
-      lines.push({
-        question: questions[`q${q}` as keyof typeof questions],
-        yes: { label: content.daily.yes, url: `${site}/v/${yes}` },
-        no: { label: content.daily.no, url: `${site}/v/${no}` },
-      });
-    }
-    lines.push(content.daily.footer);
+    // One link, not twelve. The questions are answered on the page the link
+    // opens, the same way AttFocus does it. Putting six yes/no pairs in the
+    // letter meant twelve signed URLs, each four wrapped lines of base64, and
+    // a letter nobody could read. It also meant a mail scanner opening links
+    // could answer somebody's day for them.
+    const dayLink = `${site}/v/${await sign({ e: e.id, d: today })}`;
 
     const mail = renderEmail(
-      { subject: fill(content.emails.daily.subject, { dayIndex: index }), lines },
-      { links: {}, footer: content.emails.footer },
+      {
+        subject: fill(content.emails.daily.subject, { dayIndex: index }),
+        lines: [
+          content.emails.daily.lead,
+          `{dayButton:${content.emails.daily.button}}`,
+          content.daily.footer,
+        ],
+      },
+      { links: { day: dayLink }, footer: content.emails.footer },
     );
 
     const res = await sendEmail({ to: p.email, ...mail });
