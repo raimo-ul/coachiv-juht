@@ -17,8 +17,17 @@ export type Scored = {
   /** Exact means. SPEC 6: the database keeps full precision. */
   scores: Record<PartKey, number>;
   levels: Record<PartKey, Level>;
-  /** One per belief whose level differs from its paired action's. */
-  pairs: Array<{ belief: PartKey; action: PartKey; direction: "beliefHigher" | "actionHigher" }>;
+  /**
+   * All three belief-action pairs, always, each with a verdict.
+   *
+   * Only the differing ones used to be returned. That left the report showing
+   * one lonely card in a three-column row, with nothing to say why the other
+   * two pairs were absent, and it hid the oddity below: because the comparison
+   * is between levels, suhe 2,7 against juhendamine 3,0 counts as different
+   * while autonoomia 3,0 against voimestamine 4,0 counts as the same. Showing
+   * every pair makes that visible instead of silent.
+   */
+  pairs: Array<{ belief: PartKey; action: PartKey; direction: "beliefHigher" | "actionHigher" | "same" }>;
 };
 
 const LEVEL_ORDER: Level[] = ["low", "mid", "high"];
@@ -78,9 +87,8 @@ export function scoreTest(answers: Answers, locale?: string): Scored {
   const pairResults: Scored["pairs"] = [];
   for (const [belief, action] of Object.entries(pairs) as Array<[PartKey, PartKey]>) {
     const distance = levelDistance(partLevels[action], partLevels[belief]);
-    if (distance >= 1) pairResults.push({ belief, action, direction: "beliefHigher" });
-    else if (distance <= -1) pairResults.push({ belief, action, direction: "actionHigher" });
-    // Equal levels produce no sentence.
+    const direction = distance >= 1 ? "beliefHigher" : distance <= -1 ? "actionHigher" : "same";
+    pairResults.push({ belief, action, direction });
   }
 
   return { scores, levels: partLevels, pairs: pairResults };

@@ -282,8 +282,10 @@
     },
     "pairs": {
       "heading": "Uskumus ja tegevus koos",
+      "intro": "Iga uskumus on seotud ühe tegevusega. Siin näed, kas nad on omavahel tasakaalus.",
       "beliefHigher": "Sinu valikud toetavad seda tegevust rohkem, kui see praegu sinu päeva jõuab. Seda on kõige lihtsam muuta, sest põhi on olemas.",
-      "actionHigher": "Teed seda sagedamini, kui sinu valikud näitavad. Mõtle, kas tegevus tuleb veendumusest või harjumusest."
+      "actionHigher": "Teed seda sagedamini, kui sinu valikud näitavad. Mõtle, kas tegevus tuleb veendumusest või harjumusest.",
+      "same": "Uskumus ja tegevus liiguvad koos."
     },
     "ai": {
       "heading": "Mida sinu tulemused koos näitavad",

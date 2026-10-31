@@ -13,7 +13,7 @@ type PartKey = keyof Content["report"]["parts"];
 
 type Report = {
   parts: Array<{ key: PartKey; score: number; display: string; level: Level }>;
-  pairs: Array<{ belief: PartKey; action: PartKey; direction: "beliefHigher" | "actionHigher" }>;
+  pairs: Array<{ belief: PartKey; action: PartKey; direction: "beliefHigher" | "actionHigher" | "same" }>;
   ai: { status: string; text: string | null };
   hasActiveProgramme: boolean;
 };
@@ -105,7 +105,8 @@ export function ReportView({ token, content }: { token: string; content: Content
       {report.pairs.length > 0 && (
         <section className="grain border-b-2 border-rule bg-bone">
           <div className="mx-auto max-w-3xl px-5 py-14">
-            <h2 className="mb-8 text-5xl md:text-6xl">{t.pairs.heading}</h2>
+            <h2 className="text-5xl md:text-6xl">{t.pairs.heading}</h2>
+            <p className="mb-8 mt-4 max-w-xl text-muted-foreground">{t.pairs.intro}</p>
             <div className="grid gap-4 md:grid-cols-3">
               {report.pairs.map((p) => (
                 <div key={p.belief} className="border-2 border-rule bg-background p-5">

@@ -79,8 +79,9 @@ describe("scoreTest", () => {
     expect(levels.inimene).toBe("low");
     expect(levels.juhendamine).toBe("low");
 
-    // Everything low, so no pair differs.
-    expect(pairs).toEqual([]);
+    // Every part low, so all three pairs sit level with each other.
+    expect(pairs).toHaveLength(3);
+    expect(pairs.every((p) => p.direction === "same")).toBe(true);
   });
 
   it("set 2: every answer 6", () => {
@@ -128,7 +129,7 @@ describe("scoreTest", () => {
     expect(pair).toEqual({ belief: "inimene", action: "inspireerimine", direction: "beliefHigher" });
   });
 
-  it("set 5: equal levels produce no pair sentence", () => {
+  it("set 5: equal levels are reported as such, not omitted", () => {
     // inimene:        U1=3 U2=3 U3=4 → (3 + 3 + 3) / 3 = 3,0  mid
     // inspireerimine: T7=3 T8=3 T9=3 → 3,0                     mid
     const { levels, pairs } = scoreTest(sheet(3, {
@@ -138,7 +139,9 @@ describe("scoreTest", () => {
 
     expect(levels.inimene).toBe("mid");
     expect(levels.inspireerimine).toBe("mid");
-    expect(pairs.find((p) => p.belief === "inimene")).toBeUndefined();
+    // The report shows every pair now, so an equal one says "same" rather than
+    // vanishing and leaving the reader to wonder what happened to it.
+    expect(pairs.find((p) => p.belief === "inimene")?.direction).toBe("same");
   });
 
   it("set 6: a mixed sheet, part by part", () => {
@@ -166,11 +169,12 @@ describe("scoreTest", () => {
       inimene: "low", suhe: "high", autonoomia: "mid",
     });
 
-    // inimene low vs inspireerimine mid → action one step up
-    // suhe high vs juhendamine high     → equal, no sentence
-    // autonoomia mid vs voimestamine low → belief one step up
+    // inimene low vs inspireerimine mid  → action one step up
+    // suhe high vs juhendamine high       → level with each other
+    // autonoomia mid vs voimestamine low  → belief one step up
     expect(pairs).toEqual([
       { belief: "inimene", action: "inspireerimine", direction: "actionHigher" },
+      { belief: "suhe", action: "juhendamine", direction: "same" },
       { belief: "autonoomia", action: "voimestamine", direction: "beliefHigher" },
     ]);
   });
