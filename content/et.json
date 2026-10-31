@@ -12,7 +12,7 @@
   },
   "home": {
     "title": "Coachiva juhi test",
-    "subtitle": "Coachiv juhtimine on kombinatsioon uskumustest ja tegevustest. Testi tehes saad viie minutiga teada, kus sina praegu coachiva juhina oled.",
+    "subtitle": "Coachiv juhtimine on kombinatsioon uskumustest ja tegevustest. Testi tehes saad viie minutiga teada, kui coachiv sa praegu juhina oled.",
     "button": "Alusta testi · 5 min",
     "smallLine": "Tasuta. Raport kohe ekraanile ja e-postile.",
     "aboutLink": "Mille peale test tugineb →",
@@ -28,7 +28,58 @@
         "Juhendamine",
         "Võimestamine",
         "Inspireerimine"
+      ],
+      "heading": "Coachiv juhtimine – võtmeuskumused ja võtmetegevused",
+      "beliefsHint": "mida usud",
+      "actionsHint": "mida teed",
+      "meanings": {
+        "inimene": "Inimene on võimeline enamaks kui hetkel välja paistab",
+        "suhe": "Töötaja usaldus juhi vastu on coachiva juhtimise eeldus",
+        "autonoomia": "Inimene suudab end ise juhtida, kui tal on suurem kontroll oma valikute üle",
+        "juhendamine": "Ootuste kokkuleppimine, tagasiside korraldamine, kokkulepete kontroll",
+        "voimestamine": "Küsimine, kuulamine, otsus jääb inimesele",
+        "inspireerimine": "Arengu potentsiaali välja ütlemine, väljakutsete esitamine"
+      }
+    },
+    "eyebrow": "Enesehinnang juhile · 18 väidet",
+    "heroCardLabel": "Sinu raport",
+    "tension": {
+      "lead": "Coachiv juhtimine on ühelt poolt ülipopulaarne ja teiselt poolt erakordselt ebamäärane nähtus. Sellest räägitakse koolitustel, Linkedinis, juhtimispõhimõtetes. Ja tegelikult pole olemas ühte konkreetset definitsiooni, mis see täpselt on.",
+      "questions": [
+        "Kas see on vahend või filosoofia?",
+        "Igas olukorras rakendatav või pigem täppistöövahend?",
+        "Pehmodele või hoopis tugevatele juhtidele?"
       ]
+    },
+    "whatYouGet": {
+      "eyebrow": "Mida saad",
+      "heading": "Personaalne ja sisulise analüüsiga raport",
+      "body": "Igaüks kuuest coachiva juhtimise parameetrist on eraldi oluline, rääkimata sellest, et tegevus ja uskumus võivad olla väga erinevad asjad - usume, aga ei tee. Raportis sisuline analüüs ja jutt sellest, mida tulemused mustrina sinu kui coachiva juhi tegemiste kohta räägivad. Ning veidi ka sellest, mida sellega ehk peale võiks hakata.",
+      "note": "Ei tüüpe. Ei võrdlust teistega.",
+      "previewHeading": "Tegevused",
+      "analysisLabel": "Analüüs",
+      "sampleAnalysis": "Sinu tugevus on selgus: inimesed tõenäoliselt teavad, mida sa neilt ootad ja sa tuled kokkulepete juurde tagasi. Samas jääb arengu võimaluse välja ütlemine sinu juhitöös pigem haruldaseks, kuigi su valikud uskumustes näitavad, et sinu usk inimeste arengusse on tugev."
+    },
+    "how": {
+      "heading": "Coachiv juht, mis sind ees ootab",
+      "steps": [
+        [
+          "Täidad Coachiva juhi testi",
+          "Võtab aega umbes viis minutit. Vastad selle järgi, mida päriselt teed ja usud."
+        ],
+        [
+          "Raport kohe kätte",
+          "Saad kohe pärast täitmist oma tulemuste raporti ekraanile ja e-postile."
+        ],
+        [
+          "Kolm nädalat pehmet nügimist",
+          "Saad soovi korral jätkata lihtsa programmiga, mis läbi igapäevase tähelepanu suunamise võtmetegevustele tugevdab hüppeliselt sinu võimekust coachiva juhina."
+        ]
+      ]
+    },
+    "close": {
+      "heading": "Kui coachiv sa juhina oled?",
+      "link": "Vaata teadust testi taga →"
     }
   },
   "test": {
@@ -167,7 +218,11 @@
       "newsletterNote": "Ainult sisu, mida saad juhina kasutada. Loobuda saad ühe klõpsuga.",
       "privacyNote": "Raport saadetakse sellele aadressile. Loe lähemalt: Privaatsus",
       "button": "Näita raportit"
-    }
+    },
+    "eyebrow": "Enne alustamist",
+    "heading": "18 väidet",
+    "partLabel": "Osa {n} / 2",
+    "backButton": "Tagasi"
   },
   "errors": {
     "_note": "Claude'i pakutud laused, Raimo kinnitab või muudab. Neid näeb kasutaja ainult siis, kui midagi läheb katki.",
@@ -187,41 +242,41 @@
         "explain": "Inimene teab, millist tulemust temalt oodatakse, saab tagasisidet oma tegevuse kohta ja juht tuleb kokkulepete juurde tagasi.",
         "low": "Ootused, tagasiside ja kokkulepete juurde tagasi tulemine jõudsid sinu päeva harva. Inimestele jääb siis rohkem ise ära arvata.",
         "mid": "Ootusi ja tagasisidet jagad, aga ebaühtlaselt. Vaata, milline kolmest jääb kõige sagedamini vahele.",
-        "high": "Ootused, tagasiside ja kokkulepete juurde tagasi tulemine on sinu nädalas tavalised. Järgmine küsimus on, kas inimesed saavad sinu ootustest samamoodi aru."
+        "high": "Ootused, tagasiside ja kokkulepete juurde tagasi tulemine on sinu nädalas tavaline osa."
       },
       "voimestamine": {
         "name": "Võimestamine",
-        "explain": "Küsid inimese mõtteid enne, kui lahenduse pakud, kuulad lõpuni ja jätad otsuse talle, kui see on tema otsustada.",
+        "explain": "Juht küsib ja kuulab ning jätab otsuse inimesele, kelle töö see on.",
         "low": "Lahendused tulevad praegu enamasti sinult. See on kiire, aga inimestel jääb vähem võimalusi probleem ise läbi mõelda.",
-        "mid": "Küsid ja kuulad osas olukordades. Märka, millal sa lahenduse ise ette ütled.",
+        "mid": "Teadlikult küsid ja kuulad paar korda nädalas; inimese enda kätte jääb otsuse tegemine pigem harvem.",
         "high": "Küsimine, kuulamine ja otsuse inimesele jätmine on sinu nädalas tavalised. Kontrolli, kas inimesed saavad sinult selge suuna ka siis, kui nad seda vajavad."
       },
       "inspireerimine": {
         "name": "Inspireerimine",
-        "explain": "Ütled inimesele välja, millist arengut temas näed, annad väljakutseid ja räägid temaga, kuhu ta areneda tahab.",
-        "low": "Arengust ja väljakutsetest räägid praegu harva. Inimesed ei pruugi teada, mida sa nende juures märkad.",
+        "explain": "Juht ütleb välja, milles inimene on arenenud, ja annab talle väljakutseid, mis viivad edasi.",
+        "low": "Arengu võimaluse ja potentsiaali välja ütlemine ja väljakutse esitamine jõudsid sinu päevadesse viimase kuu jooksul vaid üksikutel kordadel.",
         "mid": "Väljakutseid ja arengujutte tuleb ette, aga ebaühtlaselt. Vaata, kellega sa neid vestlusi pidanud ei ole.",
         "high": "Arengu välja ütlemine ja väljakutsed on sinu nädalas tavalised. Järgmine küsimus on, kas väljakutse on igaühe jaoks õige suurusega."
       },
       "inimene": {
         "name": "Inimene",
-        "explain": "Kas sinu valikud lähtuvad sellest, et inimesed saavad areneda, ka need, kes praegu on nõrgemad.",
+        "explain": "Inimesed saavad areneda — ka need, kes praegu ülesandega toime ei tule.",
         "low": "Sinu valikud viitavad, et pead inimese võimekust pigem püsivaks. Siis on lihtne jätta panustamata neisse, kellest esimene mulje oli nõrk.",
         "mid": "Usud arengusse osa inimeste puhul. Mõtle, kelle puhul sa oma esimest muljet viimati muutsid.",
-        "high": "Sinu valikud lähtuvad sellest, et inimesed saavad areneda. See on alus inspireerimisele."
+        "high": "Sinu valikud näitavad selget usku, et inimene saab õppida."
       },
       "suhe": {
         "name": "Suhe",
-        "explain": "Kas sinu valikud lähtuvad sellest, et töötaja usaldus sinu vastu on coachiva juhtimise eeldus.",
+        "explain": "Töötaja usaldus juhi vastu on coachiva juhtimise eeldus.",
         "low": "Kiirel ajal jääb usalduse hoidmine tagaplaanile. Kui usaldust napib, räägivad inimesed oma raskustest harvem.",
-        "mid": "Hoiad usaldust osas olukordades. Vaata, kas see kehtib ka siis, kui on kiire või uudis on halb.",
+        "mid": "Hoiad usaldust enamasti teadlikult; ebamugavates olukordades vähem.",
         "high": "Sinu valikud hoiavad usaldust ka kiirel ajal. See on alus juhendamisele."
       },
       "autonoomia": {
         "name": "Autonoomia",
-        "explain": "Kas sinu valikud lähtuvad sellest, et inimene suudab end ise juhtida, kui otsus on tema oma.",
+        "explain": "Inimene suudab end ise juhtida, kui otsus on tema oma.",
         "low": "Sinu valikud viitavad, et pead kontrolli tulemuse tagatiseks. Inimestel jääb siis vähem ruumi vastutust ise võtta.",
-        "mid": "Annad otsustusruumi osas olukordades. Mõtle, kelle puhul ja miks sa kontrollid.",
+        "mid": "Sinu valikutes on kontroll ja vabadus tasakaalus, kaal kaldub kontrolli poole.",
         "high": "Sinu valikud jätavad inimestele otsustusruumi. Kontrolli, kas see sobib ka uutele ja vähem kogenud inimestele."
       }
     },
@@ -232,11 +287,12 @@
     },
     "ai": {
       "heading": "Mida sinu tulemused koos näitavad",
-      "loading": "Kirjutan kokkuvõtet…"
+      "loading": "Kirjutan kokkuvõtet…",
+      "signature": "— kirjutatud sinu vastuste põhjal"
     },
     "notMeaning": {
       "heading": "Mida see ei tähenda",
-      "text": "See on sinu enda hinnang ühel ajahetkel. Test näitab, kui sageli tegevused sinu päeva jõuavad ja milliseid valikuid sa teed. Kui hästi sa neid tegevusi teed, näevad kõige paremini sinu inimesed. Teiste juhtidega test sind ei võrdle."
+      "text": "See ei ole hinne ega võrdlus teiste juhtidega. Tulemus näitab, kui sageli tegevused sinu päeva jõudsid ja milliseid valikuid sa teed — mitte seda, kui hästi sa neid teed. Seda näevad kõige paremini sinu inimesed."
     },
     "cta": {
       "heading": "Kolm nädalat, kuus küsimust",
@@ -247,7 +303,20 @@
       "active": "Sinu kolm nädalat on käimas. Päevakiri tuleb igal tööpäeval.",
       "started": "Valmis. Sinu kolm nädalat algab {startDate}. Tervituskiri on teel."
     },
-    "notFound": "Seda raportit ei leitud. Kontrolli linki oma e-postis."
+    "notFound": "Seda raportit ei leitud. Kontrolli linki oma e-postis.",
+    "eyebrow": "Raport",
+    "track": {
+      "low": "harva",
+      "high": "sageli"
+    },
+    "groupHints": {
+      "actions": "kui sageli viimase nelja nädala jooksul",
+      "beliefs": "mida sinu valikud näitavad"
+    },
+    "contact": {
+      "label": "Tahan, et Raimo võtaks minuga ühendust (koolitus/coaching vms teema)",
+      "saved": "Märgitud. Raimo võtab ühendust."
+    }
   },
   "final": {
     "title": "Sinu kolm nädalat",
@@ -361,7 +430,7 @@
     ]
   },
   "about": {
-    "title": "Mille peale test tugineb",
+    "title": "Millele test tugineb",
     "why": {
       "heading": "Miks see test",
       "paragraphs": [
@@ -423,6 +492,11 @@
       "paragraphs": [
         "Test on enesehinnang. See näitab, kui sageli tegevused sinu päeva jõuavad ja milliseid valikuid sa teed. Kui hästi sa neid tegevusi teed, näevad kõige paremini sinu inimesed. Uuringud on näidanud, et sagedus üksi tulemusi ei paranda: madala oskusega sage coachimine mõjus tulemustele isegi halvasti (Dahling jt 2016).",
         "Võimestamise kohta on uurimustes eri arvamusi. Osa juhte peab küsimist vähem tõhusaks kui lahenduse andmist (Anderson 2013). Seepärast on mudelis juhendamine ja võimestamine võrdväärsed."
+      ],
+      "items": [
+        "Seda, kui hästi sa tegevusi teed. Seda näevad kõige paremini sinu inimesed.",
+        "Sinu isiksust ega juhitüüpi.",
+        "Sinu asukohta teiste juhtide suhtes."
       ]
     },
     "development": {
@@ -443,7 +517,8 @@
       "heading": "Ettevõtetele",
       "text": "Kui tahad pakkuda testi ja kolme nädala programmi oma juhtidele, saab ettevõte osta kohad ette ja juhid liituvad ettevõtte koodiga. Iga juht näeb ainult oma tulemusi.",
       "contact": "raimo@raimoulavere.com"
-    }
+    },
+    "eyebrow": "Taust"
   },
   "privacy": {
     "todo": "MUSTAND. Viia kooskõlla Truresp'i privaatsuslehega ja lasta juriidiliselt üle vaadata.",
@@ -485,6 +560,14 @@
         "heading": "Küpsised",
         "text": "Kasutame ainult keelevaliku, sooduskoodi ja teenuse toimimiseks vajalikke küpsiseid. Jälgimisküpsiseid ei kasuta."
       }
-    ]
+    ],
+    "eyebrow": "Andmed"
+  },
+  "programme": {
+    "eyebrow": "Pärast testi",
+    "title": "Coachiva juhi võimekuste sprint",
+    "body": "Iga tööpäeva lõpus saad coachiva juhi võtmetegevustele tähelepanu juhtimiseks kirja kuue jah/ei küsimusega. Vastamine võtab alla minuti. Kolme nädala pärast näed, kui sageli need tegevused sinu päeva tegelikult jõudsid.",
+    "price": "15 € koos käibemaksuga",
+    "note": "Valiku teed pärast raporti kätte saamist."
   }
 }

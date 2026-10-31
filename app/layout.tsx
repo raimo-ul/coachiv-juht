@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Bebas_Neue, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { getContent } from "@/lib/content";
-import { Footer } from "@/components/Footer";
 
 // Self-hosted by next/font at build time: no request to Google from a visitor's
 // browser, which keeps the pages free of third-party calls and matches SPEC 2's
@@ -32,7 +31,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="et" className={`${head.variable} ${body.variable}`}>
       <body>
         {children}
-        <Footer />
       </body>
     </html>
   );

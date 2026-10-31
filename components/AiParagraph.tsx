@@ -30,13 +30,14 @@ const INTERVAL_MS = 3000;
 const GIVE_UP_MS = 60000;
 
 export function AiParagraph({
-  token, initialText, initialStatus, heading, loadingLabel,
+  token, initialText, initialStatus, heading, loadingLabel, signature,
 }: {
   token: string;
   initialText: string | null;
   initialStatus: string;
   heading: string;
   loadingLabel: string;
+  signature: string;
 }) {
   const [text, setText] = useState(initialText);
   const [waiting, setWaiting] = useState(initialStatus === "pending" && !initialText);
@@ -90,18 +91,25 @@ export function AiParagraph({
   // rather than as a section that was never there.
   if (text) {
     return (
-      <section className="stack">
-        <h2>{heading}</h2>
-        <p>{text}</p>
+      <section className="border-b-2 border-rule">
+        <div className="mx-auto max-w-3xl px-5 py-14">
+          <h2 className="mb-8 text-5xl md:text-6xl">{heading}</h2>
+          <div className="border-l-4 border-signal pl-6">
+            <p className="text-xl italic leading-relaxed md:text-2xl md:leading-relaxed">{text}</p>
+            <p className="mt-6 text-sm text-muted-foreground">{signature}</p>
+          </div>
+        </div>
       </section>
     );
   }
 
   if (waiting) {
     return (
-      <section className="stack">
-        <h2>{heading}</h2>
-        <p className="dim shimmer">{loadingLabel}</p>
+      <section className="border-b-2 border-rule">
+        <div className="mx-auto max-w-3xl px-5 py-14">
+          <h2 className="mb-8 text-5xl md:text-6xl">{heading}</h2>
+          <p className="border-l-4 border-signal pl-6 text-xl italic text-muted-foreground">{loadingLabel}</p>
+        </div>
       </section>
     );
   }
