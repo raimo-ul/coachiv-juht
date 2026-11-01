@@ -268,34 +268,9 @@ export function FinalView({ token, content }: { token: string; content: Content 
         </div>
       </section>
 
-      {/* The caveat sits before the reflection rather than after it. It used
-          to be the last thing on the page, which meant a personal report ended
-          on a disclaimer. Read first it does its job better anyway: the person
-          learns what the numbers are not before reading what someone made of
-          them, and the page can end on the question, which is the one thing
-          asked of them. */}
-      <section className="border-b-2 border-rule">
-        <div className="mx-auto max-w-3xl px-5 py-12">
-          <div className="bg-bone p-6 text-muted-foreground">
-            <p className="eyebrow mb-3 text-foreground">{t.notMeaning.heading}</p>
-            <p>{t.notMeaning.text}</p>
-          </div>
-          {/* The only way to reach a person from the end of a paid product.
-              It lived in the closing block until that was removed. */}
-          <p className="mt-6 text-sm">
-            <LinkedText
-              text={t.contact}
-              label={content.about.companies.contact}
-              href={`mailto:${content.about.companies.contact}`}
-              className="border-b-2 border-rule hover:bg-signal-soft"
-            />
-          </p>
-        </div>
-      </section>
-
       {ai ? (
-        <section>
-          <div className="mx-auto max-w-3xl px-5 py-14 md:py-20">
+        <section className="border-b-2 border-rule">
+          <div className="mx-auto max-w-3xl px-5 py-14">
             <h2 className="mb-8 text-4xl md:text-5xl">{t.ai.heading}</h2>
             {/* The block is breakable, the paragraphs are not. Marking the
                 whole reflection unbreakable pushed it onto a sheet of its own
@@ -339,6 +314,29 @@ export function FinalView({ token, content }: { token: string; content: Content 
           </div>
         </section>
       ) : null}
+
+      {/* The caveat and the contact line close the document, after the
+          reflection. Raimo moved the reflection up on 01.11 so that it sits
+          with the numbers it describes, while they are still in view, rather
+          than behind a disclaimer the reader has to get past first. */}
+      <section className="border-b-2 border-rule">
+        <div className="mx-auto max-w-3xl px-5 py-12">
+          <div className="bg-bone p-6 text-muted-foreground">
+            <p className="eyebrow mb-3 text-foreground">{t.notMeaning.heading}</p>
+            <p>{t.notMeaning.text}</p>
+          </div>
+          {/* The only way to reach a person from the end of a paid product.
+              It lived in the closing block until that was removed. */}
+          <p className="mt-6 text-sm">
+            <LinkedText
+              text={t.contact}
+              label={content.about.companies.contact}
+              href={`mailto:${content.about.companies.contact}`}
+              className="border-b-2 border-rule hover:bg-signal-soft"
+            />
+          </p>
+        </div>
+      </section>
 
       {/* The report used to end on a full-bleed green block carrying a closing
           line and a question. Both were written before the reflection had a

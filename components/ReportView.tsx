@@ -114,7 +114,7 @@ export function ReportView({ token, content }: { token: string; content: Content
           <div className="mx-auto max-w-3xl px-5 py-14">
             <h2 className="text-5xl md:text-6xl">{t.pairs.heading}</h2>
             <p className="mb-8 mt-4 max-w-xl text-muted-foreground">{t.pairs.intro}</p>
-            <div data-print="two-up" className="grid gap-4 md:grid-cols-3">
+            <div data-print="three-up" className="grid gap-4 md:grid-cols-3">
               {report.pairs.map((p) => (
                 <div key={p.belief} className="border-2 border-rule bg-background p-5">
                   <p className="eyebrow border-b-2 border-rule pb-2 text-muted-foreground">

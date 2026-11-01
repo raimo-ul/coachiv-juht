@@ -209,10 +209,20 @@
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
-  /* Two across for the pair cards, not three. Three was tried: narrower
-     columns make taller cards, the section grew, and the test report went from
-     three pages to four. One card starting the next page is the cheaper
-     blemish. */
+  /* The three pair cards stay on one row, as they are on screen. Two across
+     leaves the third orphaned at the top of the next page under a band of
+     colour belonging to the section it came from. Narrower columns do make
+     taller cards, so the padding comes down to pay for it. */
+  .print-report [data-print="three-up"] {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0.6rem !important;
+  }
+  .print-report [data-print="three-up"] > * {
+    padding: 0.8rem !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
 
   /* A card may not be cut in half. The reflection and the person's own words
      are the ones that actually suffered in AttFocus. */
