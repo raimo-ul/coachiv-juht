@@ -412,11 +412,9 @@
       ]
     },
     "contactRequest": {
-      "subject": "Keegi soovib, et võtaksid ühendust",
+      "subject": "Coachiv juht - kontaktisoov",
       "body": [
-        "{email} märkis coachiva juhi testi raportis, et soovib sinuga ühendust.",
-        "{reportButton:Vaata tema raportit}",
-        "Soov märgitud {when}."
+        "{email} kirjutab sulle sooviga võtta kontakti."
       ]
     },
     "welcome": {

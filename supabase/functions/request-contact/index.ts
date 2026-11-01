@@ -80,16 +80,15 @@ serve(async (req) => {
   const person = upd.data?.[0]?.email;
   if (person) {
     const content = getContent();
-    const site = (env("SITE_BASE_URL") ?? "").replace(/\/+$/, "");
     const mail = renderEmail(
       {
         subject: content.emails.contactRequest.subject,
-        lines: content.emails.contactRequest.body.map((l) =>
-          fill(l, { email: person, when: at.toISOString().slice(0, 16).replace("T", " ") })
-        ),
+        lines: content.emails.contactRequest.body.map((l) => fill(l, { email: person })),
       },
       {
-        links: { report: `${site}/raport/${token}` },
+        // No link to their report. Raimo asked for it out on 01.11: he is
+        // writing to a person, not reviewing their scores first.
+        links: {},
         footer: content.emails.footer,
         siteName: content.meta.siteName,
       },
