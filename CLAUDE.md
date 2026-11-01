@@ -28,7 +28,7 @@ Kui sul pole nendele kaustadele ligipääsu, palu Raimol käivitada sind lisakau
 - Kujundus: Radical Simplicity, **hele**. Taust #FFFFFF, pind (kaardid) #EBEAE5, tekst #0F0F0F, teisene tekst #6A6862, üks aktsent #00FA96, joon #2B2B2B. Bebas Neue pealkirjad, DM Sans tekst, teravad nurgad (radius 0). Mobiil esmalt.
   - **Roheline on täide, mitte tekst.** #00FA96 valgel on ~1,5:1 ja kukub kontrastis läbi. Nupu taust jah, tekstivärv ei.
   - **Jooned on peaaegu mustad juuksekarvad, mitte hall.** 1px #2B2B2B. See on brändi kõige iseloomulikum osa ja esimene asi, mille tüüpiline mall valesti teeb.
-  - Stiilimine käib **Tailwind 3.4-ga**, sama versioon mis radical-simplicity's ja attfocus-v2-s, et Lovable'is tehtud disain tuleks siia ilma tõlkesammuta. Värvid on HSL-kanalid CSS-muutujates, loetakse `hsl(var(--x))` kaudu.
+  - Stiilimine käib **Tailwind 4-ga** (CSS-first `@theme`, ilma `tailwind.config.ts` failita). Plaan oli 3.4, et radical-simplicity ja attfocus-v2 oleksid sama versiooniga, aga Lovable'i eksport tuli v4 peal ja selle tagasi tõlkimine oleks olnud see ümberkirjutamine, mida siin just vältida tuleb. Värvid on `oklch` CSS-muutujates. **NB:** Chrome teatab `oklch` väärtusi `lab()` kujul, nii et brauserist loetud värvi ei saa võrrelda `rgb()` stringiga.
 - Commit'i sõnumid ja kood on inglise keeles, kasutajale nähtav sisu on eesti keeles.
 
 ## AttFocus ja muud olemasolevad projektid
