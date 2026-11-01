@@ -411,6 +411,14 @@
         "Raimo"
       ]
     },
+    "contactRequest": {
+      "subject": "Keegi soovib, et võtaksid ühendust",
+      "body": [
+        "{email} märkis coachiva juhi testi raportis, et soovib sinuga ühendust.",
+        "{reportButton:Vaata tema raportit}",
+        "Soov märgitud {when}."
+      ]
+    },
     "welcome": {
       "subject": "Kolm nädalat algab {startDate}",
       "body": [

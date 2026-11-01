@@ -123,7 +123,7 @@ Anon-võti on avalik: ükski tabel ei anna anon-rollile õigusi ja kõik funktsi
 3. **E-posti ekraan.** E-post ja märkimata linnuke uudiskirja jaoks. Ajavöönd loetakse brauserist.
 4. **`submit-test`.** Valideerib, leiab või loob osaleja, skoorib, salvestab testi, loob `report_token`. Linnukese korral lisab kontakti Smailysse.
 5. **Raport `/raport/[token]`.** Numbrid kohe. Tehisaru lõik kirjutatakse esimesel vaatamisel `get-report-ai` sees ja leht pollib seda kuni **60 sekundit** (v1.0 ütles 20 s; mõõdetud jooks võtab ~36 s).
-6. **Kontakt.** Raportis saab märkida soovi ühendust võtta. Grupihuvi korral `mailto:` Raimole. *(v1.0-s ei olnud.)*
+6. **Kontakt.** Raportis saab märkida soovi ühendust võtta. See saadab **Raimole kohe kirja** inimese aadressi ja raportilingiga; ainult esimesel vajutusel. Grupihuvi korral `mailto:` Raimole. *(v1.0-s ei olnud.)*
 7. **CTA.** Aktiivse programmi korral kuvatakse `report.cta.active`. Muidu nupp → `create-checkout`.
 8. **Stripe Checkout.** Pärast makset `/raport/[token]?alustatud=1`.
 9. **Webhook** loob liitumise ja saadab tervituskirja.
@@ -381,7 +381,8 @@ Valideerimine on kõik-või-mitte-midagi: üks vigane osa kukutab terve peegeldu
 | Päevakiri | cron | `emails.daily` (`{dayIndex}`, **üks link**) |
 | Päevakiri viimasel päeval | cron | sama + `saTitle`, `saBody`, `saButton` |
 | Lõpuraporti kiri | cron final | `emails.final` |
-| Uudiskirja kinnitus | linnuke | Smaily |
+| Teade kontaktisoovist | linnuke raportis | `emails.contactRequest`, läheb Raimole |
+| Uudiskiri | link raportis | Smaily enda leht, mitte kiri siit |
 
 Kirjakest on üle tõstetud AttFocusest (`_shared/emailLayout.ts`), muutunud on ainult bränd. **Hele taust, tume tekst**: Outlook Windowsis eirab `body` taustavärvi ja Gmaili tume režiim värvib teksti ümber, mis annaks osale lugejatest halli hallil.
 
