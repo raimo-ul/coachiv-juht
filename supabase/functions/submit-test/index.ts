@@ -15,7 +15,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getContent } from "../_shared/content.ts";
 import { isComplete, scoreTest } from "../_shared/scoring.ts";
 import { newToken } from "../_shared/tokens.ts";
-import { renderEmail, sendEmail, subscribeNewsletter } from "../_shared/email.ts";
+import { renderEmail, sendEmail } from "../_shared/email.ts";
 import { env } from "../_shared/env.ts";
 
 const corsHeaders = {
@@ -87,6 +87,9 @@ serve(async (req) => {
     }
   }
 
+  // The client stopped sending this on 01.11, when the checkbox became a link
+  // to Smaily's own page. The column and this path stay so the consents
+  // already recorded keep their meaning and an older cached page cannot break.
   const newsletter = body.newsletter === true;
   const locale = content.locale;
 
@@ -203,10 +206,6 @@ serve(async (req) => {
       console.error("[submit-test] SITE_BASE_URL puudub, raporti kirja ei saadetud");
     }
 
-    if (newsletter) {
-      const sub = await subscribeNewsletter(email);
-      if (!sub.ok) console.error("[submit-test] uudiskiri:", sub.error);
-    }
   })());
 
   return json(200, { reportPath });

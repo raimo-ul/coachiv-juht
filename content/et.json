@@ -205,8 +205,6 @@
       "title": "Kuhu raport saata?",
       "emailLabel": "E-post",
       "emailError": "Kontrolli e-posti aadressi.",
-      "newsletterLabel": "Tahan saada ka Raimo uudiskirja",
-      "newsletterNote": "Ainult sisu, mida saad juhina kasutada. Loobuda saad ühe klõpsuga.",
       "privacyNote": "Raport saadetakse sellele aadressile. Loe lähemalt: Privaatsus",
       "button": "Näita raportit"
     },
@@ -315,6 +313,11 @@
     "contact": {
       "label": "Tahan, et Raimo võtaks minuga ühendust (koolitus/coaching vms teema)",
       "saved": "Märgitud. Raimo võtab ühendust."
+    },
+    "newsletter": {
+      "text": "Raimo uudiskiri: juhtimisest, umbes korra või kaks kuus.",
+      "link": "Liitu uudiskirjaga",
+      "url": "https://9ndeed0t.sendsmaily.net/landing-pages/67862044-9c20-4f33-99d5-6451c1ddeffb/html/"
     }
   },
   "final": {

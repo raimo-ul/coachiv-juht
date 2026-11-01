@@ -134,27 +134,16 @@ export async function sendEmail(params: {
  * This is a request to opt in, not a subscription. Smaily answers it by mailing
  * the person a confirmation; they join the list only when they click it.
  */
-const SMAILY_OPT_IN = "https://9ndeed0t.sendsmaily.net/api/opt-in/";
+// subscribeNewsletter is gone, 01.11.
+//
+// It posted to Smaily's public opt-in form from the server. That form answers
+// a server with a robot check page and HTTP 200, so every signup looked like a
+// success and nobody was ever subscribed. Seven consents sat in the database
+// having reached no list; all of them test addresses, found before launch.
+//
+// The newsletter is now a link on the report to Smaily's own page, where the
+// robot check and the confirmation mail belong and where the person can see
+// that it worked. Doing it from the server again would need Smaily's
+// authenticated API (autoresponder.php, HTTP Basic) and a check on the
+// response body rather than the status code.
 
-export async function subscribeNewsletter(email: string): Promise<SendResult> {
-  if (emailDisabled()) return { ok: true, skipped: true };
-
-  try {
-    const res = await fetch(SMAILY_OPT_IN, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ email, allikas: "coachiv-test" }).toString(),
-      // Without a success_url Smaily answers an accepted post with a redirect
-      // of its own, so 3xx means yes just as much as 2xx does.
-      redirect: "manual",
-    });
-
-    if (res.status >= 400) {
-      const body = (await res.text().catch(() => "")).slice(0, 300);
-      return { ok: false, error: `Smaily HTTP ${res.status} ${body}` };
-    }
-    return { ok: true };
-  } catch (e) {
-    return { ok: false, error: String(e) };
-  }
-}
