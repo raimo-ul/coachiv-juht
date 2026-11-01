@@ -60,9 +60,18 @@ export function Footer() {
   );
 }
 
-export function Page({ children, minimal }: { children: ReactNode; minimal?: boolean }) {
+export function Page({
+  children,
+  minimal,
+  printable = false,
+}: {
+  children: ReactNode;
+  minimal?: boolean;
+  /** Marks this page as one the print stylesheet should lay out for A4. */
+  printable?: boolean;
+}) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className={`flex min-h-screen flex-col${printable ? " print-report" : ""}`}>
       <Header minimal={minimal} />
       <main className="flex-1">{children}</main>
       <Footer />

@@ -154,3 +154,119 @@
   transform-origin: left;
   animation: grow 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
+
+/* ── Printing a report ───────────────────────────────────────────────────────
+ *
+ * The PDF is the browser's. window.print() plus these rules, saved as PDF.
+ * Lifted from AttFocus, where the same page printed as three sheets with the
+ * reflection guillotined across a break, and where the fixes below were worked
+ * out against real A4 output rather than guessed.
+ *
+ * Three things caused that mess and all three apply here:
+ *
+ * 1. An A4 page inside 1cm margins is about 718px wide, which is under
+ *    Tailwind's md breakpoint of 768px. Every md:grid-cols-2 therefore stacks
+ *    in print and eats height it does not need. They are forced back across.
+ *
+ * 2. Nothing told the browser which blocks were indivisible, so it split
+ *    wherever the page ran out. Cards are marked unbreakable; sections are
+ *    not, deliberately, because protecting a whole section pushes a long one
+ *    onto its own sheet and leaves the previous one half empty.
+ *
+ * 3. min-h-screen means "at least one viewport", and in print a viewport is a
+ *    page, so it pushes a sliver past the end and Chrome prints a blank sheet.
+ *
+ * The green and the bone surfaces have to survive: this product's report is
+ * read partly by colour, and a greyscale chart says nothing. print-color-adjust
+ * is what keeps browsers from helpfully dropping backgrounds.
+ */
+@media print {
+  @page {
+    size: A4;
+    margin: 1cm;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background: #fff;
+  }
+
+  /* No blank trailing sheet. */
+  .print-report,
+  .print-report > div {
+    min-height: 0 !important;
+  }
+
+  /* The site chrome is navigation, which a sheet of paper cannot use. The
+     report's own h1 says what the document is. */
+  .print-report header {
+    display: none !important;
+  }
+
+  /* Reclaim the width the md breakpoint gives away on A4. */
+  .print-report [data-print="two-up"] {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  /* Two across for the pair cards, not three. Three was tried: narrower
+     columns make taller cards, the section grew, and the test report went from
+     three pages to four. One card starting the next page is the cheaper
+     blemish. */
+
+  /* A card may not be cut in half. The reflection and the person's own words
+     are the ones that actually suffered in AttFocus. */
+  .print-report [data-print="keep"],
+  .print-report [data-print="two-up"] > *,
+  .print-report blockquote {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* A heading alone at the foot of a page is worse than a shorter page. */
+  .print-report h1,
+  .print-report h2 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* Paper has no scroll, so the screen's generous rhythm is wasted. Taking it
+     back is what lets the type stay full size. */
+  .print-report section > div {
+    padding-top: 0.9rem !important;
+    padding-bottom: 0.9rem !important;
+  }
+  .print-report section:first-of-type > div {
+    padding-top: 0 !important;
+  }
+
+  /* The chart reads the same a little shorter. */
+  .print-report [data-print="chart"] {
+    height: 7rem !important;
+  }
+
+  /* Full-bleed colour across a page edge looks like a printing fault, so the
+     tinted sections keep their tint but lose the bleed. */
+  .print-report .bg-bone {
+    border: 1px solid var(--rule);
+  }
+
+  /* The reflection's green rule runs the height of its container, and a
+     container that spans a page break leaves the rule running down two inches
+     of empty paper, which reads as a printing fault. In print it hugs each
+     paragraph instead. On screen the continuous line stays. */
+  .print-report [data-print="reflection"] {
+    border-left: 0 !important;
+    padding-left: 0 !important;
+  }
+  .print-report [data-print="reflection"] > p {
+    border-left: 4px solid var(--signal);
+    padding-left: 1.5rem;
+  }
+
+  .print-report footer {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border-top: 1px solid var(--rule);
+  }
+}

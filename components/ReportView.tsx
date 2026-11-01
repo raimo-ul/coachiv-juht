@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Content } from "@/lib/content";
 import { functionHeaders, functionUrl } from "@/lib/functionsUrl";
 import { Page } from "@/components/site";
+import { PrintButton } from "@/components/PrintButton";
 import { ResultRow } from "@/components/ResultRow";
 import { AiParagraph } from "@/components/AiParagraph";
 import { ContactOptIn } from "@/components/ContactOptIn";
@@ -91,10 +92,13 @@ export function ReportView({ token, content }: { token: string; content: Content
   );
 
   return (
-    <Page>
+    <Page printable>
       <section className="border-b-2 border-rule">
         <div className="mx-auto max-w-3xl px-5 pb-10 pt-12 md:pt-16">
-          <p className="eyebrow mb-6 text-muted-foreground">{t.eyebrow}</p>
+          <div className="mb-6 flex items-start justify-between gap-4">
+            <p className="eyebrow text-muted-foreground">{t.eyebrow}</p>
+            <PrintButton label={t.print} />
+          </div>
           <h1 className="text-6xl leading-[0.9] md:text-8xl">
             Sinu coachiv juhtimine <span className="marker">praegu</span>
           </h1>
@@ -110,7 +114,7 @@ export function ReportView({ token, content }: { token: string; content: Content
           <div className="mx-auto max-w-3xl px-5 py-14">
             <h2 className="text-5xl md:text-6xl">{t.pairs.heading}</h2>
             <p className="mb-8 mt-4 max-w-xl text-muted-foreground">{t.pairs.intro}</p>
-            <div className="grid gap-4 md:grid-cols-3">
+            <div data-print="two-up" className="grid gap-4 md:grid-cols-3">
               {report.pairs.map((p) => (
                 <div key={p.belief} className="border-2 border-rule bg-background p-5">
                   <p className="eyebrow border-b-2 border-rule pb-2 text-muted-foreground">
@@ -143,7 +147,9 @@ export function ReportView({ token, content }: { token: string; content: Content
         </div>
       </section>
 
-      <section className="bg-signal">
+      {/* The offer belongs on screen, not in a saved file: a PDF read in
+          six months would carry a price and a button that do nothing. */}
+      <section className="bg-signal print:hidden">
         <div className="mx-auto max-w-3xl px-5 py-16 md:py-20">
           {report.hasActiveProgramme ? (
             <p className="text-xl">{t.cta.active}</p>

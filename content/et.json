@@ -298,6 +298,7 @@
     },
     "notFound": "Seda raportit ei leitud. Kontrolli linki oma e-postis.",
     "eyebrow": "Raport",
+    "print": "Laadi PDF alla",
     "track": {
       "low": "harva",
       "high": "sageli"
@@ -314,6 +315,7 @@
   "final": {
     "title": "Sinu kolm nädalat",
     "eyebrow": "Kolm nädalat",
+    "print": "Laadi PDF alla",
     "consistency": {
       "heading": "Sinu järjepidevus",
       "intro": "Vastasid {answered} tööpäeval {workdays}-st.",

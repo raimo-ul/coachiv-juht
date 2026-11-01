@@ -95,7 +95,7 @@ export function AiParagraph({
       <section className="border-b-2 border-rule">
         <div className="mx-auto max-w-3xl px-5 py-14">
           <h2 className="mb-8 text-5xl md:text-6xl">{heading}</h2>
-          <div className="border-l-4 border-signal pl-6">
+          <div data-print="keep" className="border-l-4 border-signal pl-6">
             <p className="text-xl italic leading-relaxed md:text-2xl md:leading-relaxed">{text}</p>
             <p className="mt-6 text-sm text-muted-foreground">{signature}</p>
           </div>
@@ -109,7 +109,7 @@ export function AiParagraph({
       <section className="border-b-2 border-rule">
         <div className="mx-auto max-w-3xl px-5 py-14">
           <h2 className="mb-8 text-5xl md:text-6xl">{heading}</h2>
-          <p className="border-l-4 border-signal pl-6 text-xl italic text-muted-foreground">{loadingLabel}</p>
+          <p data-print="keep" className="border-l-4 border-signal pl-6 text-xl italic text-muted-foreground">{loadingLabel}</p>
         </div>
       </section>
     );

@@ -5,6 +5,7 @@ import type { Content } from "@/lib/content";
 import { fill } from "@/lib/content";
 import { functionHeaders, functionUrl } from "@/lib/functionsUrl";
 import { Page } from "@/components/site";
+import { PrintButton } from "@/components/PrintButton";
 import { LinkedText } from "@/components/LinkedText";
 
 type QuestionResult = { q: number; yes: number; answered: number; yesRate: number | null };
@@ -118,12 +119,15 @@ export function FinalView({ token, content }: { token: string; content: Content 
   const pct = (r: QuestionResult) => (r.yesRate ?? 0) * 100;
 
   return (
-    <Page>
+    <Page printable>
       <section className="border-b-2 border-rule">
         <div className="mx-auto max-w-3xl px-5 pb-10 pt-12 md:pt-16">
-          <p className="eyebrow mb-6 text-muted-foreground">
-            {t.eyebrow} · {data.period.start} – {data.period.end}
-          </p>
+          <div className="mb-6 flex items-start justify-between gap-4">
+            <p className="eyebrow text-muted-foreground">
+              {t.eyebrow} · {data.period.start} – {data.period.end}
+            </p>
+            <PrintButton label={t.print} />
+          </div>
           <h1 className="text-6xl leading-[0.9] md:text-8xl">
             Sinu kolm <span className="marker">nädalat</span>
           </h1>
@@ -145,7 +149,7 @@ export function FinalView({ token, content }: { token: string; content: Content 
 
           <div className="mt-8 border-2 border-rule p-5">
             <p className="eyebrow mb-5 text-muted-foreground">{t.consistency.chart}</p>
-            <div className="flex items-end gap-1" style={{ height: "9rem" }}>
+            <div data-print="chart" className="flex items-end gap-1" style={{ height: "9rem" }}>
               {numbers.consistency.map((d) => (
                 <div
                   key={d.dayIndex}
@@ -173,7 +177,7 @@ export function FinalView({ token, content }: { token: string; content: Content 
           <div className="mx-auto max-w-3xl px-5 py-12">
             <h2 className="text-4xl md:text-5xl">{t.strongest.heading}</h2>
             <p className="mb-8 mt-3 text-muted-foreground">{t.strongest.framing}</p>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div data-print="two-up" className="grid gap-4 md:grid-cols-2">
               {numbers.strongest.map((r) => (
                 <div key={r.q} className="border-2 border-rule bg-background p-5">
                   <p className="leading-snug">{questionText(r.q)}</p>
@@ -193,7 +197,7 @@ export function FinalView({ token, content }: { token: string; content: Content 
         <section className="border-b-2 border-rule">
           <div className="mx-auto max-w-3xl px-5 py-12">
             <h2 className="mb-6 text-4xl md:text-5xl">{t.weakest.heading}</h2>
-            <div className="border-l-4 border-signal pl-6">
+            <div data-print="keep" className="border-l-4 border-signal pl-6">
               <p className="text-lg leading-snug">{questionText(numbers.weakest.q)}</p>
               <p className="display mt-4 text-4xl">{Math.round(pct(numbers.weakest))}%</p>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -215,7 +219,7 @@ export function FinalView({ token, content }: { token: string; content: Content 
           <div className="mx-auto max-w-3xl px-5 py-12">
             <h2 className="mb-8 text-4xl md:text-5xl">{t.change.heading}</h2>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div data-print="two-up" className="grid gap-4 md:grid-cols-2">
               {([
                 [t.change.attentionQuestion, data.change.attention],
                 [t.change.behaviourQuestion, data.change.behaviour],
@@ -293,7 +297,12 @@ export function FinalView({ token, content }: { token: string; content: Content 
         <section>
           <div className="mx-auto max-w-3xl px-5 py-14 md:py-20">
             <h2 className="mb-8 text-4xl md:text-5xl">{t.ai.heading}</h2>
-            <div className="border-l-4 border-signal pl-6">
+            {/* The block is breakable, the paragraphs are not. Marking the
+                whole reflection unbreakable pushed it onto a sheet of its own
+                and left the previous one half empty. A break between two
+                paragraphs is fine; one through the middle of a sentence is
+                what this is here to prevent. */}
+            <div data-print="reflection" className="border-l-4 border-signal pl-6">
               {/* The paragraphs run together as one piece of writing, without
                   headings over them: they are a reflection, not a set of
                   findings, and three labelled boxes would read as a verdict.
@@ -302,13 +311,17 @@ export function FinalView({ token, content }: { token: string; content: Content 
               {reflection.map((text, i) => (
                 <p
                   key={i}
+                  data-print="keep"
                   className="text-xl italic leading-relaxed md:text-2xl md:leading-relaxed [&+p]:mt-6"
                 >
                   {text}
                 </p>
               ))}
               {question && (
-                <p className="mt-8 border-t-2 border-rule pt-6 text-xl leading-relaxed md:text-2xl md:leading-relaxed">
+                <p
+                  data-print="keep"
+                  className="mt-8 border-t-2 border-rule pt-6 text-xl leading-relaxed md:text-2xl md:leading-relaxed"
+                >
                   {question}
                 </p>
               )}
