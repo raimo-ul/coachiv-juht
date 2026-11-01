@@ -302,6 +302,10 @@ Põhjus: kolm nädalat juhivad tähelepanu. Viisteist päeva enesekohast vastust
 - **Enesehinnang.** Kaks hinnangut skaalal ja juhi enda sõnad eraldi tsitaadina.
 - **Kõik kuus** küsimust loeteluna.
 
+**Järjekord lehel:** numbrid, siis „Mida see ei tähenda", siis peegeldus. Hoiatus loetakse enne, mitte pärast: nii saab inimene teada, mida numbrid ei tähenda, enne kui loeb, mida keegi neist arvas, ja leht lõpeb küsimusega, mis on ainus asi, mida temalt palutakse. Hoiatuse all on kontaktirida, ainus viis tasulise toote lõpust Raimoni jõuda.
+
+Lehe lõpus oli kuni 01.11 roheline plokk lõpulause ja küsimusega. Mõlemad olid kirjutatud enne, kui peegeldusel oli oma küsimus, ja kui see tekkis, kordas plokk kahte asja, mida öeldi tema kohal paremini. Üldine küsimus personaalse raporti lõpus loeb täitetekstina.
+
 Vastamata päev ei ole „ei". `null` tähendab, et küsimus ei jõudnud päeva, ja selle lugemine „ei"-ks karistaks eemalolekut.
 
 Arvutus on puhas aritmeetika (`_shared/finalReport.ts`), ilma andmebaasi ja võrguta, ühiktestidega.
