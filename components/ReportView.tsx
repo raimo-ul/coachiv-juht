@@ -159,7 +159,6 @@ export function ReportView({ token, content }: { token: string; content: Content
               <p className="mt-6 text-lg leading-relaxed">{content.programme.body}</p>
               <p className="display mt-6 text-4xl">{content.programme.price}</p>
               <StartProgramme token={token} content={content} />
-              <p className="mt-4 text-sm">{t.cta.codeNote}</p>
               <p className="mt-4 text-sm">
                 <LinkedText
                   text={content.programme.groupNote}

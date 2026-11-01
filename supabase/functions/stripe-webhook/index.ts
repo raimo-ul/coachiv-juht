@@ -8,11 +8,8 @@
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-import { getContent, fill } from "../_shared/content.ts";
-import { newToken } from "../_shared/tokens.ts";
 import { verifyWebhook } from "../_shared/stripe.ts";
-import { renderEmail, sendEmail } from "../_shared/email.ts";
-import { localDate, nextWorkday, nthWorkdayFrom } from "../_shared/workdays.ts";
+import { enrol } from "../_shared/enroll.ts";
 import { env } from "../_shared/env.ts";
 
 serve(async (req) => {
@@ -62,80 +59,37 @@ serve(async (req) => {
     return new Response("Missing metadata", { status: 200 }); // 200: retrying will not fix it
   }
 
-  const participant = await supabase
-    .from("participants")
-    .select("email, timezone, locale")
-    .eq("id", participantId)
-    .maybeSingle();
-
-  if (participant.error || !participant.data) {
-    console.error("[stripe-webhook] osaleja ei leitud:", participantId);
-    return new Response("Unknown participant", { status: 200 });
-  }
-
-  const tz = participant.data.timezone || "Europe/Tallinn";
-  const content = getContent(participant.data.locale);
-
-  // SPEC 8: the first workday after the money arrived, in their own time zone.
-  // Someone paying on Friday evening starts on Monday, not on Saturday.
-  const today = localDate(new Date(), tz);
-  const startDate = nextWorkday(today);
-  const endDate = nthWorkdayFrom(startDate, 15);
-
   // SPEC 8: the code comes off the session rather than being trusted from the
   // browser, so what is stored is what Stripe actually honoured.
-  const promoCode =
-    session.total_details?.breakdown?.discounts?.[0]?.discount?.promotion_code?.code ??
-    (typeof session.total_details?.breakdown?.discounts?.[0]?.discount?.promotion_code === "string"
-      ? session.total_details.breakdown.discounts[0].discount.promotion_code
-      : null);
+  const d = session.total_details?.breakdown?.discounts?.[0]?.discount?.promotion_code;
+  const promoCode = typeof d === "string" ? d : d?.code ?? null;
 
-  const finalToken = newToken();
+  // The dates, the token and the welcome letter are shared with the free-seat
+  // door in create-checkout. One implementation, so the two cannot drift.
+  const result = await enrol(supabase, {
+    participantId,
+    testId,
+    idempotencyKey: session.id,
+    amountTotal: session.amount_total ?? 0,
+    promoCode,
+  });
 
-  const created = await supabase
-    .from("enrollments")
-    .insert({
-      participant_id: participantId,
-      test_id: testId,
-      status: "active",
-      start_date: startDate,
-      end_date: endDate,
-      stripe_session_id: session.id,
-      amount_total: session.amount_total ?? 0,
-      promo_code: promoCode,
-      final_token: finalToken,
-    })
-    .select("id")
-    .single();
-
-  if (created.error) {
-    // 23505 is the unique violation on stripe_session_id: this delivery is a
-    // repeat and the programme already exists. Nothing to do and nothing wrong.
-    if (created.error.code === "23505") {
-      console.log(`[stripe-webhook] juba loodud, session=${session.id}`);
-      return new Response(JSON.stringify({ ok: true, duplicate: true }), { status: 200 });
+  if (!result.ok) {
+    if (result.reason === "osaleja ei leitud") {
+      console.error("[stripe-webhook] osaleja ei leitud:", participantId);
+      return new Response("Unknown participant", { status: 200 });
     }
-    console.error("[stripe-webhook] enrollment insert:", created.error.message);
+    console.error("[stripe-webhook] enrollment:", result.reason);
     return new Response("Insert failed", { status: 500 }); // worth a retry
   }
 
-  const site = (env("SITE_BASE_URL") ?? "").replace(/\/+$/, "");
-  const hour = env("DAILY_SEND_HOUR") ?? "16";
-  const mail = renderEmail(
-    {
-      subject: fill(content.emails.welcome.subject, { startDate }),
-      lines: content.emails.welcome.body.map((l) => fill(l, { startDate, sendTime: `${hour}:00` })),
-    },
-    {
-      links: { report: `${site}/raport/` },
-      footer: content.emails.footer,
-      siteName: content.meta.siteName,
-    },
+  if (result.duplicate) {
+    console.log(`[stripe-webhook] juba loodud, session=${session.id}`);
+    return new Response(JSON.stringify({ ok: true, duplicate: true }), { status: 200 });
+  }
+
+  return new Response(
+    JSON.stringify({ ok: true, startDate: result.startDate, endDate: result.endDate }),
+    { status: 200 },
   );
-
-  const sent = await sendEmail({ to: participant.data.email, ...mail });
-  if (!sent.ok) console.error("[stripe-webhook] tervituskiri:", sent.error);
-
-  console.log(`[stripe-webhook] programm loodud ${startDate}..${endDate} tz=${tz}`);
-  return new Response(JSON.stringify({ ok: true, startDate, endDate }), { status: 200 });
 });

@@ -240,7 +240,30 @@ Muud õigused on `None`. Webhook ei kasuta API võtit üldse, ainult allkirja.
 
 Hind 15 € on koos käibemaksuga, Stripe Taxi ei kasutata.
 
-**TEGEMATA kontroll:** 100% koodiga tellimus peab läbima Checkouti ilma kaardita. Testimata.
+### 8.1 100% kood ei lähe Stripe'i kaudu
+
+v1.0 §8 eeldas, et täissoodustusega tellimus läbib Checkouti ilma kaardita („no-cost orders"). **Kontrollitud 01.11: ei läbi.** Stripe vastab sõnaselgelt:
+
+> The Checkout Session's total amount due cannot be zero in `payment` mode.
+
+Nii et koht, mille ettevõte on juba kinni maksnud, ei saa Checkoutist läbi käia. Seda ei paranda ükski seadistus: kupongi tootepiirang, režiim ega võtme õigused olid kõik korras.
+
+**Lahendus.** Kui kood annab 100%, siis Stripe'i ei kutsuta. `create-checkout` kontrollib koodi, loeb kohad üle ja loob liitumise ise, `amount_total = 0`. Kõik väiksemad soodustused käivad endiselt Checkouti kaudu, sest siis on summa olemas.
+
+**Kohtade lugemine.** Stripe ütleb, **mitu kohta lubati** (`max_redemptions`), see projekt loeb, **mitu on kasutatud** (`enrollments.promo_code`). Stripe'i enda loendur ei liigu, sest makset läbi ei käi. Kohtade täitumisel vastatakse `codeError: "full"` ja makse-nupp jääb alles, nii et keegi ei jää ummikusse.
+
+**Idempotentsus.** Tasuta kohal ei ole Stripe'i sessiooni, aga `stripe_session_id` on kohustuslik ja unikaalne. Väärtuseks pannakse `free:<kood>:<osaleja>`, nii et nupu teine vajutus satub samasse ritta.
+
+**Liitumise loomine on ühes kohas.** `_shared/enroll.ts` teenindab mõlemat ust, makset ja koodi. Kuupäevad, žetoon ja tervituskiri on identsed ja ei saa lahku minna.
+
+### 8.2 Koodi sisestamine
+
+Kood jõuab kohale kahte teed:
+
+- **link** `?kood=COMPENSA26` → küpsis `cj_promo` (60 päeva) → automaatselt kaasa
+- **väli raporti lõpus** → inimesele, kes tegi testi enne, kui tööandja kohad ostis, ja kelle brauseris koodi ei ole
+
+Väli lisati 01.11. Enne seda ütles tekst „sisesta see makselehel", mis lakkas kehtimast samal hetkel, kui 100% kood hakkas Stripe'ist mööda minema.
 
 ## 9. Keel
 

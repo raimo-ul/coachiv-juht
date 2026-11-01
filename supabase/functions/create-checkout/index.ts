@@ -10,6 +10,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getContent } from "../_shared/content.ts";
 import { looksLikeToken } from "../_shared/tokens.ts";
 import { createCheckoutSession, findPromotionCode } from "../_shared/stripe.ts";
+import { enrol, freeKey } from "../_shared/enroll.ts";
 import { env } from "../_shared/env.ts";
 
 const corsHeaders = {
@@ -76,11 +77,54 @@ serve(async (req) => {
     // The code travels in the request body rather than a cookie header: the
     // browser holds it in cj_promo and this function is on another origin, so
     // the cookie is never sent here.
-    const promotionCodeId = promo ? await findPromotionCode(promo) : null;
-    if (promo && !promotionCodeId) {
+    const found = promo ? await findPromotionCode(promo) : null;
+    if (promo && !found) {
       console.warn(`[create-checkout] tundmatu või aegunud kood: ${promo.slice(0, 40)}`);
+      return json(200, { codeError: "invalid" });
     }
 
+    // A seat the company already paid for never reaches Stripe.
+    //
+    // Checkout refuses a session whose total is zero in payment mode, in its
+    // own words on 01.11: "The Checkout Session's total amount due cannot be
+    // zero in `payment` mode." So a 100% code is honoured here instead, after
+    // the seats have been counted.
+    if (found && found.percentOff === 100) {
+      // Stripe knows how many seats were sold; it never learns they were used,
+      // because no payment passes through it. The count lives here.
+      if (found.maxRedemptions !== null) {
+        const used = await supabase
+          .from("enrollments")
+          .select("id", { count: "exact", head: true })
+          .eq("promo_code", found.code);
+
+        if (used.error) {
+          console.error("[create-checkout] kohtade lugemine:", used.error.message);
+          return json(500, { error: content.errors.saveFailed });
+        }
+        if ((used.count ?? 0) >= found.maxRedemptions) {
+          console.log(`[create-checkout] kohad täis: ${found.code} ${used.count}/${found.maxRedemptions}`);
+          return json(200, { codeError: "full" });
+        }
+      }
+
+      const result = await enrol(supabase, {
+        participantId: test.data.participant_id,
+        testId: test.data.id,
+        idempotencyKey: freeKey(found.code, test.data.participant_id),
+        amountTotal: 0,
+        promoCode: found.code,
+      });
+
+      if (!result.ok) {
+        console.error("[create-checkout] tasuta liitumine:", result.reason);
+        return json(500, { error: content.errors.saveFailed });
+      }
+      return json(200, { enrolled: true, startDate: result.startDate });
+    }
+
+    // Anything short of 100% still has a sum to pay, so it goes through
+    // Checkout exactly as before.
     const session = await createCheckoutSession({
       priceId,
       participantId: test.data.participant_id,
@@ -88,7 +132,7 @@ serve(async (req) => {
       email: (test.data as unknown as { participants: { email: string } }).participants.email,
       successUrl: `${site}/raport/${token}?alustatud=1`,
       cancelUrl: `${site}/raport/${token}`,
-      promotionCodeId,
+      promotionCodeId: found?.id ?? null,
     });
 
     return json(200, { url: session.url });

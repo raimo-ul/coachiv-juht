@@ -57,19 +57,61 @@ async function call(path: string, body?: Record<string, unknown>): Promise<Recor
   return json as Record<string, unknown>;
 }
 
-/** The promotion code's id, or null when the code is unknown or spent. */
-export async function findPromotionCode(code: string): Promise<string | null> {
+export type PromoDetails = {
+  id: string;
+  code: string;
+  /** 100 for a seat a company has already paid for. Null for amount-off. */
+  percentOff: number | null;
+  /** Seats the company bought, or null when Raimo set no limit. */
+  maxRedemptions: number | null;
+};
+
+/**
+ * The promotion code, or null when it is unknown, inactive or spent.
+ *
+ * Returns the discount size as well as the id, because a code worth 100% can
+ * never travel through Checkout: Stripe refuses a session whose total is zero
+ * in payment mode. Those seats are granted directly instead, which means this
+ * lookup has to be able to tell the two kinds apart.
+ *
+ * `expand[]=coupon` is what carries percent_off. Reading it needs the
+ * restricted key to hold Coupons: read alongside Promotion Codes: read.
+ */
+export async function findPromotionCode(code: string): Promise<PromoDetails | null> {
   const clean = code.trim().toUpperCase();
   if (!/^[A-Z0-9_-]{3,40}$/.test(clean)) return null;
 
   const res = await fetch(
-    `${API}/promotion_codes?code=${encodeURIComponent(clean)}&active=true&limit=1`,
+    `${API}/promotion_codes?code=${encodeURIComponent(clean)}&active=true&limit=1` +
+      `&expand[]=data.coupon`,
     { headers: { authorization: `Bearer ${secret()}` } },
   );
-  if (!res.ok) return null;
 
-  const data = (await res.json()) as { data?: Array<{ id?: string }> };
-  return data.data?.[0]?.id ?? null;
+  // A failed lookup used to return null silently, which is indistinguishable
+  // from "no such code" and hid a missing key permission for an afternoon.
+  if (!res.ok) {
+    console.error(`[stripe] promotion_codes ${res.status}:`, (await res.text()).slice(0, 200));
+    return null;
+  }
+
+  const data = (await res.json()) as {
+    data?: Array<{
+      id?: string;
+      code?: string;
+      max_redemptions?: number | null;
+      coupon?: { percent_off?: number | null; valid?: boolean };
+    }>;
+  };
+
+  const hit = data.data?.[0];
+  if (!hit?.id || hit.coupon?.valid === false) return null;
+
+  return {
+    id: hit.id,
+    code: hit.code ?? clean,
+    percentOff: hit.coupon?.percent_off ?? null,
+    maxRedemptions: hit.max_redemptions ?? null,
+  };
 }
 
 export async function createCheckoutSession(opts: {

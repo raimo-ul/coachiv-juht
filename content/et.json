@@ -291,10 +291,15 @@
       "heading": "Kolm nädalat, kuus küsimust",
       "text": "Iga tööpäeva lõpus saad kirja kuue jah/ei küsimusega. Vastamine võtab alla minuti. Kolme nädala pärast näed, kui sageli need tegevused sinu päeva tegelikult jõudsid, ja saad seda selle testiga võrrelda.",
       "button": "Alusta · 15 €",
-      "codeNote": "Sul on ettevõttelt kood? Sisesta see makselehel.",
+      "codeNote": "Kas sul on ettevõttelt kood?",
       "codeApplied": "Ettevõtte kood on lisatud.",
       "active": "Sinu kolm nädalat on käimas. Päevakiri tuleb igal tööpäeval.",
-      "started": "Valmis. Sinu kolm nädalat algab {startDate}. Tervituskiri on teel."
+      "started": "Valmis. Sinu kolm nädalat algab {startDate}. Tervituskiri on teel.",
+      "codeLabel": "Sisesta kood",
+      "codeButton": "Kasuta koodi",
+      "codeChecking": "Kontrollin…",
+      "codeInvalid": "Seda koodi ei leitud. Kontrolli üle või küsi tööandjalt uus.",
+      "codeFull": "Selle koodi kohad on täis. Küsi tööandjalt või kirjuta Raimole."
     },
     "notFound": "Seda raportit ei leitud. Kontrolli linki oma e-postis.",
     "eyebrow": "Raport",
