@@ -42,7 +42,7 @@ export function ContactOptIn({ token, content }: { token: string; content: Conte
   }
 
   return (
-    <div className="mt-8 border-t-2 border-rule pt-6">
+    <div>
       <label htmlFor={id} className="flex cursor-pointer items-start gap-3">
         <input
           id={id}

@@ -8,6 +8,7 @@ import { Page } from "@/components/site";
 import { PrintButton } from "@/components/PrintButton";
 import { LinkedText } from "@/components/LinkedText";
 import { NewsletterBlock } from "@/components/NewsletterBlock";
+import { ContactOptIn } from "@/components/ContactOptIn";
 
 type QuestionResult = { q: number; yes: number; answered: number; yesRate: number | null };
 
@@ -344,6 +345,18 @@ export function FinalView({ token, content }: { token: string; content: Content 
         button={t.newsletter.button}
         url={t.newsletter.url}
       />
+
+      {/* The contact box moved here from the test report on 01.11. It sat in
+          the green block under the price, the code field and the group note,
+          which was four things asking for a decision at once. Here it is the
+          last of them and the only one left, and a person three weeks in has
+          more reason to want a conversation than one five minutes past a free
+          test. */}
+      <section className="border-b-2 border-rule print:hidden">
+        <div className="mx-auto max-w-3xl px-5 py-10">
+          <ContactOptIn token={token} content={content} />
+        </div>
+      </section>
 
       {/* The report used to end on a full-bleed green block carrying a closing
           line and a question. Both were written before the reflection had a

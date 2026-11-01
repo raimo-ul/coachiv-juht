@@ -7,7 +7,6 @@ import { Page } from "@/components/site";
 import { PrintButton } from "@/components/PrintButton";
 import { ResultRow } from "@/components/ResultRow";
 import { AiParagraph } from "@/components/AiParagraph";
-import { ContactOptIn } from "@/components/ContactOptIn";
 import { LinkedText } from "@/components/LinkedText";
 import { StartProgramme } from "@/components/StartProgramme";
 import { NewsletterBlock } from "@/components/NewsletterBlock";
@@ -170,7 +169,6 @@ export function ReportView({ token, content }: { token: string; content: Content
               </p>
             </>
           )}
-          <ContactOptIn token={token} content={content} />
         </div>
       </section>
 

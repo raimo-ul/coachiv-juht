@@ -47,19 +47,35 @@ serve(async (req) => {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
+  // Two tokens can ask for this. The report's, from the test report, and the
+  // final one, from the end of the three weeks: Raimo moved the box there on
+  // 01.11, where a person has more reason to want a conversation than they did
+  // five minutes after a free test. Either way the token is the authority, and
+  // either way it resolves to the same participant.
   const test = await supabase
     .from("tests")
     .select("participant_id")
     .eq("report_token", token)
     .maybeSingle();
 
-  if (test.error || !test.data) return json(404, { ok: false });
+  let participantId: string | null = test.data?.participant_id ?? null;
+
+  if (!participantId) {
+    const enrolment = await supabase
+      .from("enrollments")
+      .select("participant_id")
+      .eq("final_token", token)
+      .maybeSingle();
+    participantId = enrolment.data?.participant_id ?? null;
+  }
+
+  if (!participantId) return json(404, { ok: false });
 
   const at = new Date();
   const upd = await supabase
     .from("participants")
     .update({ contact_requested: true, contact_requested_at: at.toISOString() })
-    .eq("id", test.data.participant_id)
+    .eq("id", participantId)
     .eq("contact_requested", false)   // keeps the first request's timestamp
     .select("email");
 
