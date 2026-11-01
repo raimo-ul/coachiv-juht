@@ -162,6 +162,10 @@ tests (
 
 enrollments (
   id, participant_id, test_id, status, start_date, end_date,
+  -- status: active | finished | cancelled
+  --   finished  = kolm nädalat said läbi ja lõpuraport läks välja
+  --   cancelled = katkestatud, näiteks tagasimakse järel. Mõlemad cronid
+  --               filtreerivad 'active', nii et kirjad lakkavad kohe
   stripe_session_id unique, amount_total, promo_code,
   final_token unique, final_report jsonb, final_sent_at,
   sa_token unique, sa_attention, sa_behaviour,   -- enesehinnang, lisatud 31.10
