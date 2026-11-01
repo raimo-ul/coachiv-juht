@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!--
+    The mark from the site header: the signal square inside a hairline rule.
+    Nothing is drawn that is not already on the page, because a favicon that
+    invents its own symbol teaches the eye a second thing to remember.
+
+    Sized for 32px first. At 16px the stroke still reads because it is 2 units
+    wide against a 32-unit box, which rounds to one clean pixel rather than the
+    grey smear a 1-unit hairline becomes.
+  -->
+  <rect x="0" y="0" width="32" height="32" fill="#FFFFFF"/>
+  <rect x="5" y="5" width="22" height="22" fill="#00FA96" stroke="#0F0F0F" stroke-width="3"/>
+</svg>

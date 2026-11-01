@@ -286,6 +286,7 @@
       "text": "See ei ole hinne ega võrdlus teiste juhtidega. Tulemus näitab, kui sageli tegevused sinu päeva jõudsid ja milliseid valikuid sa teed — mitte seda, kui hästi sa neid teed. Seda näevad kõige paremini sinu inimesed."
     },
     "cta": {
+      "transition": "Tahad edasi liikuda?",
       "heading": "Kolm nädalat, kuus küsimust",
       "text": "Iga tööpäeva lõpus saad kirja kuue jah/ei küsimusega. Vastamine võtab alla minuti. Kolme nädala pärast näed, kui sageli need tegevused sinu päeva tegelikult jõudsid, ja saad seda selle testiga võrrelda.",
       "button": "Alusta · 15 €",
@@ -564,44 +565,64 @@
     "eyebrow": "Taust"
   },
   "privacy": {
-    "todo": "MUSTAND. Viia kooskõlla Truresp'i privaatsuslehega ja lasta juriidiliselt üle vaadata.",
     "title": "Privaatsus",
+    "updated": "Uuendatud 1. novembril 2026.",
     "sections": [
       {
         "heading": "Vastutav töötleja",
         "text": "Mindsweeper OÜ, registrikood 11473411, Kammelja tn 4-2, 13516 Tallinn. Kontakt: raimo@raimoulavere.com"
       },
       {
-        "heading": "Mida kogume",
-        "text": "E-posti aadress, testi vastused, skoorid, igapäevased jah/ei vastused, keel, ajavöönd ja uudiskirja nõusolek. Makse puhul makse tunnus ja kasutatud sooduskood. Kaardiandmeid me ei näe, neid töötleb Stripe."
+        "heading": "Mida kogume testi juures",
+        "text": "E-posti aadressi, 18 testiväite vastused, nende pealt arvutatud kuus skoori, ajavööndi ja keele. Ajavöönd loetakse sinu brauserist ja seda on vaja ainult selleks, et kirjad tuleksid sinu enda kella järgi."
+      },
+      {
+        "heading": "Mida kogume programmi juures",
+        "text": "Kui ostad kolme nädala sprindi, lisandub iga tööpäeva kuus jah/ei vastust ja viimase päeva enesehinnang: kaks hinnangut viiepallisel skaalal ja sinu enda kirjutatud vastus küsimusele, mis sinu töötamises muutus. Lisaks makse tunnus Stripe'ist ja kasutatud sooduskood. Kaardiandmeid me ei näe ega salvesta, neid töötleb Stripe."
       },
       {
         "heading": "Milleks",
-        "text": "Raporti koostamiseks ja saatmiseks, kolme nädala programmi kirjade saatmiseks, lõpuraporti koostamiseks, uudiskirja saatmiseks (ainult nõusoleku korral) ja testi parandamiseks anonüümsel kujul."
+        "text": "Raporti koostamiseks ja sulle saatmiseks, kolme nädala kirjade saatmiseks ja lõpuraporti koostamiseks. Testi enda parandamiseks kasutame vastuseid ainult kujul, kust üksikut inimest ei ole võimalik tuvastada."
       },
       {
         "heading": "Õiguslik alus",
-        "text": "Raport ja programm: teenuse osutamine, mida sa tellisid. Uudiskiri: sinu nõusolek, mille saad igal ajal tagasi võtta. Testi parandamine: õigustatud huvi, anonüümsetel andmetel."
+        "text": "Raport ja programm: teenuse osutamine, mille sa tellisid. Testi parandamine: õigustatud huvi, anonüümsetel andmetel."
       },
       {
-        "heading": "Kes andmeid töötleb",
-        "text": "Supabase (andmebaas, EL-i regioon), Vercel (veebileht), Brevo (e-kirjad), Stripe (maksed), Anthropic (raporti isikliku lõigu koostamine; edastatakse ainult vastused ja skoorid, mitte e-posti aadress)."
+        "heading": "Kui soovid, et võtan ühendust",
+        "text": "Raporti lõpus saad märkida, et soovid minuga ühendust. Siis salvestame selle soovi ja selle aja ning mulle läheb teade sinu e-posti aadressiga. Rohkemat ei edastata. Selle aluseks on sinu nõusolek ja sa võid selle igal ajal tagasi võtta, kirjutades raimo@raimoulavere.com."
+      },
+      {
+        "heading": "Tehisaru",
+        "text": "Raporti ja lõpuraporti tekstiosa kirjutab Anthropicu keelemudel. Sinna saadetakse sinu testivastused ja skoorid, kolme nädala jah/ei vastuste kokkuvõte ning enesehinnangu vastused, kaasa arvatud sinu enda kirjutatud lause. E-posti aadressi, nime ega ühtegi muud tunnust me sinna ei saada. Anthropic ei kasuta neid andmeid mudelite treenimiseks."
+      },
+      {
+        "heading": "Kes veel andmeid töötleb",
+        "text": "Supabase (andmebaas, Euroopa Liidu regioon), Vercel (veebileht), Brevo (e-kirjade saatmine), Stripe (maksed), Anthropic (tekstiosa koostamine). Kõik töötlevad andmeid meie ülesandel ja ainult selle teenuse jaoks."
+      },
+      {
+        "heading": "Uudiskiri",
+        "text": "Uudiskirja saad tellida lingiga, mis viib Smaily lehele. Seda nimekirja peetakse Smailys ja sellel ei ole testi ega programmi andmetega mingit seost: me ei saada sinu testitulemusi sinna ega loe Smailyst midagi siia. Uudiskirjast loobumine käib iga kirja lõpus oleva lingiga."
       },
       {
         "heading": "Ettevõtte kood",
-        "text": "Kui liitusid ettevõtte koodiga, ei näe ettevõte sinu tulemusi. Ettevõte näeb ainult, mitu korda koodi on kasutatud."
+        "text": "Kui alustasid ettevõtte koodiga, ei näe ettevõte sinu vastuseid, skoore ega raportit. Ettevõte teab ainult, mitu kohta on kasutatud."
       },
       {
         "heading": "Kui kaua hoiame",
-        "text": "24 kuud pärast viimast tegevust. Seejärel muudetakse andmed anonüümseks."
+        "text": "24 kuud pärast sinu viimast tegevust. Seejärel kustutame e-posti aadressi ja ülejäänu jääb alles kujul, kust sind ei ole võimalik tuvastada. Enne seda saad igal ajal paluda kustutamist."
       },
       {
         "heading": "Sinu õigused",
-        "text": "Saad küsida oma andmete koopiat, neid parandada või kustutada ja uudiskirjast igal ajal loobuda. Kirjuta raimo@raimoulavere.com. Kaebuse saad esitada Andmekaitse Inspektsioonile (aki.ee)."
+        "text": "Saad küsida koopiat oma andmetest, lasta need parandada või kustutada ja võtta nõusoleku tagasi. Kirjuta raimo@raimoulavere.com ja vastan 30 päeva jooksul. Kui vastus ei rahulda, saad pöörduda Andmekaitse Inspektsiooni poole (aki.ee)."
       },
       {
-        "heading": "Küpsised",
-        "text": "Kasutame ainult keelevaliku, sooduskoodi ja teenuse toimimiseks vajalikke küpsiseid. Jälgimisküpsiseid ei kasuta."
+        "heading": "Küpsised ja brauserisalvestus",
+        "text": "Kasutame ühte küpsist. Kui tulid lingiga, milles oli ettevõtte sooduskood, hoiame seda koodi 60 päeva, et see oleks ostu hetkel olemas. Testi ajal hoitakse sinu pooleliolevaid vastuseid sinu enda brauseris, et lehe uuesti laadimine neid ei kaotaks; need ei lahku sinu arvutist enne, kui vajutad raporti nuppu. Jälgimisküpsiseid ja analüütikat ei ole."
+      },
+      {
+        "heading": "Raportite lingid",
+        "text": "Sinu raport avaneb salajase lingiga, ilma parooli ja kontota. Kes seda linki teab, näeb raportit, nii et tasub seda hoida nagu parooli. Lingid ei ole otsingumootoritele nähtavad."
       }
     ],
     "eyebrow": "Andmed"

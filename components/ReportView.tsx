@@ -155,6 +155,11 @@ export function ReportView({ token, content }: { token: string; content: Content
             <p className="text-xl">{t.cta.active}</p>
           ) : (
             <>
+              {/* The block used to open cold on the programme's name, with
+                  nothing joining it to the report above. A person who has just
+                  read their own numbers needs a sentence that turns the page
+                  rather than a headline that starts a new one. */}
+              <p className="eyebrow mb-4">{t.cta.transition}</p>
               <h2 className="text-6xl md:text-8xl">{content.programme.title}</h2>
               <p className="mt-6 text-lg leading-relaxed">{content.programme.body}</p>
               <p className="display mt-6 text-4xl">{content.programme.price}</p>
