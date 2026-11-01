@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { firstText, stripDashes, validateParagraph } from "./ai.ts";
+import { firstText, parseJsonReply, stripDashes, validateParagraph, validateReflection } from "./ai.ts";
 
 describe("stripDashes", () => {
   it("removes a dash used as punctuation between clauses", () => {
@@ -85,5 +85,103 @@ describe("firstText", () => {
     expect(firstText({ content: [{ type: "thinking", thinking: "…" }] })).toBe("");
     expect(firstText({})).toBe("");
     expect(firstText(null)).toBe("");
+  });
+});
+
+// The final report's reflection: two paragraphs and a question, or one and the
+// question when the self-assessment was skipped. Each test names the failure it
+// is guarding against, because every one of these has a plausible-looking wrong
+// answer that would reach a real reader.
+describe("parseJsonReply", () => {
+  it("reads bare JSON", () => {
+    expect(parseJsonReply('{"a":1}')).toEqual({ a: 1 });
+  });
+
+  it("reads JSON the model wrapped in a fence", () => {
+    // Asked for bare JSON, the model fences it often enough that throwing the
+    // answer away over three backticks would waste good text.
+    expect(parseJsonReply('```json\n{"a":1}\n```')).toEqual({ a: 1 });
+    expect(parseJsonReply('```\n{"a":1}\n```')).toEqual({ a: 1 });
+  });
+
+  it("reads JSON with a sentence in front of it", () => {
+    expect(parseJsonReply('Siin on vastus:\n{"a":1}')).toEqual({ a: 1 });
+  });
+
+  it("returns null rather than throwing on something that is not JSON", () => {
+    expect(parseJsonReply("Vabandust, ma ei saa seda teha.")).toBeNull();
+    expect(parseJsonReply("")).toBeNull();
+    expect(parseJsonReply("{ katki")).toBeNull();
+  });
+});
+
+describe("validateReflection", () => {
+  const full = {
+    pattern: "Kuulamine jõudis päeva peaaegu alati. Suuremad ülesanded jõudsid harva.",
+    ownWords: "Kirjutasid, et hakkasid hommikul mõtlema, kellele midagi öelda on.",
+    question: "Mida sa tahad neist edasi hoida?",
+  };
+
+  it("accepts two paragraphs and a question", () => {
+    const r = validateReflection(full, true);
+    expect(r.status).toBe("done");
+    if (r.status === "done") {
+      expect(r.parts.ownWords).toContain("hommikul");
+      expect(r.parts.question).toContain("?");
+    }
+  });
+
+  it("accepts one paragraph and the question when there was no self-assessment", () => {
+    const r = validateReflection({ ...full, ownWords: "" }, false);
+    expect(r.status).toBe("done");
+    if (r.status === "done") expect(r.parts.ownWords).toBeNull();
+  });
+
+  it("refuses words the leader never wrote", () => {
+    // The guard that matters most. Without a self-assessment there is nothing
+    // to write that paragraph from, so anything there was invented.
+    const r = validateReflection(full, false);
+    expect(r.status).toBe("failed");
+    if (r.status === "failed") expect(r.reason).toContain("ownWords");
+  });
+
+  it("refuses a missing own-words paragraph when one was asked for", () => {
+    const r = validateReflection({ ...full, ownWords: "" }, true);
+    expect(r.status).toBe("failed");
+  });
+
+  it("fails the whole reflection when one part is missing", () => {
+    // A report missing its middle paragraph reads as broken. A report with no
+    // reflection at all reads as a report, which SPEC 11 allows.
+    expect(validateReflection({ ...full, pattern: "" }, true).status).toBe("failed");
+    expect(validateReflection({ ...full, pattern: "   " }, true).status).toBe("failed");
+  });
+
+  it("refuses a question that is not a question", () => {
+    const r = validateReflection({ ...full, question: "Hoia seda edasi." }, true);
+    expect(r.status).toBe("failed");
+  });
+
+  it("refuses a runaway paragraph", () => {
+    const long = "Üks lause. Teine lause. Kolmas lause. Neljas lause. Viies lause.";
+    expect(validateReflection({ ...full, pattern: long }, true).status).toBe("failed");
+  });
+
+  it("refuses a type named anywhere, including inside the question", () => {
+    expect(validateReflection({ ...full, pattern: "Sinu tüüp on selge." }, true).status).toBe("failed");
+    expect(validateReflection({ ...full, question: "Kas see arhetüüp sobib?" }, true).status).toBe("failed");
+  });
+
+  it("strips dashes from every part, not only the first", () => {
+    const r = validateReflection({
+      ...full,
+      ownWords: "Kirjutasid ise — et miski muutus.",
+    }, true);
+    expect(r.status).toBe("done");
+    if (r.status === "done") expect(r.parts.ownWords).not.toContain("—");
+  });
+
+  it("treats a non-JSON reply as a failure rather than throwing", () => {
+    expect(validateReflection(null, true).status).toBe("failed");
   });
 });

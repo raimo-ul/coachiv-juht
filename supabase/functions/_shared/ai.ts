@@ -155,23 +155,48 @@ export async function writeReportParagraph(input: {
   }
 }
 
-// ── The final report's paragraph ─────────────────────────────────────────────
+// ── The final report's reflection ────────────────────────────────────────────
 //
-// Rebuilt on AttFocus's reflection prompt rather than SPEC 12.2, because SPEC
-// asks for three paragraphs of which two compare: "mis muutus esimese ja
-// viimase nädala vahel" and "kus erineb kolme nädala pilt sellest, mida juht
-// testis enda kohta hindas". The sprint directs attention and does not measure
-// development, so neither comparison belongs in it.
+// Two paragraphs and a question:
 //
-// What is left is AttFocus's rule, which is the whole point: describe, do not
-// rate. A model asked to comment on someone's three weeks will write "you did
-// well" unless told plainly not to, and "you did well" is a rating.
+//   pattern    what reached the day often, what rarely, what came together
+//   ownWords   what the leader wrote in the self-assessment, against the counts
+//   question   one thing to carry on with
+//
+// SPEC 12.2 originally asked for three paragraphs: pattern, change, and
+// comparison-with-the-test. The last two are the comparisons SPEC 11.1
+// forbids, so on 01.11 they were replaced with ownWords and a third called
+// "attention", about where three weeks of attention went.
+//
+// That third one was then cut, because it could not be written. Run against
+// real data it restated the first paragraph with different adjectives: same
+// three groups of questions, same order, nothing new. The cause was the data
+// rather than the prompt. This report holds two things worth saying, the
+// counts and the leader's own sentence, and a model asked for a third view
+// where no third view exists will rephrase the first. Padding reads as filler
+// in a reflection, so there are two.
+//
+// ownWords exists only when there is something to write from. A leader who
+// skipped the self-assessment gets one paragraph and the question, and the
+// prompt is built without that section so the model is never asked to write
+// about words it does not have.
+//
+// Underneath it is still AttFocus's rule, which is the whole point: describe,
+// do not rate. A model asked to comment on someone's three weeks will write
+// "you did well" unless told plainly not to, and "you did well" is a rating.
 
-const SYSTEM_FINAL = `Sa kirjutad eesti keeles lühikese peegelduse juhi kolme nädala kohta.
-Juht vastas igal tööpäeval kuuele jah/ei küsimusele selle kohta, mis tema päeva jõudis.
-Teksti loeb ainult see juht ise.
+export type FinalReflection = {
+  pattern: string;
+  /** Null when the self-assessment was not filled in. */
+  ownWords: string | null;
+  question: string;
+};
 
-Kolm reeglit:
+export type FinalAiResult =
+  | { status: "done"; parts: FinalReflection }
+  | { status: "failed"; reason: string };
+
+const RULES = `Kolm reeglit:
 1. Kirjelda, ära hinda. Ei mingit skoori, hinnangut ega võrdlust teistega.
    „Sul läks hästi" on hinnang, ära kirjuta nii.
 2. Räägi tegevustest, mitte inimesest. Mitte „sa oled järjepidev", vaid
@@ -182,25 +207,128 @@ Kolm reeglit:
 Ära võrdle esimest ja viimast nädalat. Ära ütle, kas midagi paranes või halvenes.
 Kolm nädalat juhtisid tähelepanu, need ei mõõda arengut.
 
-Kui juht kirjutas viimasel päeval ise midagi, võta see arvesse. See on tema enda
-sõna selle kohta, mis muutus, ja see kaalub rohkem kui numbrid. Ära tsiteeri
-teda sõna-sõnalt ega paranda tema sõnastust.
-
-4-5 lauset, otse juhile, sina-vormis. Ilma pealkirjata, ilma loeteluta.
-Viimane lause on üks küsimus, mille üle juht saab mõelda.
-Kui vastatud päevi on alla viie, ütle esimeses lauses, et pilt on ligikaudne.
+Iga lõik on 2-3 lauset, otse juhile, sina-vormis. Ilma pealkirjata, ilma loeteluta.
+Kui vastatud päevi on alla viie, ütle esimeses lõigus, et pilt on ligikaudne.
 Ära kasuta mõttekriipsu. Ära kasuta vastandust kujul „ei …, vaid …".
 Ära pane koma sõna „ja" ette. Ära korda numbreid, juht näeb neid raportis.
-Vasta ainult lõigu tekstiga.`;
+Ära nimeta tüüpe ega isiksuseomadusi.
+
+Küsimus on selle kohta, mida juht tahab alles hoida. See ei ole soovitus ega
+ülesanne. Ära küsi, kuidas midagi sagedamini teha, ära küsi, mida parandada,
+ja ära ehita küsimust kõige harvemini täidetud tegevuse ümber. Kõige harvem
+„ei" tähendab, et olukorda tuli ette harva, mitte et seal on viga.`;
+
+/**
+ * Built per call, because the second paragraph only exists when the leader
+ * wrote something. Asking for a paragraph about their own words when there are
+ * none invites the model to invent them.
+ */
+function systemFinal(hasOwnWords: boolean): string {
+  const sections = hasOwnWords
+    ? `1. "pattern": mis jõudis päeva sageli, mis harva, mis tulid sageli samal päeval koos.
+2. "ownWords": mida juht viimasel päeval enesehinnangus ise kirjutas, kõrvutatuna
+   sellega, mis numbrites näha. See on tema enda sõna ja kaalub rohkem kui numbrid.
+   Ära tsiteeri teda sõna-sõnalt ega paranda tema sõnastust.
+3. "question": üks küsimus selle kohta, mida juht tahab edasi hoida.`
+    : `1. "pattern": mis jõudis päeva sageli, mis harva, mis tulid sageli samal päeval koos.
+2. "question": üks küsimus selle kohta, mida juht tahab edasi hoida.
+
+Juht ei täitnud enesehinnangut, nii et "ownWords" jäta tühjaks stringiks.
+Ära kirjuta sinna midagi, mida ta ei öelnud.`;
+
+  return `Sa kirjutad eesti keeles juhi kolme nädala lõpuraporti tekstiosa.
+Juht vastas igal tööpäeval kuuele jah/ei küsimusele selle kohta, mis tema päeva jõudis.
+Teksti loeb ainult see juht ise.
+
+${sections}
+
+${RULES}
+
+Vasta ainult JSON-ina kujul {"pattern":"…","ownWords":"…","question":"…"}`;
+}
+
+/** Up to four sentences per paragraph: the prompt asks for two or three. */
+const MAX_SENTENCES_PER_PART = 4;
+
+/**
+ * The JSON out of a reply that may be wrapped in a fence.
+ *
+ * The model is asked for bare JSON and usually gives it, but a ```json fence
+ * appears often enough that failing on it would throw away good text.
+ */
+export function parseJsonReply(raw: string): Record<string, unknown> | null {
+  const cleaned = raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+  if (start < 0 || end <= start) return null;
+  try {
+    const parsed = JSON.parse(cleaned.slice(start, end + 1));
+    return parsed && typeof parsed === "object" ? parsed as Record<string, unknown> : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Every part held to the same bar as the single paragraph was: present, not
+ * runaway, no types named. One bad part fails the whole reflection rather than
+ * leaving a gap in the middle of it, because a report missing its second
+ * paragraph reads as broken while a report missing all of them reads as a
+ * report without a reflection, which is what SPEC 11 allows.
+ */
+export function validateReflection(
+  parsed: Record<string, unknown> | null,
+  expectOwnWords: boolean,
+): FinalAiResult {
+  if (!parsed) return { status: "failed", reason: "vastus ei olnud JSON" };
+
+  const clean = (v: unknown) => (typeof v === "string" ? stripDashes(v) : "");
+  const pattern = clean(parsed.pattern);
+  const ownWords = clean(parsed.ownWords);
+  const question = clean(parsed.question);
+
+  for (const [name, text] of [["pattern", pattern], ["question", question]] as const) {
+    if (!text) return { status: "failed", reason: `${name} puudub` };
+    if (sentenceCount(text) > MAX_SENTENCES_PER_PART) {
+      return { status: "failed", reason: `${name} liiga pikk (${sentenceCount(text)} lauset)` };
+    }
+  }
+
+  // Asked for, so it has to be there. Not asked for, so it must not be: a
+  // paragraph about words the leader never wrote would be invented.
+  if (expectOwnWords) {
+    if (!ownWords) return { status: "failed", reason: "ownWords puudub" };
+    if (sentenceCount(ownWords) > MAX_SENTENCES_PER_PART) {
+      return { status: "failed", reason: `ownWords liiga pikk (${sentenceCount(ownWords)} lauset)` };
+    }
+  } else if (ownWords) {
+    return { status: "failed", reason: "ownWords kirjutatud ilma enesehinnanguta" };
+  }
+
+  if (!question.includes("?")) return { status: "failed", reason: "küsimus ei ole küsimus" };
+
+  const all = [pattern, ownWords, question].join(" ");
+  if (/\barhetüüp|\btüüp/i.test(all)) return { status: "failed", reason: "nimetab tüüpi" };
+
+  return {
+    status: "done",
+    parts: { pattern, ownWords: expectOwnWords ? ownWords : null, question },
+  };
+}
 
 /**
  * SPEC 11: when this fails the report still goes out. The numbers above it are
  * the report; this is the part that can be missing.
  */
-export async function writeFinalParagraph(input: unknown): Promise<AiResult> {
+export async function writeFinalReflection(
+  input: Record<string, unknown>,
+): Promise<FinalAiResult> {
   const key = env("ANTHROPIC_API_KEY");
   const model = env("ANTHROPIC_MODEL");
   if (!key || !model) return { status: "failed", reason: "ANTHROPIC_API_KEY või ANTHROPIC_MODEL puudub" };
+
+  const sa = input.selfAssessment as { kirjutasIse?: string | null } | null | undefined;
+  const hasOwnWords = Boolean(sa?.kirjutasIse && String(sa.kirjutasIse).trim());
 
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -216,7 +344,7 @@ export async function writeFinalParagraph(input: unknown): Promise<AiResult> {
       body: JSON.stringify({
         model,
         max_tokens: 4000,
-        system: SYSTEM_FINAL,
+        system: systemFinal(hasOwnWords),
         messages: [{ role: "user", content: JSON.stringify(input) }],
       }),
     });
@@ -232,11 +360,12 @@ export async function writeFinalParagraph(input: unknown): Promise<AiResult> {
       return { status: "failed", reason: "katkes" };
     }
 
-    const result = validateParagraph(firstText(body));
+    const raw = firstText(body);
+    const result = validateReflection(parseJsonReply(raw), hasOwnWords);
     if (result.status === "failed") {
-      console.warn(`[ai-final] tagasi lükatud (${result.reason}): ${firstText(body).slice(0, 300)}`);
+      console.warn(`[ai-final] tagasi lükatud (${result.reason}): ${raw.slice(0, 300)}`);
     } else {
-      console.info(`[ai-final] ok: ${result.text.slice(0, 300)}`);
+      console.info(`[ai-final] ok, lõike ${hasOwnWords ? 2 : 1}: ${result.parts.pattern.slice(0, 200)}`);
     }
     return result;
   } catch (e) {

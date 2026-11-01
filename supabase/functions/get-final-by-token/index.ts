@@ -17,7 +17,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 import { getContent } from "../_shared/content.ts";
 import { looksLikeToken } from "../_shared/tokens.ts";
-import { writeFinalParagraph } from "../_shared/ai.ts";
+import { writeFinalReflection } from "../_shared/ai.ts";
 import { env } from "../_shared/env.ts";
 
 const corsHeaders = {
@@ -114,7 +114,7 @@ serve(async (req) => {
   const change = report.change as
     { attention: number | null; behaviour: number | null; openText: string | null } | null;
 
-  const ai = await writeFinalParagraph({
+  const ai = await writeFinalReflection({
     workdays: numbers.workdays,
     answeredDays: numbers.answeredDays,
     perQuestion: numbers.questions.map((x) => ({ ...x, text: q(x.q) })),
@@ -129,9 +129,13 @@ serve(async (req) => {
       : null,
   });
 
+  // `ai` is an object of three paragraphs and a question since 01.11. The two
+  // reports generated before that hold a plain string, and the page still
+  // renders those: a report someone has the link to must not stop working
+  // because the shape behind it moved.
   const finished = {
     ...report,
-    ai: ai.status === "done" ? ai.text : null,
+    ai: ai.status === "done" ? ai.parts : null,
     aiStatus: ai.status === "done" ? "done" : "failed",
     aiStartedAt: undefined,
   };

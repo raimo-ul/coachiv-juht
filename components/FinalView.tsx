@@ -24,7 +24,17 @@ type Final = {
     behaviour: number | null;
     openText: string | null;
   } | null;
-  ai: string | null;
+  /**
+   * Two paragraphs and a question since 01.11, or one paragraph and the
+   * question when the self-assessment was skipped. Reports written before that
+   * hold a plain string and are still rendered, because a link someone already
+   * has must keep working.
+   */
+  ai: string | {
+    pattern: string;
+    ownWords: string | null;
+    question: string;
+  } | null;
   aiStatus?: "pending" | "generating" | "done" | "failed";
 };
 
@@ -87,6 +97,17 @@ export function FinalView({ token, content }: { token: string; content: Content 
 
   const { numbers, ai } = data;
   const few = numbers.answeredDays < FEW_DAYS;
+
+  // An older report is one string; a current one is two paragraphs of which the
+  // second may be absent, plus the question. Both end up as a list of
+  // paragraphs and an optional question, so the markup below handles one case.
+  const reflection =
+    typeof ai === "string"
+      ? [ai]
+      : ai
+        ? [ai.pattern, ai.ownWords].filter((x): x is string => Boolean(x?.trim()))
+        : [];
+  const question = typeof ai === "string" ? null : ai?.question?.trim() || null;
   const questionText = (q: number) =>
     content.daily.questions[`q${q}` as keyof typeof content.daily.questions];
   const pct = (r: QuestionResult) => (r.yesRate ?? 0) * 100;
@@ -243,7 +264,24 @@ export function FinalView({ token, content }: { token: string; content: Content 
           <div className="mx-auto max-w-3xl px-5 py-14">
             <h2 className="mb-8 text-4xl md:text-5xl">{t.ai.heading}</h2>
             <div className="border-l-4 border-signal pl-6">
-              <p className="text-xl italic leading-relaxed md:text-2xl md:leading-relaxed">{ai}</p>
+              {/* The paragraphs run together as one piece of writing, without
+                  headings over them: they are a reflection, not a set of
+                  findings, and three labelled boxes would read as a verdict.
+                  The question sits apart because it is the one thing asked of
+                  the reader rather than told to them. */}
+              {reflection.map((text, i) => (
+                <p
+                  key={i}
+                  className="text-xl italic leading-relaxed md:text-2xl md:leading-relaxed [&+p]:mt-6"
+                >
+                  {text}
+                </p>
+              ))}
+              {question && (
+                <p className="mt-8 border-t-2 border-rule pt-6 text-xl leading-relaxed md:text-2xl md:leading-relaxed">
+                  {question}
+                </p>
+              )}
               <p className="mt-6 text-sm text-muted-foreground">{t.ai.signature}</p>
             </div>
           </div>

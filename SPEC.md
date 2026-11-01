@@ -6,7 +6,7 @@ See fail kirjeldab, **mis on ehitatud ja miks**. v1.0 oli ehitusjuhis, kirjutatu
 
 Kõik kasutajale nähtavad tekstid on failis `content/et.json`. Koodi ei kirjutata ühtegi kasutajale nähtavat lauset.
 
-Veel ehitamata asjad on märgitud **TEGEMATA**. Neid on üks.
+Veel ehitamata asju selles failis ei ole.
 
 ---
 
@@ -327,19 +327,23 @@ Järeltöötlus: mõttekriipsud eemaldatakse. Tühi, liiga pikk või sõnu „t�
 
 Üks lõik, 4–5 lauset, sina-vormis. Kirjelda ainult andmetes nähtavat, seo vähemalt kaks osa, ära nimeta tüüpe, ära kiida ega hinda, viimane lause on küsimus. Ilma mõttekriipsuta, ilma „ei …, vaid …" vastanduseta, ilma komata „ja" ees. Juhend tervikuna on `_shared/ai.ts` failis.
 
-### 12.2 Lõpuraporti lõigud · **TEGEMATA**
+### 12.2 Lõpuraporti peegeldus
 
-Raimo otsus (30.10, kinnitatud 01.11): **kolm lõiku ja nende järel üks küsimus.** Praegu kirjutab kood **ühe** 4–5 lause lõigu. See on ainus koht, kus kood on specist maas.
+**Kaks lõiku ja üks küsimus.** Vastus tuleb JSON-ina.
 
-v1.0 kolm teemat olid muster, muutus ja võrdlus testiga. Teine ja kolmas on punktiga 11.1 keelatud. Uued kolm teemat (Raimo kinnitus 01.11):
+1. **`pattern`** — mis jõudis päeva sageli, mis harva, mis tulid sageli samal päeval koos.
+2. **`ownWords`** — mida juht viimasel päeval enesehinnangus ise kirjutas, kõrvutatuna sellega, mis numbrites näha. Ainus koht, kus kõlab tema enda hääl.
+3. **`question`** — üks küsimus selle kohta, mida juht tahab **edasi hoida**.
 
-1. **Muster.** Mis jõudis päeva sageli, mis harva, mis tulid sageli samal päeval koos.
-2. **Sinu sõnad.** Mida juht viimasel päeval enesehinnangus ise kirjutas, kõrvutatuna sellega, mis numbrites näha. Ainus koht, kus kõlab tema enda hääl.
-3. **Tähelepanu.** Kuhu kolm nädalat tähelepanu viisid. Kirjeldav, ilma hinnangu ja ilma suunata.
+Kui enesehinnang jäi täitmata, ehitatakse juhend ilma teise lõiguta ja alles on üks lõik ning küsimus. Mudelilt ei küsita kunagi lõiku sõnadest, mida ei ole.
 
-Seejärel üks küsimus: mida juht tahab edasi hoida.
+**Miks kaks, mitte kolm.** v1.0 §12.2 nõudis kolme lõiku: muster, muutus, võrdlus testiga. Kaks viimast on §11.1-ga keelatud. 01.11 asendati need kolmikuga muster / sinu sõnad / tähelepanu, aga päris andmete peal kirjutas kolmas lõik esimese ümber: samad kolm küsimuste rühma, sama järjekord, teised omadussõnad. Põhjus oli andmetes, mitte juhendis. Selles raportis on kaks asja, millest kirjutada, ja mudel, kellelt küsitakse kolmandat vaadet seal kus kolmandat vaadet ei ole, sõnastab esimese ümber.
 
-Reeglid jäävad samaks mis punktis 12.1. Lisaks: kui juht kirjutas ise midagi, kaalub see rohkem kui numbrid; teda ei tsiteerita sõna-sõnalt ega parandata tema sõnastust. Kui vastatud päevi on alla viie, öeldakse esimeses lauses, et pilt on ligikaudne.
+**Küsimus ei ole soovitus.** Esimene jooks andis „Mida saaksid teha, et anda kellelegi senisest suurem väljakutse sagedamini kui praegu?". See on nõuanne küsimuse kujul, ja just selle kohta, mis kõige harvemini päeva jõudis, mida §11.2 nimetab mitte-probleemiks. Juhend keelab nüüd otse: küsimus on selle kohta, mida alles hoida, seda ei ehitata kõige harvema tegevuse ümber.
+
+Reeglid jäävad samaks mis punktis 12.1. Lisaks: kui juht kirjutas ise midagi, kaalub see rohkem kui numbrid; teda ei tsiteerita sõna-sõnalt ega parandata tema sõnastust. Kui vastatud päevi on alla viie, öeldakse esimeses lõigus, et pilt on ligikaudne.
+
+Valideerimine on kõik-või-mitte-midagi: üks vigane osa kukutab terve peegelduse. Raport, mille keskelt on lõik puudu, loeb katkisena; raport ilma peegelduseta loeb raportina, mida §11 lubab.
 
 ## 13. E-kirjad
 
@@ -417,7 +421,6 @@ Edge-funktsioonid **ei** deploy'u pushist. Need lähevad üles käsitsi: `npm ru
 
 ## 17. Lahtised
 
-- **Lõpuraporti kolm lõiku** (punkt 12.2). Ainus koht, kus kood on specist maas.
 - **Privaatsusleht on mustand.** Ei räägi kontaktilinnukesest ega kolme nädala andmetest. Vajalik enne raha küsimist.
 - **Andmete säilitusaeg.** 24 kuud on kohatäide, otsustamata.
 - **Testandmed andmebaasis.** Kolm liitumist, mis tuleb enne käivitamist koristada.
