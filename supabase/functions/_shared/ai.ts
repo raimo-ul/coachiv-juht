@@ -182,6 +182,10 @@ Kolm reeglit:
 Ära võrdle esimest ja viimast nädalat. Ära ütle, kas midagi paranes või halvenes.
 Kolm nädalat juhtisid tähelepanu, need ei mõõda arengut.
 
+Kui juht kirjutas viimasel päeval ise midagi, võta see arvesse. See on tema enda
+sõna selle kohta, mis muutus, ja see kaalub rohkem kui numbrid. Ära tsiteeri
+teda sõna-sõnalt ega paranda tema sõnastust.
+
 4-5 lauset, otse juhile, sina-vormis. Ilma pealkirjata, ilma loeteluta.
 Viimane lause on üks küsimus, mille üle juht saab mõelda.
 Kui vastatud päevi on alla viie, ütle esimeses lauses, et pilt on ligikaudne.

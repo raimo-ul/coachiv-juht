@@ -18,6 +18,12 @@ type Final = {
     strongest: QuestionResult[];
     weakest: QuestionResult | null;
   };
+  /** The last day's self-assessment. Null when it was not filled in. */
+  change: {
+    attention: number | null;
+    behaviour: number | null;
+    openText: string | null;
+  } | null;
   ai: string | null;
   aiStatus?: "pending" | "generating" | "done" | "failed";
 };
@@ -169,6 +175,45 @@ export function FinalView({ token, content }: { token: string; content: Content 
               </p>
               <p className="mt-5 text-muted-foreground">{t.weakest.note}</p>
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* The self-assessment from the last day, in the shape AttFocus's
+          personal report uses: the two ratings on a five-step scale with the
+          step named, then the person's own words set apart. It sits after the
+          counts and before the written paragraph, because the paragraph was
+          written with it. */}
+      {data.change && (
+        <section className="grain border-b-2 border-rule bg-bone">
+          <div className="mx-auto max-w-3xl px-5 py-12">
+            <h2 className="mb-8 text-4xl md:text-5xl">{t.change.heading}</h2>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {([
+                [t.change.attentionQuestion, data.change.attention],
+                [t.change.behaviourQuestion, data.change.behaviour],
+              ] as const).map(([label, value]) =>
+                value == null ? null : (
+                  <div key={label} className="border-2 border-rule bg-background p-5">
+                    <p className="leading-snug">{label}</p>
+                    <p className="display mt-4 text-4xl">{value}/5</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {t.change.scaleLabels[value - 1]}
+                    </p>
+                  </div>
+                ),
+              )}
+            </div>
+
+            {data.change.openText?.trim() && (
+              <div className="mt-8">
+                <p className="eyebrow mb-4 text-muted-foreground">{t.change.yourThoughts}</p>
+                <blockquote className="border-l-4 border-signal pl-6 text-lg italic leading-relaxed">
+                  {data.change.openText.trim()}
+                </blockquote>
+              </div>
+            )}
           </div>
         </section>
       )}

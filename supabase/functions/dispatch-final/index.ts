@@ -14,7 +14,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getContent } from "../_shared/content.ts";
 import { computeFinal, type DayRow } from "../_shared/finalReport.ts";
 import { renderEmail, sendEmail } from "../_shared/email.ts";
-import { localDate, localHour } from "../_shared/workdays.ts";
+import { localDate, localHour, nextWorkday } from "../_shared/workdays.ts";
 import { env } from "../_shared/env.ts";
 
 function json(status: number, body: unknown) {
@@ -48,7 +48,7 @@ serve(async (req) => {
 
   let query = supabase
     .from("enrollments")
-    .select("id, participant_id, test_id, start_date, end_date, final_token, participants!inner(email, timezone, locale)")
+    .select("id, participant_id, test_id, start_date, end_date, final_token, sa_attention, sa_behaviour, sa_open_text, sa_submitted_at, participants!inner(email, timezone, locale)")
     .eq("status", "active")
     .is("final_sent_at", null);
   if (onlyEnrollment) query = query.eq("id", onlyEnrollment);
@@ -67,7 +67,15 @@ serve(async (req) => {
     const tz = p.timezone || "Europe/Tallinn";
     const today = localDate(now, tz);
 
-    if (today <= e.end_date) { skipped.push({ id: e.id, why: "pole veel läbi" }); continue; }
+    // The next workday after the last day, which is what AttFocus's
+    // dispatch-program-reports does: report_day = nextWorkday(period_end).
+    //
+    // This used to be "any day after end_date", and since the fifteenth workday
+    // is always a workday, every programme ending on a Friday had its report
+    // land on the Saturday. It also left no room for the self-assessment, which
+    // the last day's letter asks for by noon tomorrow.
+    const reportDay = nextWorkday(e.end_date);
+    if (today < reportDay)  { skipped.push({ id: e.id, why: "pole veel raporti päev" }); continue; }
     if (!force && localHour(now, tz) !== sendHour) {
       skipped.push({ id: e.id, why: `kell ${localHour(now, tz)}` });
       continue;
@@ -98,11 +106,19 @@ serve(async (req) => {
       const numbers = computeFinal(rows);
       const content = getContent(p.locale);
 
+      // The self-assessment, as filled in from the last day's letter. Stored
+      // with the numbers so the page a month later shows what the report was
+      // built from. Null when nobody filled it in, and the report still goes.
+      const change = e.sa_submitted_at
+        ? { attention: e.sa_attention, behaviour: e.sa_behaviour, openText: e.sa_open_text }
+        : null;
+
       // No comparison with the test and no first-week-against-last. The sprint
       // directs attention; it does not measure development, and a number that
       // moved would be read as progress or as failure. See finalReport.ts.
       const report = {
         numbers,
+        change,
         ai: null,
         aiStatus: "pending",
         generatedAt: new Date().toISOString(),
@@ -126,7 +142,7 @@ serve(async (req) => {
       const sent = await sendEmail({ to: p.email, ...mail });
       if (!sent.ok) console.error(`[dispatch-final] kiri ${e.id}:`, sent.error);
 
-      console.log(`[dispatch-final] valmis ${e.id}, vastatud päevi ${numbers.answeredDays}, lõigud kirjutatakse esimesel vaatamisel`);
+      console.log(`[dispatch-final] valmis ${e.id}, vastatud päevi ${numbers.answeredDays}, enesehinnang ${e.sa_submitted_at ? "jah" : "ei"}, lõigud kirjutatakse esimesel vaatamisel`);
       done.push(e.id);
     } catch (err) {
       // Give the claim back so the next hour tries again, rather than leaving

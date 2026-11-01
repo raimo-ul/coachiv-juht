@@ -45,3 +45,6 @@ next-env.d.ts
 
 # Sünkitud koopia, allikas on content/et.json
 supabase/functions/_shared/et.json
+
+# Supabase CLI tööfailid, tekivad linkimisel
+supabase/.temp/

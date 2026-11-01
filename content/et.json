@@ -329,6 +329,19 @@
       "heading": "Kõige sagedasem „EI“ signaal",
       "note": "See ei tähenda automaatselt probleemi. Olukorda võis ka mitte tekkida või ei sobi küsimus iga päeva juurde."
     },
+    "change": {
+      "heading": "Sinu enesehinnang",
+      "attentionQuestion": "Kui palju sinu tähelepanu paranes?",
+      "behaviourQuestion": "Kui palju sinu käitumine muutus?",
+      "yourThoughts": "Sinu mõtted sellest perioodist",
+      "scaleLabels": [
+        "Muutust pole",
+        "Kerge",
+        "Mõõdukas",
+        "Märgatav",
+        "Oluline"
+      ]
+    },
     "perQuestion": "{yes} päeval {answered} vastatud päevast",
     "ai": {
       "heading": "Mida sinu kolm nädalat näitavad",
@@ -403,7 +416,10 @@
     "daily": {
       "subject": "Tänased kuus küsimust · päev {dayIndex}",
       "button": "Vasta siin",
-      "lead": "Mõtle tänasele päevale."
+      "lead": "Mõtle tänasele päevale.",
+      "saTitle": "Täna on kolme nädala viimane päev.",
+      "saBody": "Palun täida ka lõplik enesehindamine hiljemalt homme kella 12:00-ks. See teeb lõpuraporti põhjalikumaks ja raport saadetakse pärast seda.",
+      "saButton": "Täida enesehindamine"
     },
     "final": {
       "subject": "Sinu kolm nädalat",
@@ -575,5 +591,19 @@
     "price": "15 € koos käibemaksuga",
     "note": "Valiku teed pärast raporti kätte saamist.",
     "groupNote": "Meeskonnale või grupile lepime eraldi kokku. Kirjuta Raimole: raimo@raimoulavere.com"
+  },
+  "selfAssessment": {
+    "title": "Perioodi refleksioon",
+    "subtitle": "Rutiin on lõppenud. Mõtiskle möödunud nädalate üle.",
+    "scaleHelp": "1 = Muutust pole · 3 = Mõningane muutus · 5 = Oluline muutus",
+    "attention": "Kuidas muutus sinu tähelepanu?",
+    "behaviour": "Kuidas muutus sinu käitumine?",
+    "openQuestion": "Mis, kui üldse midagi, muutus sinu töötamises selle perioodi jooksul?",
+    "openPlaceholder": "Kirjelda muutusi, mida märkasid...",
+    "submit": "Saada",
+    "saving": "Salvestan…",
+    "doneTitle": "Refleksioon esitatud",
+    "doneBody": "Aitäh. Sinu refleksioon on salvestatud ja see läheb lõpuraportisse.",
+    "notFound": "Seda linki ei leitud."
   }
 }

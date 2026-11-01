@@ -16,6 +16,7 @@ import { getContent, fill } from "../_shared/content.ts";
 import { sign } from "../_shared/signing.ts";
 import { renderEmail, sendEmail } from "../_shared/email.ts";
 import { dayIndex, isWorkday, localDate, localHour } from "../_shared/workdays.ts";
+import { newToken } from "../_shared/tokens.ts";
 import { env } from "../_shared/env.ts";
 
 function json(status: number, body: unknown) {
@@ -61,7 +62,7 @@ serve(async (req) => {
 
   let query = supabase
     .from("enrollments")
-    .select("id, participant_id, start_date, end_date, participants!inner(email, timezone, locale)")
+    .select("id, participant_id, start_date, end_date, sa_token, participants!inner(email, timezone, locale)")
     .eq("status", "active");
   if (onlyEnrollment) query = query.eq("id", onlyEnrollment);
 
@@ -114,16 +115,63 @@ serve(async (req) => {
     // could answer somebody's day for them.
     const dayLink = `${site}/v/${await sign({ e: e.id, d: today })}`;
 
+    // On the last workday the letter carries a second link, the way AttFocus's
+    // dispatch-daily-links does: the self-assessment, due before the final
+    // report goes out the next workday. Three questions, and the open one is
+    // the only sentence the final paragraph gets in the person's own words.
+    //
+    // The token is minted here and only here, so it exists from the moment the
+    // link is sent and never before. Minted once: a re-run on the same day
+    // reuses it, because a second token would leave the first link dead in an
+    // inbox someone had already opened.
+    const lastDay = today === e.end_date;
+    let saLink: string | null = null;
+
+    if (lastDay) {
+      let token = e.sa_token;
+      if (!token) {
+        token = newToken();
+        const minted = await supabase
+          .from("enrollments")
+          .update({ sa_token: token })
+          .eq("id", e.id)
+          .is("sa_token", null)
+          .select("sa_token");
+
+        // Lost the race, or could not write. Read back what is actually there,
+        // because sending a link built from a token the row does not hold would
+        // give a 404 to the one person who clicked it.
+        if (minted.error || !minted.data?.length) {
+          const back = await supabase
+            .from("enrollments").select("sa_token").eq("id", e.id).maybeSingle();
+          token = back.data?.sa_token ?? null;
+        }
+      }
+      if (token) saLink = `${site}/hinnang/${token}`;
+      else console.error(`[dispatch-daily] sa_token puudub ${e.id}, kiri läheb ilma lingita`);
+    }
+
     const mail = renderEmail(
       {
         subject: fill(content.emails.daily.subject, { dayIndex: index }),
         lines: [
           content.emails.daily.lead,
           `{dayButton:${content.emails.daily.button}}`,
+          ...(saLink
+            ? [
+                content.emails.daily.saTitle,
+                content.emails.daily.saBody,
+                `{saButton:${content.emails.daily.saButton}}`,
+              ]
+            : []),
           content.daily.footer,
         ],
       },
-      { links: { day: dayLink }, footer: content.emails.footer, siteName: content.meta.siteName },
+      {
+        links: saLink ? { day: dayLink, sa: saLink } : { day: dayLink },
+        footer: content.emails.footer,
+        siteName: content.meta.siteName,
+      },
     );
 
     const res = await sendEmail({ to: p.email, ...mail });

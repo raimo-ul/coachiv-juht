@@ -65,3 +65,52 @@ describe("renderEmail", () => {
     expect(out.text).not.toContain("{reportButton");
   });
 });
+
+// The last day's letter, which is the only one that carries two links. Lifted
+// from AttFocus's dispatch-daily-links, where the self-assessment goes out
+// alongside the normal daily link on the final workday of a period.
+describe("the last day's letter", () => {
+  const footer = t.emails.footer;
+  const d = t.emails.daily;
+
+  const lastDay = (links: Record<string, string>) =>
+    renderEmail(
+      {
+        subject: "S",
+        lines: [d.lead, `{dayButton:${d.button}}`, d.saTitle, d.saBody, `{saButton:${d.saButton}}`],
+      },
+      { links, footer, siteName: "Coachiva juhi test" },
+    );
+
+  it("carries both the day link and the self-assessment link", () => {
+    const out = lastDay({
+      day: "https://example.test/v/signed",
+      sa: "https://example.test/hinnang/tok",
+    });
+
+    expect(out.html).toContain("https://example.test/v/signed");
+    expect(out.html).toContain("https://example.test/hinnang/tok");
+    expect(out.html).toContain("Täida enesehindamine");
+    expect(out.html).toContain("viimane päev");
+    // Both reachable without HTML, because some people read the text part.
+    expect(out.text).toContain("https://example.test/hinnang/tok");
+  });
+
+  it("puts the day's own button first", () => {
+    const out = lastDay({
+      day: "https://example.test/v/signed",
+      sa: "https://example.test/hinnang/tok",
+    });
+
+    expect(out.html.indexOf("/v/signed")).toBeLessThan(out.html.indexOf("/hinnang/tok"));
+  });
+
+  it("drops the self-assessment line rather than linking nowhere when the token is missing", () => {
+    // dispatch-daily logs and sends without the link if the token could not be
+    // minted. The letter has to stay readable and the day still answerable.
+    const out = lastDay({ day: "https://example.test/v/signed" });
+
+    expect(out.html).toContain("https://example.test/v/signed");
+    expect(out.html).not.toContain("Täida enesehindamine");
+  });
+});

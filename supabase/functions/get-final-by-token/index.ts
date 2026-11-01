@@ -108,12 +108,25 @@ serve(async (req) => {
   const q = (n: number) =>
     content.daily.questions[`q${n}` as keyof typeof content.daily.questions];
 
+  // The self-assessment from the last day, as AttFocus's reflection.ts feeds
+  // it: the two 1-5 ratings, and the open text clipped at 1200 characters,
+  // which is the same cap AttFocus uses.
+  const change = report.change as
+    { attention: number | null; behaviour: number | null; openText: string | null } | null;
+
   const ai = await writeFinalParagraph({
     workdays: numbers.workdays,
     answeredDays: numbers.answeredDays,
     perQuestion: numbers.questions.map((x) => ({ ...x, text: q(x.q) })),
     strongest: numbers.strongest.map((x) => ({ ...x, text: q(x.q) })),
     weakest: numbers.weakest ? { ...numbers.weakest, text: q(numbers.weakest.q) } : null,
+    selfAssessment: change
+      ? {
+          tahelepanuMuutus: change.attention,
+          kaitumiseMuutus: change.behaviour,
+          kirjutasIse: change.openText?.trim().slice(0, 1200) ?? null,
+        }
+      : null,
   });
 
   const finished = {
