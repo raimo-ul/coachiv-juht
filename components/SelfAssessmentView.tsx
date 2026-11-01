@@ -45,7 +45,8 @@ export function SelfAssessmentView({ token, content }: { token: string; content:
         // second visit does not look like the first one failed.
         if (data?.submitted) setSubmitted(true);
         setLoaded(true);
-      } catch {
+      } catch (e) {
+        console.error("[hinnang] laadimine ebaõnnestus:", e);
         if (!cancelled) setMissing(true);
       }
     })();
@@ -73,7 +74,8 @@ export function SelfAssessmentView({ token, content }: { token: string; content:
       if (res.ok || res.status === 409) { setSubmitted(true); return; }
       setMissing(res.status === 404);
       setSubmitting(false);
-    } catch {
+    } catch (e) {
+      console.error("[hinnang] saatmine ebaõnnestus:", e);
       setSubmitting(false);
     }
   }

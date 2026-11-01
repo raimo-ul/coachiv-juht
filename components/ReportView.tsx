@@ -39,7 +39,8 @@ export function ReportView({ token, content }: { token: string; content: Content
         if (cancelled) return;
         if (!res.ok) { setMissing(true); return; }
         setReport(await res.json());
-      } catch {
+      } catch (e) {
+        console.error("[raport] laadimine ebaõnnestus:", e);
         if (!cancelled) setMissing(true);
       }
     })();

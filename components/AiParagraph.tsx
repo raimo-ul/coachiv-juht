@@ -73,7 +73,8 @@ export function AiParagraph({
           setWaiting(false);
           clearInterval(timer);
         }
-      } catch {
+      } catch (e) {
+        console.error("[ai-loik] laadimine ebaõnnestus:", e);
         // A dropped poll is not worth reporting. The next one runs in two
         // seconds, and the timeout above ends it either way.
       }

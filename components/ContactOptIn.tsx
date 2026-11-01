@@ -33,7 +33,8 @@ export function ContactOptIn({ token, content }: { token: string; content: Conte
       });
       if (res.ok) setSaved(true);
       else setChecked(false);
-    } catch {
+    } catch (e) {
+      console.error("[kontakt] ebaõnnestus:", e);
       // Nothing was recorded, so the box goes back to how it was rather than
       // telling someone their request is in when it is not.
       setChecked(false);

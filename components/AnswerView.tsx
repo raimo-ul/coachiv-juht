@@ -48,7 +48,8 @@ export function AnswerView({ signed, content }: { signed: string; content: Conte
           if (q.answer !== null) existing[q.q] = q.answer;
         }
         setAnswers(existing);
-      } catch {
+      } catch (e) {
+        console.error("[paev] laadimine ebaõnnestus:", e);
         if (!cancelled) setError(t.invalid);
       }
     })();
@@ -71,7 +72,8 @@ export function AnswerView({ signed, content }: { signed: string; content: Conte
       const data = await res.json().catch(() => ({}));
       if (!res.ok) { setError(data?.error ?? t.invalid); setSubmitting(false); return; }
       setSubmitted(true);
-    } catch {
+    } catch (e) {
+      console.error("[paev] saatmine ebaõnnestus:", e);
       setError(t.invalid);
       setSubmitting(false);
     }

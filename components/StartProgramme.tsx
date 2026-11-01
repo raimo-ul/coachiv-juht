@@ -37,7 +37,8 @@ export function StartProgramme({ token, content }: { token: string; content: Con
         return;
       }
       window.location.href = data.url;
-    } catch {
+    } catch (e) {
+      console.error("[makse] ebaõnnestus:", e);
       setError(content.errors.saveFailed);
       setBusy(false);
     }

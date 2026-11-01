@@ -76,7 +76,11 @@ export function FinalView({ token, content }: { token: string; content: Content 
 
         const waiting = json.aiStatus === "pending" || json.aiStatus === "generating";
         if (waiting && Date.now() - startedAt < 150_000) timer = setTimeout(load, 4000);
-      } catch {
+      } catch (e) {
+        // Logitud, sest 01.11 jõudis vigane anon-võti Vercelisse ja
+        // `fetch` viskas enne ühtegi päringut. Vaikiv catch näitas kasutajale
+        // „raportit ei leitud" ja ei jätnud kuhugi ühtegi jälge.
+        console.error("[lopp] laadimine ebaõnnestus:", e);
         if (!cancelled) setMissing(true);
       }
     };
