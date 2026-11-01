@@ -114,3 +114,36 @@ describe("the last day's letter", () => {
     expect(out.html).not.toContain("Täida enesehindamine");
   });
 });
+
+// The newsletter in the final letter. It sits after the existing invitation to
+// write back, which means one short letter now carries two different asks; the
+// order matters and is Raimo's call, so it is pinned here.
+describe("the final letter's newsletter line", () => {
+  it("renders both buttons, report first", () => {
+    const out = renderEmail(
+      { subject: t.emails.final.subject, lines: t.emails.final.body },
+      {
+        links: { final: "https://example.test/lopp/tok", newsletter: "https://example.test/uudiskiri" },
+        footer: t.emails.footer,
+        siteName: "Coachiva juhi test",
+      },
+    );
+
+    expect(out.html).toContain("https://example.test/lopp/tok");
+    expect(out.html).toContain("https://example.test/uudiskiri");
+    expect(out.html.indexOf("/lopp/tok")).toBeLessThan(out.html.indexOf("/uudiskiri"));
+    expect(out.text).toContain("https://example.test/uudiskiri");
+  });
+
+  it("still sends a readable letter when the newsletter link is missing", () => {
+    // A missing link drops its button rather than linking nowhere, and the
+    // report, which is what the letter is actually for, has to survive that.
+    const out = renderEmail(
+      { subject: t.emails.final.subject, lines: t.emails.final.body },
+      { links: { final: "https://example.test/lopp/tok" }, footer: t.emails.footer, siteName: "x" },
+    );
+
+    expect(out.html).toContain("https://example.test/lopp/tok");
+    expect(out.html).not.toContain("Liitu uudiskirjaga");
+  });
+});

@@ -134,7 +134,12 @@ serve(async (req) => {
       const mail = renderEmail(
         { subject: content.emails.final.subject, lines: content.emails.final.body },
         {
-          links: { final: `${site}/lopp/${e.final_token}` },
+          links: {
+            final: `${site}/lopp/${e.final_token}`,
+            // Smaily's own page: the robot check and the confirmation mail
+            // belong there, not in a server-side post that subscribes nobody.
+            newsletter: content.emails.final.newsletterUrl,
+          },
           footer: content.emails.footer,
           siteName: content.meta.siteName,
         },

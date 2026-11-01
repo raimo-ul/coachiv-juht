@@ -7,6 +7,7 @@ import { functionHeaders, functionUrl } from "@/lib/functionsUrl";
 import { Page } from "@/components/site";
 import { PrintButton } from "@/components/PrintButton";
 import { LinkedText } from "@/components/LinkedText";
+import { NewsletterBlock } from "@/components/NewsletterBlock";
 
 type QuestionResult = { q: number; yes: number; answered: number; yesRate: number | null };
 
@@ -337,6 +338,12 @@ export function FinalView({ token, content }: { token: string; content: Content 
           </p>
         </div>
       </section>
+
+      <NewsletterBlock
+        text={t.newsletter.text}
+        button={t.newsletter.button}
+        url={t.newsletter.url}
+      />
 
       {/* The report used to end on a full-bleed green block carrying a closing
           line and a question. Both were written before the reflection had a

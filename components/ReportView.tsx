@@ -10,6 +10,7 @@ import { AiParagraph } from "@/components/AiParagraph";
 import { ContactOptIn } from "@/components/ContactOptIn";
 import { LinkedText } from "@/components/LinkedText";
 import { StartProgramme } from "@/components/StartProgramme";
+import { NewsletterBlock } from "@/components/NewsletterBlock";
 
 type Level = "low" | "mid" | "high";
 type PartKey = keyof Content["report"]["parts"];
@@ -170,27 +171,15 @@ export function ReportView({ token, content }: { token: string; content: Content
             </>
           )}
           <ContactOptIn token={token} content={content} />
-
-          {/* The newsletter is a link rather than a checkbox.
-              Until 01.11 a checkbox here posted to Smaily's public opt-in form
-              from the server, where that form answers with a robot check and
-              HTTP 200. Nobody was ever subscribed and nothing reported a
-              failure. Smaily's own page handles the robot check and the
-              confirmation mail, and the person can see for themselves that it
-              worked, which a silent checkbox never let them do. */}
-          <p className="mt-6 border-t-2 border-rule pt-5 text-sm">
-            {content.report.newsletter.text}{" "}
-            <a
-              href={content.report.newsletter.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold underline underline-offset-4"
-            >
-              {content.report.newsletter.link}
-            </a>
-          </p>
         </div>
       </section>
+
+      <NewsletterBlock
+        text={t.newsletter.text}
+        button={t.newsletter.button}
+        url={t.newsletter.url}
+        tone="bone"
+      />
     </Page>
   );
 }

@@ -315,8 +315,8 @@
       "saved": "Märgitud. Raimo võtab ühendust."
     },
     "newsletter": {
-      "text": "Raimo uudiskiri: juhtimisest, umbes korra või kaks kuus.",
-      "link": "Liitu uudiskirjaga",
+      "text": "Kui sprint praegu ei sobi: uudiskiri juhtimisest, üks-kaks korda kuus.",
+      "button": "Liitu uudiskirjaga",
       "url": "https://9ndeed0t.sendsmaily.net/landing-pages/67862044-9c20-4f33-99d5-6451c1ddeffb/html/"
     }
   },
@@ -361,7 +361,12 @@
       "heading": "Mida see ei tähenda",
       "text": "See ei ole hinne ega võrdlus teiste juhtidega, ega ka mõõt sellest, kas sa kolme nädalaga paremaks said. Kolm nädalat juhtisid tähelepanu kuuele tegevusele. Raport näitab, kuhu see tähelepanu läks."
     },
-    "contact": "Kui tahad minna sügavamale, kirjuta: raimo@raimoulavere.com"
+    "contact": "Kui tahad minna sügavamale, kirjuta: raimo@raimoulavere.com",
+    "newsletter": {
+      "text": "Kolm nädalat said läbi. Kui tahad juhtimisest edasi mõelda, saadan uudiskirja üks-kaks korda kuus.",
+      "button": "Liitu uudiskirjaga",
+      "url": "https://9ndeed0t.sendsmaily.net/landing-pages/67862044-9c20-4f33-99d5-6451c1ddeffb/html/"
+    }
   },
   "daily": {
     "intro": "Mõtle tänasele päevale.",
@@ -442,8 +447,11 @@
         "Kolm nädalat on läbi. Sinu lõpuraport on siin:",
         "{finalButton:Ava raport}",
         "Kui tahad minna sügavamale, kirjuta mulle.",
+        "Saadan ka uudiskirja juhtimisest, üks-kaks korda kuus.",
+        "{newsletterButton:Liitu uudiskirjaga}",
         "Raimo"
-      ]
+      ],
+      "newsletterUrl": "https://9ndeed0t.sendsmaily.net/landing-pages/67862044-9c20-4f33-99d5-6451c1ddeffb/html/"
     },
     "footer": "Raimo Ülavere · Radical Simplicity · radicalsimplicity.eu"
   },
