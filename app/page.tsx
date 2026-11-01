@@ -79,6 +79,16 @@ export default function Home() {
             <p className="mt-8 max-w-lg text-lg leading-relaxed md:text-xl">{t.home.subtitle}</p>
             <div className="mt-9"><StartButton big /></div>
             <p className="mt-5 text-sm text-muted-foreground">{t.home.smallLine}</p>
+            {/* The one link out of the hero. Someone deciding whether an
+                18-statement self-report is worth five minutes wants to know
+                what it rests on, and the answer is a page rather than a
+                sentence. */}
+            <Link
+              href="/alus"
+              className="mt-4 inline-block border-b-2 border-rule text-sm hover:bg-signal-soft"
+            >
+              {t.home.aboutLink}
+            </Link>
           </div>
           <div className="rise relative self-end [animation-delay:200ms]">
             <div className="border-2 border-rule bg-background p-5 shadow-[8px_8px_0_0_var(--rule)] md:rotate-[1.5deg]">
@@ -139,7 +149,6 @@ export default function Home() {
             <p className="eyebrow mb-4">{t.home.whatYouGet.eyebrow}</p>
             <h2 className="text-6xl md:text-7xl">{t.home.whatYouGet.heading}</h2>
             <p className="mt-6 max-w-md text-lg">{t.home.whatYouGet.body}</p>
-            <p className="mt-4 text-sm text-muted-foreground">{t.home.whatYouGet.note}</p>
           </div>
           <div className="border-2 border-rule bg-background p-6 shadow-[8px_8px_0_0_var(--rule)]">
             <p className="eyebrow border-b-2 border-rule pb-3">{t.home.whatYouGet.previewHeading}</p>

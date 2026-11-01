@@ -15,7 +15,7 @@
     "subtitle": "Coachiv juhtimine on kombinatsioon uskumustest ja tegevustest. Testi tehes saad viie minutiga teada, kui coachiv sa praegu juhina oled.",
     "button": "Alusta testi · 5 min",
     "smallLine": "Tasuta. Raport kohe ekraanile ja e-postile.",
-    "aboutLink": "Mille peale test tugineb →",
+    "aboutLink": "Vaata teadust testi taga →",
     "model": {
       "beliefs": "Uskumused",
       "actions": "Tegevused",
@@ -47,7 +47,6 @@
       "eyebrow": "Mida saad",
       "heading": "Personaalne ja sisulise analüüsiga raport",
       "body": "Igaüks kuuest coachiva juhtimise parameetrist on eraldi oluline, rääkimata sellest, et tegevus ja uskumus võivad olla väga erinevad asjad - usume, aga ei tee. Raportis sisuline analüüs ja jutt sellest, mida tulemused mustrina sinu kui coachiva juhi tegemiste kohta räägivad. Ning veidi ka sellest, mida sellega ehk peale võiks hakata.",
-      "note": "Ei tüüpe. Ei võrdlust teistega.",
       "previewHeading": "Tegevused",
       "analysisLabel": "Analüüs",
       "sampleAnalysis": "Sinu tugevus on selgus: inimesed tõenäoliselt teavad, mida sa neilt ootad ja sa tuled kokkulepete juurde tagasi. Samas jääb arengu võimaluse välja ütlemine sinu juhitöös pigem haruldaseks, kuigi su valikud uskumustes näitavad, et sinu usk inimeste arengusse on tugev."
@@ -352,7 +351,6 @@
       "heading": "Mida see ei tähenda",
       "text": "See ei ole hinne ega võrdlus teiste juhtidega, ega ka mõõt sellest, kas sa kolme nädalaga paremaks said. Kolm nädalat juhtisid tähelepanu kuuele tegevusele. Raport näitab, kuhu see tähelepanu läks."
     },
-    "closing": "Kolm nädalat näitasid, kuhu sinu tähelepanu läheb. Millist neist kuuest küsimusest tahad hoida edasi ka ilma kirjata?",
     "contact": "Kui tahad minna sügavamale, kirjuta: raimo@raimoulavere.com"
   },
   "daily": {

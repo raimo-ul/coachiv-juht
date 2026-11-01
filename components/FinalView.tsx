@@ -5,6 +5,7 @@ import type { Content } from "@/lib/content";
 import { fill } from "@/lib/content";
 import { functionHeaders, functionUrl } from "@/lib/functionsUrl";
 import { Page } from "@/components/site";
+import { LinkedText } from "@/components/LinkedText";
 
 type QuestionResult = { q: number; yes: number; answered: number; yesRate: number | null };
 
@@ -259,9 +260,34 @@ export function FinalView({ token, content }: { token: string; content: Content 
         </div>
       </section>
 
+      {/* The caveat sits before the reflection rather than after it. It used
+          to be the last thing on the page, which meant a personal report ended
+          on a disclaimer. Read first it does its job better anyway: the person
+          learns what the numbers are not before reading what someone made of
+          them, and the page can end on the question, which is the one thing
+          asked of them. */}
+      <section className="border-b-2 border-rule">
+        <div className="mx-auto max-w-3xl px-5 py-12">
+          <div className="bg-bone p-6 text-muted-foreground">
+            <p className="eyebrow mb-3 text-foreground">{t.notMeaning.heading}</p>
+            <p>{t.notMeaning.text}</p>
+          </div>
+          {/* The only way to reach a person from the end of a paid product.
+              It lived in the closing block until that was removed. */}
+          <p className="mt-6 text-sm">
+            <LinkedText
+              text={t.contact}
+              label={content.about.companies.contact}
+              href={`mailto:${content.about.companies.contact}`}
+              className="border-b-2 border-rule hover:bg-signal-soft"
+            />
+          </p>
+        </div>
+      </section>
+
       {ai ? (
-        <section className="border-b-2 border-rule">
-          <div className="mx-auto max-w-3xl px-5 py-14">
+        <section>
+          <div className="mx-auto max-w-3xl px-5 py-14 md:py-20">
             <h2 className="mb-8 text-4xl md:text-5xl">{t.ai.heading}</h2>
             <div className="border-l-4 border-signal pl-6">
               {/* The paragraphs run together as one piece of writing, without
@@ -297,21 +323,15 @@ export function FinalView({ token, content }: { token: string; content: Content 
         </section>
       ) : null}
 
-      <section className="border-b-2 border-rule">
-        <div className="mx-auto max-w-3xl px-5 py-12">
-          <div className="bg-bone p-6 text-muted-foreground">
-            <p className="eyebrow mb-3 text-foreground">{t.notMeaning.heading}</p>
-            <p>{t.notMeaning.text}</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-signal">
-        <div className="mx-auto max-w-3xl px-5 py-16 md:py-20">
-          <p className="text-2xl leading-snug md:text-3xl">{t.closing}</p>
-          <p className="mt-10 border-t-2 border-rule pt-6 text-sm">{t.contact}</p>
-        </div>
-      </section>
+      {/* The report used to end on a full-bleed green block carrying a closing
+          line and a question. Both were written before the reflection had a
+          question of its own, and once it did the block said two things that
+          were said better immediately above it: that the report shows where
+          attention went, which "Mida see ei tähenda" already says, and a
+          generic "which of the six do you want to keep", which the reflection
+          now asks from the person's own data. A generic question at the foot
+          of a personal report reads as filler, so the report ends on the
+          reflection. Removed 01.11 on Raimo's call. */}
     </Page>
   );
 }
