@@ -210,13 +210,25 @@ serve(async (req) => {
     // database, so Raimo can see who was promised a list they did not reach.
     // The first version of this call reported success for every signup while
     // subscribing nobody, which is why the result is checked at all.
-    if (newsletter) {
-      const sub = await subscribeNewsletter(email);
-      if (!sub.ok) console.error("[submit-test] uudiskirja liitumine:", sub.error);
-      else console.log(`[submit-test] uudiskirja liitumine ok: ${email}`);
-    }
 
   })());
 
-  return json(200, { reportPath });
+  // The newsletter goes before the response, not in the background block.
+  //
+  // That block runs under waitUntil, which this project has already watched
+  // drop slow work on the floor. One list call is fast and its outcome
+  // matters, so it waits here; the report mail stays behind, because it is
+  // slower and the page must not sit on it.
+  let newsletterError: string | null = null;
+  if (newsletter) {
+    const sub = await subscribeNewsletter(email);
+    newsletterError = sub.ok ? null : sub.error.slice(0, 500);
+    if (newsletterError) console.error("[submit-test] uudiskirja liitumine:", newsletterError);
+    await supabase
+      .from("participants")
+      .update({ newsletter_error: newsletterError })
+      .eq("id", participantId);
+  }
+
+  return json(200, { reportPath, ...(newsletterError ? { newsletterError } : {}) });
 });
