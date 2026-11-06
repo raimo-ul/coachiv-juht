@@ -142,9 +142,16 @@ export async function sendEmail(params: {
 // link to Smaily's own page, which was honest but which almost nobody
 // followed. This one uses the API the public form was standing in for.
 //
-// autoresponder.php rather than contact.php, because it triggers Smaily's
-// "subscriber opted-in" workflow: the person gets the confirmation mail and
-// Smaily holds the consent record. A direct contact insert would skip both.
+// autoresponder.php rather than contact.php, because it fires Smaily's
+// "subscriber opted-in" workflow rather than only writing a row.
+//
+// That workflow sends nothing unless an automation with a "form submitted"
+// trigger exists in the Smaily account, and on 06.11 there was none: the
+// three test addresses went straight to "Liitunud" with no confirmation mail.
+// So this is single opt-in today. The consent evidence is the timestamp on
+// participants and the sentence the person agreed to, and the copy beside the
+// checkbox promises no confirmation mail. Adding that automation in Smaily
+// would turn this into double opt-in without changing a line here.
 //
 // The response is read, not the status code. That is the whole lesson of the
 // first attempt: a 200 from Smaily proved nothing, and a success here means
