@@ -15,7 +15,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getContent } from "../_shared/content.ts";
 import { isComplete, scoreTest } from "../_shared/scoring.ts";
 import { newToken } from "../_shared/tokens.ts";
-import { renderEmail, sendEmail } from "../_shared/email.ts";
+import { renderEmail, sendEmail, subscribeNewsletter } from "../_shared/email.ts";
 import { env } from "../_shared/env.ts";
 
 const corsHeaders = {
@@ -87,9 +87,6 @@ serve(async (req) => {
     }
   }
 
-  // The client stopped sending this on 01.11, when the checkbox became a link
-  // to Smaily's own page. The column and this path stay so the consents
-  // already recorded keep their meaning and an older cached page cannot break.
   const newsletter = body.newsletter === true;
   const locale = content.locale;
 
@@ -204,6 +201,19 @@ serve(async (req) => {
       if (!sent.ok) console.error("[submit-test] raporti kiri:", sent.error);
     } else {
       console.error("[submit-test] SITE_BASE_URL puudub, raporti kirja ei saadetud");
+    }
+
+    // The newsletter, if they asked for it. After the report mail, because the
+    // report is what they came for and a slow list API must not delay it.
+    //
+    // A failure is logged and goes no further: the consent is already in the
+    // database, so Raimo can see who was promised a list they did not reach.
+    // The first version of this call reported success for every signup while
+    // subscribing nobody, which is why the result is checked at all.
+    if (newsletter) {
+      const sub = await subscribeNewsletter(email);
+      if (!sub.ok) console.error("[submit-test] uudiskirja liitumine:", sub.error);
+      else console.log(`[submit-test] uudiskirja liitumine ok: ${email}`);
     }
 
   })());

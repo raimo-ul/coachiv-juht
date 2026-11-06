@@ -205,6 +205,8 @@
       "title": "Kuhu raport saata?",
       "emailLabel": "E-post",
       "emailError": "Kontrolli e-posti aadressi.",
+      "newsletterLabel": "Tahan saada ka Raimo uudiskirja",
+      "newsletterNote": "Juhtimisest, üks-kaks korda kuus. Saadan kinnituskirja ja liitud alles selle klõpsamisega.",
       "privacyNote": "Raport saadetakse sellele aadressile. Loe lähemalt: Privaatsus",
       "button": "Näita raportit"
     },

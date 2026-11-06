@@ -116,6 +116,7 @@ export function TestFlow({ content }: { content: Content }) {
   const [restored, setRestored] = useState(false);
 
   const [email, setEmail] = useState("");
+  const [newsletter, setNewsletter] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -184,7 +185,7 @@ export function TestFlow({ content }: { content: Content }) {
       const res = await fetch(functionUrl("submit-test"), {
         method: "POST",
         headers: functionHeaders(),
-        body: JSON.stringify({ answers, email: trimmed, timezone }),
+        body: JSON.stringify({ answers, email: trimmed, newsletter, timezone }),
       });
       const data = await res.json().catch(() => ({}));
 
@@ -308,6 +309,25 @@ export function TestFlow({ content }: { content: Content }) {
                 className="mt-2 h-14 w-full border-2 border-rule bg-background px-4 text-lg outline-none focus:ring-4 focus:ring-signal"
               />
               {emailError && <p id="email-error" className="mt-2 text-sm text-destructive">{emailError}</p>}
+
+              {/* Third shape for this box. A server-side post to Smaily's
+                  public form subscribed nobody; a link from the report was
+                  honest but almost nobody followed it. Now it is a checkbox
+                  again, behind Smaily's authenticated API, and the note says
+                  plainly that a confirmation mail decides it rather than this
+                  tick. */}
+              <label className="mt-6 flex cursor-pointer gap-3">
+                <input
+                  type="checkbox"
+                  checked={newsletter}
+                  onChange={(e) => setNewsletter(e.target.checked)}
+                  className="mt-1 h-5 w-5 shrink-0 accent-[var(--ink)]"
+                />
+                <span>
+                  <span className="font-medium">{t.emailScreen.newsletterLabel}</span>
+                  <span className="mt-1 block text-sm text-muted-foreground">{t.emailScreen.newsletterNote}</span>
+                </span>
+              </label>
 
 
               <button

@@ -134,16 +134,65 @@ export async function sendEmail(params: {
  * This is a request to opt in, not a subscription. Smaily answers it by mailing
  * the person a confirmation; they join the list only when they click it.
  */
-// subscribeNewsletter is gone, 01.11.
+// The newsletter, through Smaily's authenticated API.
 //
-// It posted to Smaily's public opt-in form from the server. That form answers
-// a server with a robot check page and HTTP 200, so every signup looked like a
-// success and nobody was ever subscribed. Seven consents sat in the database
-// having reached no list; all of them test addresses, found before launch.
+// Third attempt. The first posted from the server to Smaily's public opt-in
+// form, which answers a server with a robot-check page and HTTP 200: every
+// signup looked like a success and nobody was subscribed. The second was a
+// link to Smaily's own page, which was honest but which almost nobody
+// followed. This one uses the API the public form was standing in for.
 //
-// The newsletter is now a link on the report to Smaily's own page, where the
-// robot check and the confirmation mail belong and where the person can see
-// that it worked. Doing it from the server again would need Smaily's
-// authenticated API (autoresponder.php, HTTP Basic) and a check on the
-// response body rather than the status code.
+// autoresponder.php rather than contact.php, because it triggers Smaily's
+// "subscriber opted-in" workflow: the person gets the confirmation mail and
+// Smaily holds the consent record. A direct contact insert would skip both.
+//
+// The response is read, not the status code. That is the whole lesson of the
+// first attempt: a 200 from Smaily proved nothing, and a success here means
+// the address came back in `addresses`.
+
+const SMAILY_API = "https://9ndeed0t.sendsmaily.net/api/autoresponder.php";
+
+export async function subscribeNewsletter(email: string): Promise<SendResult> {
+  if (emailDisabled()) return { ok: true, skipped: true };
+
+  const user = env("SMAILY_API_USER");
+  const pass = env("SMAILY_API_PASS");
+  if (!user || !pass) return { ok: false, error: "SMAILY_API_USER või SMAILY_API_PASS puudub" };
+
+  try {
+    const res = await fetch(SMAILY_API, {
+      method: "POST",
+      headers: {
+        authorization: `Basic ${btoa(`${user}:${pass}`)}`,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        addresses: [{ email, allikas: "coachiv-test" }],
+      }),
+    });
+
+    const text = await res.text().catch(() => "");
+    if (!res.ok) return { ok: false, error: `Smaily HTTP ${res.status} ${text.slice(0, 200)}` };
+
+    // Smaily answers {"code":101,"message":"OK","addresses":[...]} and filters
+    // out addresses it would not take. An address missing from that list was
+    // rejected, however cheerful the status line was.
+    let body: { code?: number; message?: string; addresses?: string[] };
+    try {
+      body = JSON.parse(text);
+    } catch {
+      return { ok: false, error: `Smaily vastas mitte-JSON-iga: ${text.slice(0, 200)}` };
+    }
+
+    const accepted = Array.isArray(body.addresses) &&
+      body.addresses.some((a) => String(a).toLowerCase() === email.toLowerCase());
+
+    if (!accepted) {
+      return { ok: false, error: `Smaily ei võtnud aadressi: ${text.slice(0, 200)}` };
+    }
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+}
 
