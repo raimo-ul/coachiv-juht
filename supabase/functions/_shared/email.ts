@@ -174,7 +174,11 @@ export async function subscribeNewsletter(email: string): Promise<SendResult> {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        addresses: [{ email, allikas: "coachiv-test" }],
+        // The source tag is the only trace in Smaily of where someone came
+        // from, and it outlives this code. "coachiv-test" read as "a test
+        // signup" rather than "the coaching-leader test", which is how a real
+        // subscriber gets deleted in a tidy-up a year from now.
+        addresses: [{ email, allikas: "coachiva-juhi-test" }],
       }),
     });
 
