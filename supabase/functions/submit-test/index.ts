@@ -16,6 +16,7 @@ import { getContent } from "../_shared/content.ts";
 import { isComplete, scoreTest } from "../_shared/scoring.ts";
 import { newToken } from "../_shared/tokens.ts";
 import { renderEmail, sendEmail, subscribeNewsletter } from "../_shared/email.ts";
+import { cleanUtmSet } from "../_shared/utm.ts";
 import { env } from "../_shared/env.ts";
 
 const corsHeaders = {
@@ -88,6 +89,11 @@ serve(async (req) => {
   }
 
   const newsletter = body.newsletter === true;
+
+  // Validated here as well as in the browser. The browser's check keeps
+  // rubbish out of that visitor's storage; this one is what stands between a
+  // stranger's POST and a value that ends up on a page.
+  const utm = cleanUtmSet(body as Record<string, unknown>);
   const locale = content.locale;
 
   let scored;
@@ -166,6 +172,10 @@ serve(async (req) => {
       scores: scored.scores,
       report_token: reportToken,
       ai_status: "pending",
+      // Absent keys stay absent, so the columns hold null rather than an
+      // empty string. Null reads as "direct visit or a link without UTM";
+      // "" would read as a channel whose name is blank.
+      ...utm,
     })
     .select("id")
     .single();

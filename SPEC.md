@@ -119,6 +119,9 @@ Anon-võti on avalik: ükski tabel ei anna anon-rollile õigusi ja kõik funktsi
 ### 5.1 Juht
 
 1. **Avaleht `/`.** `?kood=XXXX` salvestub küpsisesse `cj_promo` (60 päeva) ja eemaldatakse URL-ist.
+   **UTM.** `utm_source`, `utm_medium` ja `utm_campaign` salvestuvad `localStorage` võtmesse `cj_utm` (60 päeva, sama kui `cj_promo`) ja eemaldatakse samuti URL-ist. **Esimene puudutus võidab:** värsket kirjet üle ei kirjutata, sest LinkedInist tulnud ja nädal hiljem uudiskirja kaudu naasnud inimese tõi LinkedIn.
+   Püütakse **ainult avalehel**. „Alusta testi" viib `/test` peale ilma parameetriteta, nii et see, mis lingiga kaasa tuli, tuleb siin kinni püüda või on kadunud. Kampaania, mis osutab otse `/alus` või `/test` peale, jääb seetõttu loendamata.
+   Väärtus peab vastama `[a-z0-9 _-]`, kuni 50 märki; muu salvestub `null`-ina. Tühik on lubatud, sest kampaania nime kirjutab inimene. Kogu salvestus on `try/catch` sees, nii et keelatud `localStorage` ei takista testi tegemist.
 2. **Test `/test`.** Kaks ekraani: 9 tegevusväidet, siis 9 uskumusväidet. Edenemisriba, iga väide kohustuslik. Vastused hoitakse kliendis (sessionStorage) ja lehe uuesti laadimine ei kaota neid.
 3. **E-posti ekraan.** E-post ja märkimata linnuke uudiskirja jaoks. Ajavöönd loetakse brauserist.
 4. **`submit-test`.** Valideerib, leiab või loob osaleja, skoorib, salvestab testi, loob `report_token`. Linnukese korral lisab kontakti Smailysse.
@@ -156,6 +159,7 @@ tests (
   answers jsonb,          -- {"T1":4,...,"U9":2} toored vastused 1–6
   scores jsonb,           -- pärast R-ümberpööramist
   report_token unique, ai_paragraph, ai_status,
+  utm_source, utm_medium, utm_campaign,   -- lisatud 06.11, null = otsekülastus
   ai_started_at,          -- lisatud 30.10, lõigu haaramiseks
   created_at
 )
@@ -408,6 +412,8 @@ Nupud kirjutatakse kirja kehasse süntaksiga `{nimiButton:Silt}`, nii et nuppu s
 | `/privaatsus` | `privacy` |
 
 Jaluses on link aluse ja privaatsuse lehele. Tokeniga lehed on `noindex`.
+
+`UtmCapture` on avalehel, `PromoCapture` kõrval. Aruanne on failis `supabase/sql/utm_report.sql`, mille saab Supabase'i SQL-redaktorisse kleepida; muud analüütikat ega jälgimisküpsiseid ei ole.
 
 `cacheComponents` on välja lülitatud. Peaaegu iga leht on ühe inimese privaatne andmestik; sisselülitatuna oleks vea hind see, et üks külastaja näeb teise raportit.
 

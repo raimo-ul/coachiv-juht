@@ -8,6 +8,7 @@ import { fill } from "@/lib/content";
 import { LinkedText } from "@/components/LinkedText";
 import { Header, Footer } from "@/components/site";
 import { functionHeaders, functionUrl } from "@/lib/functionsUrl";
+import { readStoredUtm } from "@/lib/utm";
 
 type Answers = Record<string, number>;
 type Step = "intro" | 1 | 2 | "email";
@@ -185,7 +186,7 @@ export function TestFlow({ content }: { content: Content }) {
       const res = await fetch(functionUrl("submit-test"), {
         method: "POST",
         headers: functionHeaders(),
-        body: JSON.stringify({ answers, email: trimmed, newsletter, timezone }),
+        body: JSON.stringify({ answers, email: trimmed, newsletter, timezone, ...readStoredUtm() }),
       });
       const data = await res.json().catch(() => ({}));
 

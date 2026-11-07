@@ -5,6 +5,7 @@ import { Page } from "@/components/site";
 import { ResultRow } from "@/components/ResultRow";
 import { PromoCapture } from "@/components/PromoCapture";
 import { LinkedText } from "@/components/LinkedText";
+import { UtmCapture } from "@/components/UtmCapture";
 
 const t = getContent();
 
@@ -66,6 +67,12 @@ export default function Home() {
     <Page>
       {/* SPEC 5.1 step 1: ?kood=XXXX goes into a cookie and leaves the URL. */}
       <PromoCapture />
+
+      {/* The home page only, because the start button goes to /test with no
+          parameters: whatever the link carried has to be taken here or it is
+          gone. A campaign pointing straight at /alus or /test is therefore
+          not counted, which is the cost of keeping this to one place. */}
+      <UtmCapture />
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b-2 border-rule">
