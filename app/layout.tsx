@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, DM_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { getContent } from "@/lib/content";
 
-// Self-hosted by next/font at build time: no request to Google from a visitor's
-// browser, which keeps the pages free of third-party calls and matches SPEC 2's
-// "no analytics or tracking cookies" in spirit as well as in letter.
+// Self-hosted by next/font at build time, so a visitor's browser makes no
+// request to Google. Vercel Analytics is the one third-party call the pages
+// make, and it sets no cookie; see DECISIONS.md 10.11.
 const head = Bebas_Neue({
   weight: "400",
   subsets: ["latin-ext"],   // latin-ext carries ä, õ, ü, š, ž
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="et" className={`${head.variable} ${body.variable}`}>
       <body>
         {children}
+        <Analytics />
       </body>
     </html>
   );

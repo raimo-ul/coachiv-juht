@@ -13,6 +13,7 @@
     "deploy:functions": "node scripts/sync-content.mjs && supabase functions deploy submit-test --project-ref xdoniywdqrwbmatjttdo && supabase functions deploy get-report-by-token --project-ref xdoniywdqrwbmatjttdo && supabase functions deploy get-report-ai --project-ref xdoniywdqrwbmatjttdo"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "next": "16.4.3",
     "react": "19.3.0",
     "react-dom": "19.3.0",

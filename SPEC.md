@@ -23,7 +23,7 @@ Tasuta veebitest (18 väidet), mis annab juhile kohe raporti tema coachiva juhti
 - Kontekstiküsimus ja alluvate arvu küsimus.
 - Ingliskeelne sisu (struktuur toetab, vt punkt 9).
 - „Beta" silt kuskil kasutajale nähtavas kohas.
-- Analüütika ja jälgimisküpsised.
+- Jälgimisküpsised ja inimest üle saitide jälgiv analüütika. Vercel Analytics on 10.11 lisatud, vt DECISIONS.md.
 - **Kordustesti kutse lõpukirjas.** v1.0 §5.1 p10 nägi seda ette. Raimo otsus 31.10: kolme nädala järel uut testi ei pakuta.
 - **Arengu mõõtmine.** Vt punkt 11.
 
@@ -413,7 +413,7 @@ Nupud kirjutatakse kirja kehasse süntaksiga `{nimiButton:Silt}`, nii et nuppu s
 
 Jaluses on link aluse ja privaatsuse lehele. Tokeniga lehed on `noindex`.
 
-`UtmCapture` on avalehel, `PromoCapture` kõrval. Aruanne on failis `supabase/sql/utm_report.sql`, mille saab Supabase'i SQL-redaktorisse kleepida; muud analüütikat ega jälgimisküpsiseid ei ole.
+`UtmCapture` on avalehel, `PromoCapture` kõrval. Aruanne on failis `supabase/sql/utm_report.sql`, mille saab Supabase'i SQL-redaktorisse kleepida; lehe külastusi loeb lisaks Vercel Analytics, mis küpsist ei sea.
 
 `cacheComponents` on välja lülitatud. Peaaegu iga leht on ühe inimese privaatne andmestik; sisselülitatuna oleks vea hind see, et üks külastaja näeb teise raportit.
 

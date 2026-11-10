@@ -620,7 +620,7 @@
       },
       {
         "heading": "Küpsised ja brauserisalvestus",
-        "text": "Kasutame ühte küpsist. Kui tulid lingiga, milles oli ettevõtte sooduskood, hoiame seda koodi 60 päeva, et see oleks ostu hetkel olemas. Testi ajal hoitakse sinu pooleliolevaid vastuseid sinu enda brauseris, et lehe uuesti laadimine neid ei kaotaks; need ei lahku sinu arvutist enne, kui vajutad raporti nuppu. Jälgimisküpsiseid ja analüütikat ei ole."
+        "text": "Kasutame ühte küpsist. Kui tulid lingiga, milles oli ettevõtte sooduskood, hoiame seda koodi 60 päeva, et see oleks ostu hetkel olemas. Sama kaua hoiame märget selle kohta, millise kanali kaudu lehele jõudsid, näiteks uudiskiri või LinkedIn; see märge salvestub koos sinu testiga ja ütleb meile, millist kanalit tasub edasi teha. Testi ajal hoitakse sinu pooleliolevaid vastuseid sinu enda brauseris, et lehe uuesti laadimine neid ei kaotaks; need ei lahku sinu arvutist enne, kui vajutad raporti nuppu. Lehe külastusi loeb Vercel Analytics. Meie näeme sealt ainult koondarve: kui palju lehti avati, millisest riigist ja millise seadmega tuldi. Küpsiseid see ei kasuta, sinu nimega külastust ei seo ega jälgi sind teistel saitidel."
       },
       {
         "heading": "Raportite lingid",
