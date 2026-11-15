@@ -14,6 +14,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 import { getContent } from "../_shared/content.ts";
 import { DEFAULT_SCORING_VERSION, isComplete, scoreTest } from "../_shared/scoring.ts";
+import { readPattern } from "../_shared/pattern.ts";
 import { newToken } from "../_shared/tokens.ts";
 import { renderEmail, sendEmail, subscribeNewsletter } from "../_shared/email.ts";
 import { cleanUtmSet } from "../_shared/utm.ts";
@@ -161,6 +162,7 @@ serve(async (req) => {
   }
 
   const reportToken = newToken();
+  const pattern = readPattern(scored);
 
   const test = await supabase
     .from("tests")
@@ -222,6 +224,16 @@ serve(async (req) => {
         { subject: content.emails.report.subject, lines: content.emails.report.body },
         {
           links: { report: `${site}${reportPath}` },
+          // The same sentence the report opens with, so the letter and the
+          // page say one thing. Only the first sentence: the second one leans
+          // on the bars beside it and reads as a loose claim on its own.
+          // Omitted when all three actions tied, and the line then disappears
+          // rather than printing a placeholder.
+          values: {
+            pattern: pattern.allEqual
+              ? null
+              : content.report.pattern.weakest[pattern.weakest],
+          },
           footer: content.emails.footer,
           siteName: content.meta.siteName,
         },

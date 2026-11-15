@@ -35,6 +35,15 @@ export function renderEmail(
     siteName: string;
     /** Defaults to the subject, which is what every letter here wants. */
     heading?: string;
+    /**
+     * Plain-text substitutions for {name} inside a line.
+     *
+     * A line that is nothing but one placeholder disappears when the value is
+     * missing, rather than printing "{pattern}" at a reader. That is what lets
+     * the report letter carry the person's pattern sentence without needing a
+     * second version of the letter for the cases where there isn't one.
+     */
+    values?: Record<string, string | null | undefined>;
   },
 ): { subject: string; html: string; text: string } {
   const htmlParts: string[] = [];
@@ -64,10 +73,21 @@ export function renderEmail(
       continue;
     }
 
+    const filled = opts.values
+      ? line.replace(/\{(\w+)\}/g, (whole, key) => {
+          const v = opts.values?.[key];
+          return v === undefined || v === null ? whole : v;
+        })
+      : line;
+
+    // Nothing but an unfilled placeholder: drop the line.
+    if (/^\{\w+\}$/.test(filled.trim())) continue;
+    if (!filled.trim()) continue;
+
     // A short closing line, the signature, is set quieter than the body.
     const isLast = i === lines.length - 1;
-    htmlParts.push(isLast && line.length < 40 ? small(esc(line)) : p(esc(line)));
-    textParts.push(line, "");
+    htmlParts.push(isLast && filled.length < 40 ? small(esc(filled)) : p(esc(filled)));
+    textParts.push(filled, "");
   }
 
   return {

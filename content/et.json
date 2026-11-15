@@ -64,7 +64,7 @@
         ],
         [
           "Kolm nädalat pehmet nügimist",
-          "Saad soovi korral jätkata lihtsa programmiga, mis läbi igapäevase tähelepanu suunamise võtmetegevustele tugevdab hüppeliselt sinu võimekust coachiva juhina."
+          "Saad soovi korral jätkata lihtsa programmiga, mis hoiab kuus võtmetegevust kolm nädalat sinu tähelepanu all."
         ]
       ]
     },
@@ -333,6 +333,7 @@
     },
     "cta": {
       "transition": "Tahad edasi liikuda?",
+      "personal": "Sinu harvim tegevus on {action}. Kolm nädalat küsib sinult iga tööpäeva lõpus ka seda:",
       "heading": "Kolm nädalat, kuus küsimust",
       "text": "Iga tööpäeva lõpus saad kirja kuue jah/ei küsimusega. Vastamine võtab alla minuti. Kolme nädala pärast näed, kui sageli need tegevused sinu päeva tegelikult jõudsid, ja saad seda selle testiga võrrelda.",
       "button": "Alusta · 15 €",
@@ -460,8 +461,10 @@
         "Tere!",
         "Sinu raport on siin:",
         "{reportButton:Ava raport}",
+        "{pattern}",
         "Link jääb alles, saad selle juurde hiljem tagasi tulla.",
         "Kui tahad näha, kui sageli need tegevused sinu päeva päriselt jõuavad, leiad raporti lõpust kolme nädala programmi.",
+        "Raporti lõpus näed, millised kaks küsimust kolm nädalat sinult küsiks.",
         "Raimo"
       ]
     },
@@ -678,7 +681,7 @@
   "programme": {
     "eyebrow": "Pärast testi",
     "title": "Coachiva juhi võimekuste sprint",
-    "body": "Iga tööpäeva lõpus saad coachiva juhi võtmetegevustele tähelepanu juhtimiseks kirja kuue jah/ei küsimusega. Vastamine võtab alla minuti. Kolme nädala pärast näed, kui sageli need tegevused sinu päeva tegelikult jõudsid.",
+    "body": "Kokku kuus küsimust, alla minuti päevas. Igapäevane küsimus hoiab tegevuse tähelepanu all ja tähelepanust saab tegu. Kolme nädala pärast näed, kui sageli need tegevused sinu päeva jõudsid.",
     "price": "15 € koos käibemaksuga",
     "note": "Valiku teed pärast raporti kätte saamist.",
     "groupNote": "Meeskonnale või grupile lepime eraldi kokku. Kirjuta Raimole: raimo@raimoulavere.com"

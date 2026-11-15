@@ -195,8 +195,31 @@ export function ReportView({ token, content }: { token: string; content: Content
               {/* The block used to open cold on the programme's name, with
                   nothing joining it to the report above. A person who has just
                   read their own numbers needs a sentence that turns the page
-                  rather than a headline that starts a new one. */}
-              <p className="eyebrow mb-4">{t.cta.transition}</p>
+                  rather than a headline that starts a new one.
+
+                  Since 15.11 that sentence is their own result, and the two
+                  questions under it are the two they would actually be asked
+                  about the action they do least. The offer stops being a
+                  product described in general and becomes the thing the report
+                  just pointed at. Falls back to the old line when the pattern
+                  is missing or all three actions tied, because then there is
+                  no "your least frequent" to name. */}
+              {report.pattern && !report.pattern.allEqual ? (
+                <>
+                  <p className="mb-6 text-xl leading-relaxed md:text-2xl">
+                    {t.cta.personal.replace("{action}", t.parts[report.pattern.weakest].name.toLowerCase())}
+                  </p>
+                  <ul className="mb-8 space-y-3 border-l-2 border-ink pl-5">
+                    {content.daily.mapping[report.pattern.weakest].map((q) => (
+                      <li key={q} className="text-lg leading-snug">
+                        {content.daily.questions[q as keyof typeof content.daily.questions]}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <p className="eyebrow mb-4">{t.cta.transition}</p>
+              )}
               <h2 className="text-6xl md:text-8xl">{content.programme.title}</h2>
               <p className="mt-6 text-lg leading-relaxed">{content.programme.body}</p>
               <p className="display mt-6 text-4xl">{content.programme.price}</p>
