@@ -29,7 +29,7 @@ export function ResultRow({
   high: string;
 }) {
   return (
-    <div className="border-t-2 border-rule py-6 first:border-t-0">
+    <div data-print="keep" className="border-t-2 border-rule py-6 first:border-t-0">
       <div className="flex items-baseline justify-between gap-4">
         <h3 className="text-3xl md:text-4xl">{r.name}</h3>
         <span className="display text-4xl tabular-nums md:text-5xl">{r.display}</span>

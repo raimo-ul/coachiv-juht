@@ -224,6 +224,19 @@
     page-break-inside: avoid;
   }
 
+  /* Ten lines of reflection are too tall to be guaranteed a page of their own.
+     Refusing to break it pushed it to a fresh sheet and left half of the
+     previous one blank, which cost a page and looked like a fault. It breaks
+     now, with three lines kept together on either side of the break, which is
+     how a long quotation is set on paper anyway. Its green rule is handled
+     below. */
+  .print-report [data-print="long"] {
+    break-inside: auto;
+    page-break-inside: auto;
+    orphans: 3;
+    widows: 3;
+  }
+
   /* A card may not be cut in half. The reflection and the person's own words
      are the ones that actually suffered in AttFocus. */
   .print-report [data-print="keep"],
@@ -265,11 +278,13 @@
      container that spans a page break leaves the rule running down two inches
      of empty paper, which reads as a printing fault. In print it hugs each
      paragraph instead. On screen the continuous line stays. */
-  .print-report [data-print="reflection"] {
+  .print-report [data-print="reflection"],
+  .print-report [data-print="long"] {
     border-left: 0 !important;
     padding-left: 0 !important;
   }
-  .print-report [data-print="reflection"] > p {
+  .print-report [data-print="reflection"] > p,
+  .print-report [data-print="long"] > p {
     border-left: 4px solid var(--signal);
     padding-left: 1.5rem;
   }

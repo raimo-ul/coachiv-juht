@@ -126,7 +126,7 @@ export function ReportView({ token, content }: { token: string; content: Content
           answers do not support. */}
       {report.pattern && !report.pattern.allEqual && (
         <section className="border-b-2 border-rule bg-bone">
-          <div className="mx-auto max-w-3xl px-5 py-12">
+          <div data-print="keep" className="mx-auto max-w-3xl px-5 py-12">
             <p className="eyebrow mb-4 text-muted-foreground">{t.pattern.heading}</p>
             <p className="text-2xl leading-snug md:text-3xl">
               {t.pattern.weakest[report.pattern.weakest]}
@@ -145,7 +145,7 @@ export function ReportView({ token, content }: { token: string; content: Content
           rather than as the small print on something being sold. */}
       <section className="border-b-2 border-rule">
         <div className="mx-auto max-w-3xl px-5 py-12">
-          <div className="bg-bone p-6 text-muted-foreground">
+          <div data-print="keep" className="bg-bone p-6 text-muted-foreground">
             <p className="eyebrow mb-3 text-foreground">{t.notMeaning.heading}</p>
             <p>{t.notMeaning.text}</p>
           </div>
