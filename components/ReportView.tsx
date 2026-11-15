@@ -186,7 +186,7 @@ export function ReportView({ token, content }: { token: string; content: Content
 
       {/* The offer belongs on screen, not in a saved file: a PDF read in
           six months would carry a price and a button that do nothing. */}
-      <section className="bg-signal print:hidden">
+      <section id="programm" className="bg-signal print:hidden">
         <div className="mx-auto max-w-3xl px-5 py-16 md:py-20">
           {report.hasActiveProgramme ? (
             <p className="text-xl">{t.cta.active}</p>

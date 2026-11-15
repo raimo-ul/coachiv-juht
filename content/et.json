@@ -468,6 +468,26 @@
         "Raimo"
       ]
     },
+    "trial": {
+      "subject": "Üks päev proovi: kuus küsimust",
+      "intro": "Tegid coachiva juhi testi. Selle järgi jõuab sinu päeva kõige sagedamini {strongest} ja kõige harvem {weakest}.",
+      "introEqual": "Tegid coachiva juhi testi.",
+      "body": [
+        "Tere!",
+        "{intro}",
+        "Nüüd proovi, kuidas igapäevane tähelepanu juhtimise küsimus töötab. Mõtle tänasele päevale ja vasta endale jah või ei.",
+        "{questions}",
+        "Kui see üks päev suunas tähelepanu sinu jaoks olulisele, siis kujuta ette, mida teeb kolm nädalat tööpäevadel sama tegemine. Siit võib tekkida või tugevneda coachiv harjumus!",
+        "{reportButton:Vaata programmi}",
+        "See on ainus lisakiri, mida testi järel saadan.",
+        "Raimo"
+      ],
+      "names": {
+        "juhendamine": "juhendamine",
+        "voimestamine": "võimestamine",
+        "inspireerimine": "inspireerimine"
+      }
+    },
     "contactRequest": {
       "subject": "Coachiv juht - kontaktisoov",
       "body": [
@@ -633,7 +653,7 @@
       },
       {
         "heading": "Milleks",
-        "text": "Raporti koostamiseks ja sulle saatmiseks, kolme nädala kirjade saatmiseks ja lõpuraporti koostamiseks. Testi enda parandamiseks kasutame vastuseid ainult kujul, kust üksikut inimest ei ole võimalik tuvastada."
+        "text": "Raporti koostamiseks ja sulle saatmiseks, üheks proovipäeva kirjaks järgmisel tööpäeval pärast testi, kolme nädala kirjade saatmiseks ja lõpuraporti koostamiseks. Testi enda parandamiseks kasutame vastuseid ainult kujul, kust üksikut inimest ei ole võimalik tuvastada."
       },
       {
         "heading": "Õiguslik alus",

@@ -15,7 +15,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getContent, fill } from "../_shared/content.ts";
 import { sign } from "../_shared/signing.ts";
 import { renderEmail, sendEmail } from "../_shared/email.ts";
-import { dayIndex, isWorkday, localDate, localHour } from "../_shared/workdays.ts";
+import { dayIndex, isWorkday, localDate, localHour, nextWorkday } from "../_shared/workdays.ts";
+import { readPattern } from "../_shared/pattern.ts";
+import { scoreTest, type ScoringVersion } from "../_shared/scoring.ts";
 import { newToken } from "../_shared/tokens.ts";
 import { env } from "../_shared/env.ts";
 
@@ -183,6 +185,134 @@ serve(async (req) => {
     sent.push(e.id);
   }
 
+
+  // ── The trial-day letter ──────────────────────────────────────────────
+  //
+  // One letter, the workday after the test, at the same hour the programme's
+  // own letters go out. It carries the six questions as a plain list with no
+  // links to answer: the point is to feel what a daily question is like, not
+  // to collect anything. Nobody gets two, and nobody who already bought the
+  // programme gets one.
+  //
+  // It rides the hourly dispatch rather than a cron of its own, because the
+  // hour has to be read off each person's clock and this function already
+  // does that for the daily letters.
+  const trialSent: string[] = [];
+  const trialSkipped: Array<{ id: string; why: string }> = [];
+
+  // Only addresses on the list, while the letter is still being tried out. An
+  // empty or absent list means everyone, which is what going live looks like.
+  const allowRaw = env("COACHIV_TEST_EMAIL_ALLOWLIST") ?? "";
+  const allowList = allowRaw.split(",").map((x) => x.trim().toLowerCase()).filter(Boolean);
+
+  const { data: pending, error: pendingErr } = await supabase
+    .from("tests")
+    .select("id, created_at, answers, locale, scoring_version, report_token, participant_id, participants!inner(email, timezone, locale)")
+    .is("trial_sent_at", null);
+
+  if (pendingErr) {
+    console.error("[dispatch-daily] proovipäev:", pendingErr.message);
+  } else {
+    for (const row of pending ?? []) {
+      const t = row as unknown as {
+        id: string; created_at: string; answers: Record<string, number>;
+        locale: string; scoring_version: string; report_token: string; participant_id: string;
+        participants: { email: string; timezone: string; locale: string };
+      };
+      const p = t.participants;
+      const tz = p.timezone || "Europe/Tallinn";
+      const today = localDate(now, tz);
+
+      if (!force && localHour(now, tz) !== sendHour) { trialSkipped.push({ id: t.id, why: "vale tund" }); continue; }
+      if (!isWorkday(today)) { trialSkipped.push({ id: t.id, why: "nädalavahetus" }); continue; }
+
+      // Due on the first workday after the test, not on a fixed "tomorrow":
+      // a Friday test waits until Monday rather than landing on a Saturday.
+      const due = nextWorkday(localDate(new Date(t.created_at), tz));
+      if (today !== due) { trialSkipped.push({ id: t.id, why: `tähtaeg ${due}` }); continue; }
+
+      if (allowList.length && !allowList.includes(p.email.toLowerCase())) {
+        trialSkipped.push({ id: t.id, why: "pole nimekirjas" });
+        continue;
+      }
+
+      // Someone who already bought it is not a prospect.
+      const active = await supabase
+        .from("enrollments").select("id")
+        .eq("participant_id", t.participant_id).eq("status", "active").limit(1);
+      if (active.data?.length) { trialSkipped.push({ id: t.id, why: "programm käib" }); continue; }
+
+      // Once per person, not once per test. Somebody who takes the test twice
+      // has already had this letter and does not need it again — which the
+      // first run of this code proved by sending two to the same address.
+      const already = await supabase
+        .from("tests").select("id")
+        .eq("participant_id", t.participant_id)
+        .not("trial_sent_at", "is", null)
+        .limit(1);
+      if (already.data?.length) { trialSkipped.push({ id: t.id, why: "inimene sai juba" }); continue; }
+
+      // Claim before sending. The column is the lock, so two overlapping runs
+      // cannot both send: the second update matches nothing.
+      const claim = await supabase
+        .from("tests")
+        .update({ trial_sent_at: new Date().toISOString() })
+        .eq("id", t.id)
+        .is("trial_sent_at", null)
+        .select("id");
+      if (claim.error || !claim.data?.length) { trialSkipped.push({ id: t.id, why: "juba võetud" }); continue; }
+
+      const content = getContent(p.locale ?? t.locale);
+      const tr = content.emails.trial;
+      let pattern;
+      try {
+        pattern = readPattern(scoreTest(t.answers, t.locale, (t.scoring_version as ScoringVersion) ?? "v1"));
+      } catch (e) {
+        console.error(`[dispatch-daily] proovipäev skoorimine ${t.id}:`, String(e));
+        trialSkipped.push({ id: t.id, why: "skoorimine ebaõnnestus" });
+        continue;
+      }
+
+      const names = tr.names as Record<string, string>;
+      const intro = pattern.allEqual
+        ? tr.introEqual
+        : tr.intro
+            .replace("{strongest}", names[pattern.strongest])
+            .replace("{weakest}", names[pattern.weakest]);
+
+      // The six questions become six lines of their own, in the order the
+      // programme asks them.
+      const qs = content.daily.questions as Record<string, string>;
+      const lines: string[] = [];
+      for (const line of tr.body) {
+        if (line === "{questions}") {
+          for (const key of Object.keys(qs)) lines.push(qs[key]);
+        } else {
+          lines.push(line);
+        }
+      }
+
+      const mail = renderEmail(
+        { subject: tr.subject, lines },
+        {
+          links: { report: `${site}/raport/${t.report_token}#programm` },
+          footer: content.emails.footer,
+          siteName: content.meta.siteName,
+          values: { intro },
+        },
+      );
+
+      const res = await sendEmail({ to: p.email, ...mail });
+      if (!res.ok) console.error(`[dispatch-daily] proovipäeva kiri ${t.id}:`, res.error);
+      trialSent.push(t.id);
+    }
+  }
+
+  console.log(`[dispatch-daily] proovipäev: saadetud ${trialSent.length}, vahele ${trialSkipped.length}`);
+
   console.log(`[dispatch-daily] saadetud ${sent.length}, vahele ${skipped.length}`);
-  return json(200, { sent: sent.length, skipped: skipped.length, detail: { sent, skipped } });
+  return json(200, {
+    sent: sent.length, skipped: skipped.length, detail: { sent, skipped },
+    trial: { sent: trialSent.length, skipped: trialSkipped.length, detail: { sent: trialSent, skipped: trialSkipped } },
+  });
 });

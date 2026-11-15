@@ -394,7 +394,8 @@ Valideerimine on kõik-või-mitte-midagi: üks vigane osa kukutab terve peegeldu
 
 | Kiri | Millal | Tekst |
 |---|---|---|
-| Raporti kiri | kohe pärast testi | `emails.report` |
+| Raporti kiri | kohe pärast testi | `emails.report` (`{pattern}`) |
+| Proovipäeva kiri | järgmisel tööpäeval pärast testi, kell 16 osaleja ajavööndis | `emails.trial` (`{strongest}`, `{weakest}`, kuus päevaküsimust loeteluna) |
 | Tervituskiri | webhook | `emails.welcome` (`{startDate}`, `{sendTime}`) |
 | Päevakiri | cron | `emails.daily` (`{dayIndex}`, **üks link**) |
 | Päevakiri viimasel päeval | cron | sama + `saTitle`, `saBody`, `saButton` |
@@ -405,6 +406,10 @@ Valideerimine on kõik-või-mitte-midagi: üks vigane osa kukutab terve peegeldu
 Kirjakest on üle tõstetud AttFocusest (`_shared/emailLayout.ts`), muutunud on ainult bränd. **Hele taust, tume tekst**: Outlook Windowsis eirab `body` taustavärvi ja Gmaili tume režiim värvib teksti ümber, mis annaks osale lugejatest halli hallil.
 
 Nupud kirjutatakse kirja kehasse süntaksiga `{nimiButton:Silt}`, nii et nuppu saab `et.json`-is liigutada ilma koodi puutumata. Esimene nupp on roheline, järgmised on lingiread. Lingita nuppu ei renderdata. Igal kirjal on tekstiversioon.
+
+**Proovipäeva kiri on üks kord inimese kohta**, mitte testi kohta: `tests.trial_sent_at` on korraga nii märge kui lukk, ja enne saatmist kontrollitakse, kas samal inimesel on mõni teine test juba märgitud. Programmi ostnu seda kirja ei saa. Vastuselinke kirjas ei ole, inimene vastab endale. Saatmine käib `dispatch-daily` sees, sest kellaaeg loetakse iga inimese enda kella järgi ja see funktsioon teeb seda niikuinii.
+
+`COACHIV_TEST_EMAIL_ALLOWLIST` piirab proovipäeva kirja nimekirjaga. Tühi või puudub tähendab kõiki.
 
 `EMAIL_DISABLED` on hädapidur. Ilma selleta oleks ainus viis kirjade peatamiseks Brevo võtme tühistamine.
 
