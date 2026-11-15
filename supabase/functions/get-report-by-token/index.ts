@@ -13,7 +13,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 import { getContent } from "../_shared/content.ts";
 import { looksLikeToken } from "../_shared/tokens.ts";
-import { forDisplay, scoreTest } from "../_shared/scoring.ts";
+import { forDisplay, scoreTest, type ScoringVersion } from "../_shared/scoring.ts";
+import { readPattern } from "../_shared/pattern.ts";
 import { env } from "../_shared/env.ts";
 
 const corsHeaders = {
@@ -55,7 +56,7 @@ serve(async (req) => {
 
   const { data, error } = await supabase
     .from("tests")
-    .select("id, locale, answers, ai_paragraph, ai_status, participant_id, created_at")
+    .select("id, locale, answers, ai_paragraph, ai_status, participant_id, created_at, scoring_version")
     .eq("report_token", token)
     .maybeSingle();
 
@@ -70,7 +71,7 @@ serve(async (req) => {
 
   let scored;
   try {
-    scored = scoreTest(answers, locale);
+    scored = scoreTest(answers, locale, (data.scoring_version as ScoringVersion) ?? "v1");
   } catch (e) {
     console.error("[get-report] skoorimine:", String(e));
     return json(500, { error: "scoring_failed" });
@@ -95,6 +96,9 @@ serve(async (req) => {
       level: scored.levels[key as keyof typeof scored.levels],
     })),
     pairs: scored.pairs,
+    // Worked out here rather than in the page, because the trial-day email
+    // needs the same answer and the two must never name different actions.
+    pattern: readPattern(scored),
     ai: { status: data.ai_status, text: data.ai_paragraph ?? null },
     hasActiveProgramme: Boolean(active.data?.id),
   });

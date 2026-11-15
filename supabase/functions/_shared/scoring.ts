@@ -32,6 +32,25 @@ export type Scored = {
 
 const LEVEL_ORDER: Level[] = ["low", "mid", "high"];
 
+/** Which three parts are actions. The other three are beliefs. */
+const ACTION_PARTS: PartKey[] = ["juhendamine", "voimestamine", "inspireerimine"];
+
+export type ScoringVersion = "v1" | "v2";
+
+/**
+ * The bands the actions are read against.
+ *
+ * v1 put "high" at 4,5 and 102 of the first 122 tests reached it. The word on
+ * the report has to mean what the sprint means by it — on most working days —
+ * so v2 moves the line to 5,0. Beliefs keep one set of bands in both versions:
+ * nothing about holding a belief changed.
+ *
+ * Which bands a report uses is written on the test row, not decided at read
+ * time. Someone who took the test in November opens their report in March and
+ * sees the same words they saw the first time.
+ */
+export const DEFAULT_SCORING_VERSION: ScoringVersion = "v2";
+
 /** SPEC 7: reversed items are scored as 7 - answer. */
 export function applyReverse(key: ItemKey, value: number, reversed: readonly string[]): number {
   return reversed.includes(key) ? 7 - value : value;
@@ -47,7 +66,10 @@ export function applyReverse(key: ItemKey, value: number, reversed: readonly str
  * otherwise high) every possible score has exactly one level and the stated
  * bands are unchanged. Recorded in DECISIONS.md.
  */
-export function levelFor(score: number, levels: Content["test"]["scoring"]["levels"]): Level {
+/** One set of band edges: the shape under beliefs, v1 and v2 alike. */
+export type Bands = Content["test"]["scoring"]["levels"]["beliefs"];
+
+export function levelFor(score: number, levels: Bands): Level {
   if (score < levels.mid[0]) return "low";
   if (score < levels.high[0]) return "mid";
   return "high";
@@ -58,9 +80,15 @@ function levelDistance(a: Level, b: Level): number {
   return LEVEL_ORDER.indexOf(b) - LEVEL_ORDER.indexOf(a);
 }
 
-export function scoreTest(answers: Answers, locale?: string): Scored {
+export function scoreTest(
+  answers: Answers,
+  locale?: string,
+  version: ScoringVersion = DEFAULT_SCORING_VERSION,
+): Scored {
   const { scoring } = getContent(locale).test;
   const { parts, reversed, levels, pairs } = scoring;
+  const actionBands = version === "v1" ? levels.v1 : levels.v2;
+  const beliefBands = levels.beliefs;
 
   const scores = {} as Record<PartKey, number>;
   const partLevels = {} as Record<PartKey, Level>;
@@ -79,7 +107,7 @@ export function scoreTest(answers: Answers, locale?: string): Scored {
     }
     const mean = sum / keys.length;
     scores[part] = mean;
-    partLevels[part] = levelFor(mean, levels);
+    partLevels[part] = levelFor(mean, ACTION_PARTS.includes(part) ? actionBands : beliefBands);
   }
 
   // SPEC 7: scores themselves are never compared, because the two screens use

@@ -69,7 +69,6 @@ function Scale({
   labels?: readonly string[];
   ends: [string, string];
 }) {
-  const caption = value && labels ? labels[value - 1] : null;
   return (
     <div>
       <div role="radiogroup" className="grid grid-cols-6 border-2 border-rule">
@@ -94,16 +93,32 @@ function Scale({
           );
         })}
       </div>
-      <div className="mt-2 flex min-h-5 items-start justify-between gap-3 text-xs text-muted-foreground">
-        {caption ? (
-          <span className="w-full text-center text-sm font-semibold text-foreground">{caption}</span>
-        ) : (
-          <>
-            <span>1 · {ends[0]}</span>
-            <span className="text-right">{ends[1]} · 6</span>
-          </>
-        )}
-      </div>
+      {/* The whole scale, before anything is picked.
+          Six long Estonian words will not fit under six buttons on a phone, so
+          they go in one wrapping line instead: "1 mitte kordagi · 2 korra · …".
+          It reads as a key rather than as labels, which is what it is. The
+          caption below still names the chosen answer on its own, because that
+          is the one a reader checks after clicking.
+          Actions only: the belief scale has two ends and no words between. */}
+      {labels && (
+        <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[0.68rem] leading-snug text-muted-foreground">
+          {labels.map((word, i) => (
+            <span key={word} className={value === i + 1 ? "font-semibold text-foreground" : undefined}>
+              <span className="display mr-1">{i + 1}</span>{word}
+            </span>
+          ))}
+        </p>
+      )}
+      {/* The two ends, for the belief scale only. On the actions screen the key
+          above already carries every word, and naming the first and last a
+          second time said the same thing twice. The chosen word is no longer
+          repeated either: it is marked in the key instead. */}
+      {!labels && (
+        <div className="mt-2 flex min-h-5 items-start justify-between gap-3 text-xs text-muted-foreground">
+          <span>1 · {ends[0]}</span>
+          <span className="text-right">{ends[1]} · 6</span>
+        </div>
+      )}
     </div>
   );
 }

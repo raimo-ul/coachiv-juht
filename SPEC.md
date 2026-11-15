@@ -210,7 +210,17 @@ Väidete tekstid ja järjekord: `et.json` → `test.items`. Muutmata v1.0-st.
 
 Ümberpööramine `7 - vastus`. Osa skoor on kolme väite keskmine. Üldskoori ei arvutata.
 
-**Tasemed** loetakse **lõikepunktidena**, mitte vahemikena: alla 3,0 = low, alla 4,5 = mid, muidu high. v1.0 kirjutas vahemikud ühe komakohaga, mistõttu 2,95 ja 4,45 ei kuulunud kuhugi.
+**Tasemed** loetakse **lõikepunktidena**, mitte vahemikena. v1.0 kirjutas vahemikud ühe komakohaga, mistõttu 2,95 ja 4,45 ei kuulunud kuhugi.
+
+**Tegevuste piirid on versioneeritud, uskumuste omad mitte.** Iga testi real on `scoring_version` ja raport loetakse selle järgi, nii et ükski varem tehtud test oma sõnu ei muuda.
+
+| | low | mid | high |
+|---|---|---|---|
+| uskumused, alati | alla 3,0 | alla 4,5 | muidu |
+| tegevused **v1**, kuni 14.11 | alla 3,0 | alla 4,5 | muidu |
+| tegevused **v2**, alates 15.11 | alla 3,5 | alla 5,0 | muidu |
+
+v2 tõstab tegevuste „sageli" lävendit, sest v1 järgi jõudis sinna 102 esimesest 122 testist ja sõna kaotas tähenduse. „Sageli" peab tähendama sama, mida sprint selle all mõtleb: enamikul tööpäevadel.
 
 **Paarid** (uskumus → tegevus): inimene → inspireerimine, suhe → juhendamine, autonoomia → voimestamine. Kõik kolm paari kuvatakse alati, suunaga `beliefHigher`, `actionHigher` või `same`. Skoore omavahel ei võrrelda, sest skaalad on erinevad.
 

@@ -15,7 +15,10 @@ import { describe, expect, it } from "vitest";
 import { applyReverse, forDisplay, isComplete, levelFor, scoreTest, type Answers } from "./scoring.ts";
 import { getContent } from "./content.ts";
 
-const LEVELS = getContent("et").test.scoring.levels;
+const ALL_LEVELS = getContent("et").test.scoring.levels;
+const LEVELS = ALL_LEVELS.beliefs;   // beliefs and v1 share these edges
+const V1 = ALL_LEVELS.v1;
+const V2 = ALL_LEVELS.v2;
 
 const T = ["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9"];
 const U = ["U1", "U2", "U3", "U4", "U5", "U6", "U7", "U8", "U9"];
@@ -40,6 +43,45 @@ describe("applyReverse", () => {
   it("leaves everything else alone", () => {
     expect(applyReverse("U1", 1, ["U3"])).toBe(1);
     expect(applyReverse("T1", 6, ["U3"])).toBe(6);
+  });
+});
+
+describe("scoring versions", () => {
+  // v1 called 4,5 and up "sageli". 102 of the first 122 tests reached it on at
+  // least one action, which made the word mean little. v2 moves the line to
+  // 5,0, so "sageli" on the report means what the sprint means by it.
+  it("4,7 is high under v1 and mid under v2", () => {
+    expect(levelFor(4.7, V1)).toBe("high");
+    expect(levelFor(4.7, V2)).toBe("mid");
+  });
+
+  it("5,0 is high under v2", () => {
+    expect(levelFor(5.0, V2)).toBe("high");
+    expect(levelFor(4.9, V2)).toBe("mid");
+    expect(levelFor(3.5, V2)).toBe("mid");
+    expect(levelFor(3.4, V2)).toBe("low");
+  });
+
+  it("beliefs read against the same edges in both versions", () => {
+    // A belief answered the same way must not move because the actions moved.
+    const answers = sheet(5);
+    const one = scoreTest(answers, "et", "v1");
+    const two = scoreTest(answers, "et", "v2");
+    for (const belief of ["inimene", "suhe", "autonoomia"] as const) {
+      expect(two.levels[belief]).toBe(one.levels[belief]);
+    }
+  });
+
+  it("an action at 4,7 drops a level between the versions", () => {
+    // T1-T3 average 4,67: juhendamine sits just under the new line.
+    const answers = sheet(3, { T1: 5, T2: 5, T3: 4 });
+    expect(scoreTest(answers, "et", "v1").levels.juhendamine).toBe("high");
+    expect(scoreTest(answers, "et", "v2").levels.juhendamine).toBe("mid");
+  });
+
+  it("defaults to v2 when no version is given", () => {
+    const answers = sheet(3, { T1: 5, T2: 5, T3: 4 });
+    expect(scoreTest(answers).levels.juhendamine).toBe("mid");
   });
 });
 
@@ -130,12 +172,13 @@ describe("scoreTest", () => {
   });
 
   it("set 5: equal levels are reported as such, not omitted", () => {
+    // Read against v1, where an action and a belief share the same edges.
     // inimene:        U1=3 U2=3 U3=4 → (3 + 3 + 3) / 3 = 3,0  mid
     // inspireerimine: T7=3 T8=3 T9=3 → 3,0                     mid
     const { levels, pairs } = scoreTest(sheet(3, {
       U1: 3, U2: 3, U3: 4,
       T7: 3, T8: 3, T9: 3,
-    }));
+    }), "et", "v1");
 
     expect(levels.inimene).toBe("mid");
     expect(levels.inspireerimine).toBe("mid");

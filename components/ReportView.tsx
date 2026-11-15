@@ -17,6 +17,14 @@ type PartKey = keyof Content["report"]["parts"];
 type Report = {
   parts: Array<{ key: PartKey; score: number; display: string; level: Level }>;
   pairs: Array<{ belief: PartKey; action: PartKey; direction: "beliefHigher" | "actionHigher" | "same" }>;
+  /** Which action reaches the day least often, and whether its belief is ahead. */
+  pattern?: {
+    weakest: "juhendamine" | "voimestamine" | "inspireerimine";
+    strongest: "juhendamine" | "voimestamine" | "inspireerimine";
+    belief: PartKey;
+    beliefHigher: boolean;
+    allEqual: boolean;
+  };
   ai: { status: string; text: string | null };
   hasActiveProgramme: boolean;
 };
@@ -106,6 +114,44 @@ export function ReportView({ token, content }: { token: string; content: Content
         </div>
       </section>
 
+      {/* The one thing worth reading first. It sits above the six rows because
+          a page that opens with six numbers asks the reader to work out what
+          they mean; this says it in a sentence. The second sentence appears
+          only when the belief under that action is held at a higher level than
+          the action is done — "the ground is there" is not worth saying when
+          it is not.
+
+          Hidden when all three actions scored the same: there is no weakest
+          one to name, and inventing a winner out of a tie would be a claim the
+          answers do not support. */}
+      {report.pattern && !report.pattern.allEqual && (
+        <section className="border-b-2 border-rule bg-bone">
+          <div className="mx-auto max-w-3xl px-5 py-12">
+            <p className="eyebrow mb-4 text-muted-foreground">{t.pattern.heading}</p>
+            <p className="text-2xl leading-snug md:text-3xl">
+              {t.pattern.weakest[report.pattern.weakest]}
+            </p>
+            {report.pattern.beliefHigher && (
+              <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+                {t.pattern.beliefHigher[report.pattern.weakest]}
+              </p>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Moved up from just above the offer on 15.11: a reader who has not yet
+          seen their numbers is more likely to take the caveat as a caveat,
+          rather than as the small print on something being sold. */}
+      <section className="border-b-2 border-rule">
+        <div className="mx-auto max-w-3xl px-5 py-12">
+          <div className="bg-bone p-6 text-muted-foreground">
+            <p className="eyebrow mb-3 text-foreground">{t.notMeaning.heading}</p>
+            <p>{t.notMeaning.text}</p>
+          </div>
+        </div>
+      </section>
+
       {group(ACTIONS, t.actionsHeading, t.groupHints.actions, t.track.low, t.track.high)}
       {group(BELIEFS, t.beliefsHeading, t.groupHints.beliefs, t.track.beliefLow, t.track.beliefHigh)}
 
@@ -137,15 +183,6 @@ export function ReportView({ token, content }: { token: string; content: Content
         loadingLabel={t.ai.loading}
         signature={t.ai.signature}
       />
-
-      <section className="border-b-2 border-rule">
-        <div className="mx-auto max-w-3xl px-5 py-12">
-          <div className="bg-bone p-6 text-muted-foreground">
-            <p className="eyebrow mb-3 text-foreground">{t.notMeaning.heading}</p>
-            <p>{t.notMeaning.text}</p>
-          </div>
-        </div>
-      </section>
 
       {/* The offer belongs on screen, not in a saved file: a PDF read in
           six months would carry a price and a button that do nothing. */}

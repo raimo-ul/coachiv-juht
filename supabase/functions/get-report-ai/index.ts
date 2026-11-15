@@ -18,7 +18,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 import { getContent } from "../_shared/content.ts";
 import { looksLikeToken } from "../_shared/tokens.ts";
-import { scoreTest } from "../_shared/scoring.ts";
+import { scoreTest, type ScoringVersion } from "../_shared/scoring.ts";
 import { writeReportParagraph } from "../_shared/ai.ts";
 import { env } from "../_shared/env.ts";
 
@@ -77,7 +77,7 @@ serve(async (req) => {
 
   const { data, error } = await supabase
     .from("tests")
-    .select("id, locale, answers, ai_paragraph, ai_status, ai_started_at, ai_attempts")
+    .select("id, locale, answers, ai_paragraph, ai_status, ai_started_at, ai_attempts, scoring_version")
     .eq("report_token", token)
     .maybeSingle();
 
@@ -126,7 +126,7 @@ serve(async (req) => {
 
   let scored;
   try {
-    scored = scoreTest(answers, data.locale as string);
+    scored = scoreTest(answers, data.locale as string, (data.scoring_version as ScoringVersion) ?? "v1");
   } catch (e) {
     console.error("[get-report-ai] skoorimine:", String(e));
     await supabase.from("tests").update({ ai_status: "failed" }).eq("id", data.id);

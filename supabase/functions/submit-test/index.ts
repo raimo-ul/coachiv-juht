@@ -13,7 +13,7 @@ import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 import { getContent } from "../_shared/content.ts";
-import { isComplete, scoreTest } from "../_shared/scoring.ts";
+import { DEFAULT_SCORING_VERSION, isComplete, scoreTest } from "../_shared/scoring.ts";
 import { newToken } from "../_shared/tokens.ts";
 import { renderEmail, sendEmail, subscribeNewsletter } from "../_shared/email.ts";
 import { cleanUtmSet } from "../_shared/utm.ts";
@@ -172,6 +172,9 @@ serve(async (req) => {
       scores: scored.scores,
       report_token: reportToken,
       ai_status: "pending",
+      // Written down rather than left to the column default, so the row says
+      // which bands its report was read against even if the default moves on.
+      scoring_version: DEFAULT_SCORING_VERSION,
       // Absent keys stay absent, so the columns hold null rather than an
       // empty string. Null reads as "direct visit or a link without UTM";
       // "" would read as a channel whose name is blank.

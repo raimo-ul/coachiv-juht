@@ -49,7 +49,7 @@
       "body": "Igaüks kuuest coachiva juhtimise parameetrist on eraldi oluline, rääkimata sellest, et tegevus ja uskumus võivad olla väga erinevad asjad - usume, aga ei tee. Raportis sisuline analüüs ja jutt sellest, mida tulemused mustrina sinu kui coachiva juhi tegemiste kohta räägivad. Ning veidi ka sellest, mida sellega ehk peale võiks hakata.",
       "previewHeading": "Tegevused",
       "analysisLabel": "Analüüs",
-      "sampleAnalysis": "Sinu tugevus on selgus: inimesed tõenäoliselt teavad, mida sa neilt ootad ja sa tuled kokkulepete juurde tagasi. Samas jääb arengu võimaluse välja ütlemine sinu juhitöös pigem haruldaseks, kuigi su valikud uskumustes näitavad, et sinu usk inimeste arengusse on tugev."
+      "sampleAnalysis": "Sinu tugevus on selgus: inimesed tõenäoliselt teavad, mida sa neilt ootad ja sa tuled kokkulepete juurde tagasi. Samas jääb arengu võimaluse välja ütlemine sinu juhitöös pigem haruldaseks, kuigi su uskumused näitavad, et sinu usk inimeste arengusse on tugev."
     },
     "how": {
       "heading": "Coachiv juht, mis sind ees ootab",
@@ -182,18 +182,49 @@
         "U9"
       ],
       "levels": {
-        "low": [
-          1.0,
-          2.9
-        ],
-        "mid": [
-          3.0,
-          4.4
-        ],
-        "high": [
-          4.5,
-          6.0
-        ]
+        "_note": "Tegevuste tasemepiirid versioonide kaupa. Uskumuste piirid on beliefs all ja ei sõltu versioonist. Testi real olev scoring_version ütleb, milliseid piire tema raport kasutab, nii et vanad raportid ei muutu.",
+        "beliefs": {
+          "low": [
+            1.0,
+            2.9
+          ],
+          "mid": [
+            3.0,
+            4.4
+          ],
+          "high": [
+            4.5,
+            6.0
+          ]
+        },
+        "v1": {
+          "low": [
+            1.0,
+            2.9
+          ],
+          "mid": [
+            3.0,
+            4.4
+          ],
+          "high": [
+            4.5,
+            6.0
+          ]
+        },
+        "v2": {
+          "low": [
+            1.0,
+            3.4
+          ],
+          "mid": [
+            3.5,
+            4.9
+          ],
+          "high": [
+            5.0,
+            6.0
+          ]
+        }
       },
       "pairs": {
         "inimene": "inspireerimine",
@@ -225,6 +256,19 @@
   "report": {
     "title": "Sinu coachiv juhtimine praegu",
     "intro": "See raport näitab, kui sageli kolm coachiva juhi tegevust viimase nelja nädala jooksul sinu päeva jõudsid ja milliseid valikuid sa juhina teed. Iga tegevus ja uskumus on eraldi, sest need on erinevad asjad.",
+    "pattern": {
+      "heading": "Sinu peamine muster",
+      "weakest": {
+        "inspireerimine": "Kolmest tegevusest jõuab sinu päeva kõige harvem inspireerimine: arengu välja ütlemine ja väljakutsed.",
+        "juhendamine": "Kolmest tegevusest jõuab sinu päeva kõige harvem juhendamine: ootuste ütlemine, tagasiside ja kokkulepete juurde tagasi tulemine.",
+        "voimestamine": "Kolmest tegevusest jõuab sinu päeva kõige harvem võimestamine: küsimine, lõpuni kuulamine ja otsuse jätmine inimesele."
+      },
+      "beliefHigher": {
+        "inspireerimine": "Samas näitavad sinu uskumused, et usud inimeste arengusse. Usk on olemas, inimesteni jõuab see harvem.",
+        "juhendamine": "Samas näitavad sinu uskumused, et hoiad usaldust. Alus on olemas, selged ootused ja tagasiside jõuavad inimesteni harvem.",
+        "voimestamine": "Samas näitavad sinu uskumused, et usaldad inimesi ise otsustama. Usk on olemas, päeva jõuab see harvem."
+      }
+    },
     "actionsHeading": "Tegevused",
     "beliefsHeading": "Uskumused",
     "parts": {
@@ -252,7 +296,7 @@
       "inimene": {
         "name": "Inimene",
         "explain": "Inimesed saavad areneda — ka need, kes praegu ülesandega toime ei tule.",
-        "low": "Sinu valikud viitavad, et pead inimese võimekust pigem püsivaks. Siis on lihtne jätta panustamata neisse, kellest esimene mulje oli nõrk.",
+        "low": "Sinu uskumused viitavad, et pead inimese võimekust pigem püsivaks. Siis on lihtne jätta panustamata neisse, kellest esimene mulje oli nõrk.",
         "mid": "Usud arengusse osa inimeste puhul. Mõtle, kelle puhul sa oma esimest muljet viimati muutsid.",
         "high": "Sinu valikud näitavad selget usku, et inimene saab õppida."
       },
@@ -266,16 +310,16 @@
       "autonoomia": {
         "name": "Autonoomia",
         "explain": "Inimene suudab end ise juhtida, kui otsus on tema oma.",
-        "low": "Sinu valikud viitavad, et pead kontrolli tulemuse tagatiseks. Inimestel jääb siis vähem ruumi vastutust ise võtta.",
-        "mid": "Sinu valikutes on kontroll ja vabadus tasakaalus, kaal kaldub kontrolli poole.",
+        "low": "Sinu uskumused viitavad, et pead kontrolli tulemuse tagatiseks. Inimestel jääb siis vähem ruumi vastutust ise võtta.",
+        "mid": "Sinu uskumustes on kontroll ja vabadus tasakaalus, kaal kaldub kontrolli poole.",
         "high": "Sinu valikud jätavad inimestele otsustusruumi. Kontrolli, kas see sobib ka uutele ja vähem kogenud inimestele."
       }
     },
     "pairs": {
       "heading": "Uskumus ja tegevus koos",
       "intro": "Iga uskumus on seotud ühe tegevusega. Siin näed, kas nad on omavahel tasakaalus.",
-      "beliefHigher": "Sinu valikud toetavad seda tegevust rohkem, kui see praegu sinu päeva jõuab. Seda on kõige lihtsam muuta, sest põhi on olemas.",
-      "actionHigher": "Teed seda sagedamini, kui sinu valikud näitavad. Mõtle, kas tegevus tuleb veendumusest või harjumusest.",
+      "beliefHigher": "Sinu uskumused toetavad seda tegevust rohkem, kui see praegu sinu päeva jõuab. Seda on kõige lihtsam muuta, sest põhi on olemas.",
+      "actionHigher": "Teed seda sagedamini, kui sinu uskumused näitavad. Mõtle, kas tegevus tuleb veendumusest või harjumusest.",
       "same": "Uskumus ja tegevus liiguvad koos."
     },
     "ai": {
@@ -313,7 +357,7 @@
     },
     "groupHints": {
       "actions": "kui sageli viimase nelja nädala jooksul",
-      "beliefs": "mida sinu valikud näitavad"
+      "beliefs": "mida sinu uskumused näitavad"
     },
     "contact": {
       "label": "Tahan, et Raimo võtaks minuga ühendust (koolitus/coaching vms teema)",
