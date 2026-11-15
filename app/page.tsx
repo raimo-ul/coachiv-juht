@@ -103,7 +103,7 @@ export default function Home() {
                 <span className="eyebrow">{t.home.heroCardLabel}</span>
                 <span className="h-3 w-3 bg-signal ring-2 ring-rule" />
               </div>
-              <ResultRow r={sample[0]} compact track={t.report.track} />
+              <ResultRow r={sample[0]} compact low={t.report.track.low} high={t.report.track.high} />
             </div>
           </div>
         </div>
@@ -159,7 +159,7 @@ export default function Home() {
           </div>
           <div className="border-2 border-rule bg-background p-6 shadow-[8px_8px_0_0_var(--rule)]">
             <p className="eyebrow border-b-2 border-rule pb-3">{t.home.whatYouGet.previewHeading}</p>
-            {sample.map((r) => <ResultRow key={r.name} r={r} compact track={t.report.track} />)}
+            {sample.map((r) => <ResultRow key={r.name} r={r} compact low={t.report.track.low} high={t.report.track.high} />)}
             <div className="mt-2 border-t-2 border-rule pt-5">
               <p className="eyebrow mb-3">{t.home.whatYouGet.analysisLabel}</p>
               <p className="border-l-4 border-signal pl-4 italic leading-relaxed">

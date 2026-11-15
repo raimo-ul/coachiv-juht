@@ -1,4 +1,3 @@
-import type { Content } from "@/lib/content";
 import { Track } from "@/components/site";
 
 export type Result = {
@@ -16,11 +15,18 @@ export type Result = {
  * the point is to show the shape of a report rather than to be readable.
  */
 export function ResultRow({
-  r, compact = false, track,
+  r, compact = false, low, high,
 }: {
   r: Result;
   compact?: boolean;
-  track: Content["report"]["track"];
+  /**
+   * The two ends of the bar. The caller picks them, because the words are not
+   * the same on both halves of the report: an action happens harva or sageli,
+   * a belief is held vähem or rohkem. The row used to take the whole track
+   * object and always read low/high, which put "harva" under a belief.
+   */
+  low: string;
+  high: string;
 }) {
   return (
     <div className="border-t-2 border-rule py-6 first:border-t-0">
@@ -31,8 +37,8 @@ export function ResultRow({
       <div className="mt-3">
         <Track value={r.score} />
         <div className="mt-1 flex justify-between text-[0.68rem] text-muted-foreground">
-          <span>{track.low}</span>
-          <span>{track.high}</span>
+          <span>{low}</span>
+          <span>{high}</span>
         </div>
       </div>
       {!compact && <p className="mt-4 text-sm text-muted-foreground">{r.explain}</p>}

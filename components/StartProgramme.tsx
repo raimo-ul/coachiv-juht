@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Content } from "@/lib/content";
+import { track } from "@vercel/analytics";
 import { functionHeaders, functionUrl } from "@/lib/functionsUrl";
 
 /** The cookie PromoCapture wrote when someone arrived on a ?kood= link. */
@@ -86,8 +87,14 @@ export function StartProgramme({ token, content }: { token: string; content: Con
 
   return (
     <>
+      {/* Two events, so the drop between reading the report and paying can be
+          seen at all. Vercel Analytics sets no cookie and these carry no
+          properties, so nothing here identifies anyone. */}
       <button
-        onClick={() => start(promoFromCookie())}
+        onClick={() => {
+          track("cta_click");
+          start(promoFromCookie());
+        }}
         disabled={busy}
         className="mt-8 w-full border-2 border-rule bg-ink py-5 text-lg font-semibold text-background shadow-[5px_5px_0_0_var(--background)] disabled:opacity-60 md:w-auto md:px-12"
       >
@@ -100,7 +107,9 @@ export function StartProgramme({ token, content }: { token: string; content: Con
           className="mt-3 flex flex-col gap-2 sm:flex-row"
           onSubmit={(e) => {
             e.preventDefault();
-            if (code.trim()) start(code.trim());
+            if (!code.trim()) return;
+            track("code_submit");
+            start(code.trim());
           }}
         >
           <label htmlFor="cj-code" className="sr-only">{t.codeLabel}</label>

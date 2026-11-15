@@ -69,3 +69,6 @@ Iga otsus, mida SPEC.md ei kata või mis sellest erineb. Uusim on üleval.
 | 2026-10-30 | Hind 15 € koos käibemaksuga, Stripe Taxi pole | Raimo otsus | Raimo |
 | 2026-10-30 | Tehisaru: testi raportis 4–5 lauset, lõpuraportis kolm lõiku, kontekstiküsimust pole | Raimo otsus | Raimo |
 | 2026-11-10 | Vercel Analytics lehele, SPEC 2 keelas analüütika | UTM ütleb, mis kanalist tulid need, kes testi lõpetasid. Kes maandus ja lahkus, seda andmebaasist näha ei saa, sest sinna jõuab inimene alles alustamise järel. Küpsist ei sea, üle saitide ei jälgi. Privaatsuslehe lause „Jälgimisküpsiseid ja analüütikat ei ole" sai sama deploy'ga ümber kirjutatud. | Raimo |
+| 2026-11-14 | Etapp 0: uskumuste riba sildid „vähem/rohkem“, tegevustel jäävad „harva/sageli“ | Riba otstes seisis mõlemal pool sama sõna. Uskumust ei hoita harva ega sageli, teda hoitakse vähem või rohkem. **tekst: mustand, Raimo vaatab üle** | Raimo |
+| 2026-11-14 | Etapp 0: Vercel Analyticsi sündmused `cta_click` ja `code_submit` | 122 testi ja üks ost, aga ei ole näha, kas inimesed nuppu üldse vajutavad. Küpsist ei lisandu, omadusi sündmustel ei ole. | Raimo |
+

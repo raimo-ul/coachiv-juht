@@ -76,7 +76,7 @@ export function ReportView({ token, content }: { token: string; content: Content
     };
   };
 
-  const group = (keys: PartKey[], label: string, hint: string) => (
+  const group = (keys: PartKey[], label: string, hint: string, low: string, high: string) => (
     <section className="border-b-2 border-rule">
       <div className="mx-auto max-w-3xl px-5 py-12">
         <div className="flex items-baseline justify-between border-b-2 border-rule pb-3">
@@ -85,7 +85,7 @@ export function ReportView({ token, content }: { token: string; content: Content
         </div>
         {keys.map((k) => {
           const r = row(k);
-          return r ? <ResultRow key={k} r={r} track={t.track} /> : null;
+          return r ? <ResultRow key={k} r={r} low={low} high={high} /> : null;
         })}
       </div>
     </section>
@@ -106,8 +106,8 @@ export function ReportView({ token, content }: { token: string; content: Content
         </div>
       </section>
 
-      {group(ACTIONS, t.actionsHeading, t.groupHints.actions)}
-      {group(BELIEFS, t.beliefsHeading, t.groupHints.beliefs)}
+      {group(ACTIONS, t.actionsHeading, t.groupHints.actions, t.track.low, t.track.high)}
+      {group(BELIEFS, t.beliefsHeading, t.groupHints.beliefs, t.track.beliefLow, t.track.beliefHigh)}
 
       {report.pairs.length > 0 && (
         <section className="grain border-b-2 border-rule bg-bone">
