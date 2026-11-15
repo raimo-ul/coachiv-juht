@@ -37,6 +37,17 @@ const corsHeaders = {
  */
 const CLAIM_STALE_MS = 3 * 60 * 1000;
 
+/**
+ * How many times one report's paragraph may be attempted.
+ *
+ * A failed paragraph used to be final. Of the first 122 reports, 29 carried a
+ * hole that no amount of reloading could fill, and retrying every one of them
+ * by hand succeeded — the failures were one-off, not caused by the answers.
+ * Three is enough to clear that kind of failure and few enough that a
+ * paragraph which genuinely cannot be written stops calling Anthropic.
+ */
+const MAX_ATTEMPTS = 3;
+
 function json(status: number, body: unknown) {
   return new Response(JSON.stringify(body), {
     status,
@@ -66,7 +77,7 @@ serve(async (req) => {
 
   const { data, error } = await supabase
     .from("tests")
-    .select("id, locale, answers, ai_paragraph, ai_status, ai_started_at")
+    .select("id, locale, answers, ai_paragraph, ai_status, ai_started_at, ai_attempts")
     .eq("report_token", token)
     .maybeSingle();
 
@@ -75,7 +86,11 @@ serve(async (req) => {
   if (data.ai_status === "done") {
     return json(200, { status: "done", text: data.ai_paragraph ?? null });
   }
-  if (data.ai_status === "failed") {
+  // Failed is not final any more, it is "try again". It stays final once the
+  // row has used its attempts, so a paragraph that cannot be written stops
+  // costing an API call on every page load.
+  const attempts = Number(data.ai_attempts ?? 0);
+  if (data.ai_status === "failed" && attempts >= MAX_ATTEMPTS) {
     return json(200, { status: "failed", text: null });
   }
 
@@ -93,7 +108,7 @@ serve(async (req) => {
   // caller is told to keep waiting rather than generating a second paragraph.
   const claim = await supabase
     .from("tests")
-    .update({ ai_status: "generating", ai_started_at: new Date().toISOString() })
+    .update({ ai_status: "generating", ai_started_at: new Date().toISOString(), ai_attempts: attempts + 1 })
     .eq("id", data.id)
     .eq("ai_status", data.ai_status)
     .select("id");

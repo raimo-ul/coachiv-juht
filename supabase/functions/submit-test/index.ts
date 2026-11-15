@@ -188,11 +188,27 @@ serve(async (req) => {
   const testId = test.data.id as string;
   const reportPath = `/raport/${reportToken}`;
 
-  // The paragraph is not written here. It takes about 36 seconds, and work that
-  // long does not reliably survive past the response: four test runs gave two
-  // finished, one failed and one stuck on pending for ever. get-report-ai
-  // writes it instead, inside the request the report page already polls. See
-  // DECISIONS.md.
+  // The paragraph is still not written inside this request. It takes about 36
+  // seconds, and work that long does not reliably survive past the response:
+  // four test runs gave two finished, one failed and one stuck on pending for
+  // ever. See DECISIONS.md.
+  //
+  // What happens instead is a nudge: a request to get-report-ai is started and
+  // deliberately not awaited. That function then runs on its own clock, with
+  // its own lifetime, and writes the paragraph the way it always has. Nothing
+  // here depends on it finishing, or on it even being delivered — the report
+  // page polls the same endpoint, so the guaranteed path is unchanged.
+  //
+  // The gain is for whoever does not open the report straight away. They click
+  // the link in the email an hour later and the paragraph is already there,
+  // rather than starting a 36-second wait at that moment.
+  const aiNudgeUrl = `${env("SUPABASE_URL")}/functions/v1/get-report-ai?token=${encodeURIComponent(reportToken)}`;
+  const anonKey = env("SUPABASE_ANON_KEY") ?? "";
+  background(
+    fetch(aiNudgeUrl, { headers: { apikey: anonKey, Authorization: `Bearer ${anonKey}` } })
+      .then(() => console.log(`[submit-test] ai nudge sent token=${reportToken}`))
+      .catch((e) => console.warn("[submit-test] ai nudge:", String(e))),
+  );
   //
   // What stays is the email, which is a single Brevo call and returns in well
   // under a second. It also no longer waits on Anthropic to go out.
