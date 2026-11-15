@@ -202,6 +202,7 @@ serve(async (req) => {
 
   // Only addresses on the list, while the letter is still being tried out. An
   // empty or absent list means everyone, which is what going live looks like.
+  const backfillDate = (env("COACHIV_TRIAL_BACKFILL_DATE") ?? "").trim();
   const allowRaw = env("COACHIV_TEST_EMAIL_ALLOWLIST") ?? "";
   const allowList = allowRaw.split(",").map((x) => x.trim().toLowerCase()).filter(Boolean);
 
@@ -223,13 +224,26 @@ serve(async (req) => {
       const tz = p.timezone || "Europe/Tallinn";
       const today = localDate(now, tz);
 
-      if (!force && localHour(now, tz) !== sendHour) { trialSkipped.push({ id: t.id, why: "vale tund" }); continue; }
+      // On the backfill day the hour is a floor rather than a match: 127 letters
+      // will not all leave inside one run, and the hourly cron has to be able
+      // to pick up whatever the previous run did not reach.
+      const hourNow = localHour(now, tz);
+      const hourOk = today === backfillDate ? hourNow >= sendHour : hourNow === sendHour;
+      if (!force && !hourOk) { trialSkipped.push({ id: t.id, why: "vale tund" }); continue; }
       if (!isWorkday(today)) { trialSkipped.push({ id: t.id, why: "nädalavahetus" }); continue; }
 
       // Due on the first workday after the test, not on a fixed "tomorrow":
       // a Friday test waits until Monday rather than landing on a Saturday.
+      //
+      // COACHIV_TRIAL_BACKFILL_DATE suspends that for one named day, so the
+      // people who took the test before this letter existed get it once. The
+      // variable is the whole control: it names a single date, so the exception
+      // ends by itself rather than needing to be remembered and turned off.
       const due = nextWorkday(localDate(new Date(t.created_at), tz));
-      if (today !== due) { trialSkipped.push({ id: t.id, why: `tähtaeg ${due}` }); continue; }
+      if (today !== due && today !== backfillDate) {
+        trialSkipped.push({ id: t.id, why: `tähtaeg ${due}` });
+        continue;
+      }
 
       if (allowList.length && !allowList.includes(p.email.toLowerCase())) {
         trialSkipped.push({ id: t.id, why: "pole nimekirjas" });
@@ -280,25 +294,16 @@ serve(async (req) => {
             .replace("{strongest}", names[pattern.strongest])
             .replace("{weakest}", names[pattern.weakest]);
 
-      // The six questions become six lines of their own, in the order the
-      // programme asks them.
       const qs = content.daily.questions as Record<string, string>;
-      const lines: string[] = [];
-      for (const line of tr.body) {
-        if (line === "{questions}") {
-          for (const key of Object.keys(qs)) lines.push(qs[key]);
-        } else {
-          lines.push(line);
-        }
-      }
 
       const mail = renderEmail(
-        { subject: tr.subject, lines },
+        { subject: tr.subject, lines: tr.body },
         {
           links: { report: `${site}/raport/${t.report_token}#programm` },
           footer: content.emails.footer,
           siteName: content.meta.siteName,
           values: { intro },
+          lists: { questions: Object.keys(qs).map((k) => qs[k]) },
         },
       );
 

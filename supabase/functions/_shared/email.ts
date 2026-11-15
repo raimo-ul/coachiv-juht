@@ -13,7 +13,7 @@
 // rather than AttFocus's EMAIL_FROM.
 
 import { emailDisabled, env } from "./env.ts";
-import { button, esc, layout, linkLine, p, small } from "./emailLayout.ts";
+import { button, esc, layout, linkLine, list, p, small } from "./emailLayout.ts";
 
 export { emailDisabled, esc };
 
@@ -44,6 +44,11 @@ export function renderEmail(
      * second version of the letter for the cases where there isn't one.
      */
     values?: Record<string, string | null | undefined>;
+    /**
+     * Named lists, for a line that is just {name}. Six questions set as six
+     * paragraphs read as a wall; as a list they read as six things.
+     */
+    lists?: Record<string, readonly string[]>;
   },
 ): { subject: string; html: string; text: string } {
   const htmlParts: string[] = [];
@@ -70,6 +75,15 @@ export function renderEmail(
       htmlParts.push(buttonsSoFar === 0 ? button(url, label) : linkLine(url, label));
       buttonsSoFar += 1;
       textParts.push(`${label}: ${url}`, "");
+      continue;
+    }
+
+    // A line that is nothing but the name of a list becomes the list.
+    const listName = /^\{(\w+)\}$/.exec(line.trim())?.[1];
+    if (listName && opts.lists?.[listName]?.length) {
+      const items = opts.lists[listName];
+      htmlParts.push(list(items));
+      textParts.push(...items.map((x) => `- ${x}`), "");
       continue;
     }
 

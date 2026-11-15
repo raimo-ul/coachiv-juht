@@ -51,6 +51,25 @@ export const button = (url: string, label: string) =>
      </td></tr>
    </table>`;
 
+/**
+ * A list of short lines, each with its own rule down the left.
+ *
+ * Six questions set as six ordinary paragraphs read as a wall: nothing tells
+ * the eye where one ends and the next begins, and the trial letter is asking
+ * someone to go through them one at a time. A table rather than a <ul>,
+ * because Outlook's list indentation is its own argument.
+ */
+export const list = (items: readonly string[]) =>
+  `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 18px;width:100%">
+     ${items.map((item) => `
+     <tr><td style="padding:0 0 10px 0">
+       <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+         <td style="width:3px;background:${GREEN};"></td>
+         <td style="padding:2px 0 2px 12px;font-family:${BODY};font-size:16px;line-height:1.5;color:${FG}">${esc(item)}</td>
+       </tr></table>
+     </td></tr>`).join("")}
+   </table>`;
+
 /** A quieter second action, for when one message carries two. */
 export const linkLine = (url: string, label: string) =>
   `<p style="font-family:${BODY};font-size:15px;margin:0 0 10px">
