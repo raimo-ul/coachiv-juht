@@ -56,6 +56,17 @@ export function ReportView({ token, content }: { token: string; content: Content
     return () => { cancelled = true; };
   }, [token]);
 
+  // The trial-day letter links to /raport/<token>#programm, and the browser
+  // looks for that anchor the moment the page loads — when the report is still
+  // being fetched and the section does not exist yet. It finds nothing, gives
+  // up, and the reader lands at the top wondering where the programme went.
+  // Scrolling once the data has arrived is what makes the link keep its promise.
+  useEffect(() => {
+    if (!report || window.location.hash !== "#programm") return;
+    const el = document.getElementById("programm");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [report]);
+
   // SPEC 15: a wrong token must not show a report.
   if (missing) {
     return (
