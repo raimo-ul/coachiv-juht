@@ -33,7 +33,7 @@ serve(async (req) => {
 
   const url = new URL(req.url);
   const force = url.searchParams.get("force") === "1";
-  const dryRun = url.searchParams.get("dry_run") === "1";
+  const dryRunFlag = url.searchParams.get("dry_run") === "1";
   const onlyEnrollment = url.searchParams.get("enrollment_id");
 
   // Pretend it is another moment. For testing, and for the morning after an
@@ -41,6 +41,20 @@ serve(async (req) => {
   // to re-run a missed day is to wait a year. AttFocus carries the same
   // affordance for the same reason.
   const nowOverride = url.searchParams.get("now");
+
+  /**
+   * A made-up clock never sends a real letter.
+   *
+   * On 15.11 this function was called with now= set to the following Monday
+   * to try out the trial-day branch. It obligingly did the rest of its job
+   * too: Heiki's day-three letter went out on a Sunday, and Monday then found
+   * the day already claimed and sent him nothing. The clock was simulated and
+   * the consequences were not.
+   *
+   * force=1 remains the way to send outside the usual hour, deliberately and
+   * on purpose. Everything else with now= set is a rehearsal.
+   */
+  const dryRun = dryRunFlag || (Boolean(nowOverride) && !force);
 
   // Called by pg_cron over the public internet, so it carries a shared secret.
   // Without it anyone could make the letters go out at any hour.
@@ -94,6 +108,11 @@ serve(async (req) => {
 
     // Claim the day. Unique on (enrollment_id, day), so if the row is already
     // there this hour has been served and the letter is not sent again.
+    // Before the claim, not after. A dry run that takes the day consumes the
+    // one letter that day is owed, and the real send then skips the person —
+    // which is exactly what happened to day three.
+    if (dryRun) { skipped.push({ id: e.id, why: "dry_run" }); continue; }
+
     const claim = await supabase
       .from("daily_answers")
       .insert({ enrollment_id: e.id, day: today, day_index: index })
@@ -105,8 +124,6 @@ serve(async (req) => {
       skipped.push({ id: e.id, why: "claim ebaõnnestus" });
       continue;
     }
-
-    if (dryRun) { sent.push(`${e.id} (dry_run)`); continue; }
 
     const content = getContent(p.locale);
 
