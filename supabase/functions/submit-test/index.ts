@@ -223,7 +223,15 @@ serve(async (req) => {
       const mail = renderEmail(
         { subject: content.emails.report.subject, lines: content.emails.report.body },
         {
-          links: { report: `${site}${reportPath}` },
+          links: {
+            report: `${site}${reportPath}`,
+            // The test's own address, never the report's: a report link carries
+            // the token that opens this person's answers, and a forwarded one
+            // would hand them to a colleague. Tagged so a recommendation is
+            // countable next to the newsletter on the same dashboard. Renders
+            // as the quieter second link, since the report button comes first.
+            share: `${site}/?utm_source=soovitus`,
+          },
           // The same sentence the report opens with, so the letter and the
           // page say one thing. Only the first sentence: the second one leans
           // on the bars beside it and reads as a loose claim on its own.

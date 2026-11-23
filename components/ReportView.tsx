@@ -10,6 +10,7 @@ import { AiParagraph } from "@/components/AiParagraph";
 import { LinkedText } from "@/components/LinkedText";
 import { StartProgramme } from "@/components/StartProgramme";
 import { NewsletterBlock } from "@/components/NewsletterBlock";
+import { ShareBlock } from "@/components/ShareBlock";
 
 type Level = "low" | "mid" | "high";
 type PartKey = keyof Content["report"]["parts"];
@@ -254,6 +255,11 @@ export function ReportView({ token, content }: { token: string; content: Content
         url={t.newsletter.url}
         tone="bone"
       />
+
+      {/* Last, on purpose. Three asks stacked dilute each other, so the one
+          that costs the reader nothing goes behind the two that are for
+          them. */}
+      <ShareBlock text={t.share.text} button={t.share.button} copied={t.share.copied} />
     </Page>
   );
 }

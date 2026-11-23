@@ -368,6 +368,11 @@
       "text": "Kui sprint praegu ei sobi: uudiskiri juhtimisest, üks-kaks korda kuus.",
       "button": "Liitu uudiskirjaga",
       "url": "https://9ndeed0t.sendsmaily.net/landing-pages/67862044-9c20-4f33-99d5-6451c1ddeffb/html/"
+    },
+    "share": {
+      "text": "Tunned kolleegi, kellele see test kasuks tuleks?",
+      "button": "Kopeeri link",
+      "copied": "Kopeeritud"
     }
   },
   "final": {
@@ -465,6 +470,8 @@
         "Link jääb alles, saad selle juurde hiljem tagasi tulla.",
         "Kui tahad näha, kui sageli need tegevused sinu päeva päriselt jõuavad, leiad raporti lõpust kolme nädala programmi.",
         "Raporti lõpus näed, millised kaks küsimust kolm nädalat sinult küsiks.",
+        "Tunned kolleegi, kellele see test kasuks tuleks? Saada talle see link:",
+        "{shareButton:Coachiva juhi test}",
         "Raimo"
       ]
     },
