@@ -730,7 +730,6 @@
   "bingo": {
     "_TODO_Raimo": [
       "card.eyebrow ja card.allTypes on töönimed, kinnita või muuda",
-      "card.button on töönimi, kinnita või muuda",
       "emails.card.subject ja emails.contact.subject on töönimed",
       "squares[].keyword on mustand, kinnita või muuda"
     ],
@@ -827,7 +826,7 @@
         "Ka teistel on aeg-ajalt raske, kui",
         "Ma tegin sel hetkel parima, mida oskasin, ja ütlen endale:"
       ],
-      "button": "Kopeeri link ja saada kolleegile",
+      "button": "Mine ja saada test kolleegile",
       "shareUrl": "https://radicalsimplicity.eu/tagasivaade",
       "shareHint": "TODO: Raimo",
       "closing": [
