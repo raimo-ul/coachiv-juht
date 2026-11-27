@@ -193,7 +193,15 @@ export async function sendEmail(params: {
 
 const SMAILY_API = "https://9ndeed0t.sendsmaily.net/api/autoresponder.php";
 
-export async function subscribeNewsletter(email: string): Promise<SendResult> {
+/**
+ * @param source The `allikas` tag Smaily files the contact under. Defaults to
+ * the test's own tag so submit-test, written before there was a second caller,
+ * behaves exactly as it did.
+ */
+export async function subscribeNewsletter(
+  email: string,
+  source = "coachiva-juhi-test",
+): Promise<SendResult> {
   if (emailDisabled()) return { ok: true, skipped: true };
 
   const user = env("SMAILY_API_USER");
@@ -212,7 +220,7 @@ export async function subscribeNewsletter(email: string): Promise<SendResult> {
         // from, and it outlives this code. "coachiv-test" read as "a test
         // signup" rather than "the coaching-leader test", which is how a real
         // subscriber gets deleted in a tidy-up a year from now.
-        addresses: [{ email, allikas: "coachiva-juhi-test" }],
+        addresses: [{ email, allikas: source }],
       }),
     });
 

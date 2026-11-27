@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { esc, renderEmail } from "./email.ts";
+import { esc, renderEmail, subscribeNewsletter } from "./email.ts";
 import { getContent } from "./content.ts";
 
 const t = getContent("et");
@@ -145,5 +145,41 @@ describe("the final letter's newsletter line", () => {
 
     expect(out.html).toContain("https://example.test/lopp/tok");
     expect(out.html).not.toContain("Liitu uudiskirjaga");
+  });
+});
+
+describe("subscribeNewsletter", () => {
+  // The source tag is the only trace in Smaily of where a contact came from.
+  // It used to be fixed, and the bingo campaign is the second caller, so these
+  // two tests exist to keep the first caller's tag from drifting.
+
+  const ENV = { SMAILY_API_USER: "u", SMAILY_API_PASS: "p", EMAIL_DISABLED: "0" };
+
+  function withSmaily(run: () => Promise<unknown>) {
+    const prev = { ...process.env };
+    Object.assign(process.env, ENV);
+    const sent: Array<Record<string, unknown>> = [];
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = (async (_url: string, init: RequestInit) => {
+      const body = JSON.parse(String(init.body));
+      sent.push(body);
+      return new Response(JSON.stringify({ addresses: [body.addresses[0].email] }), { status: 200 });
+    }) as typeof fetch;
+    return run().then(() => {
+      globalThis.fetch = realFetch;
+      for (const k of Object.keys(ENV)) delete process.env[k];
+      Object.assign(process.env, prev);
+      return sent;
+    });
+  }
+
+  it("keeps the test's own tag when no source is given", async () => {
+    const sent = await withSmaily(() => subscribeNewsletter("mari@naide.ee"));
+    expect(sent[0].addresses).toEqual([{ email: "mari@naide.ee", allikas: "coachiva-juhi-test" }]);
+  });
+
+  it("uses the source it is given", async () => {
+    const sent = await withSmaily(() => subscribeNewsletter("mari@naide.ee", "aasta-juhi-bingo"));
+    expect(sent[0].addresses).toEqual([{ email: "mari@naide.ee", allikas: "aasta-juhi-bingo" }]);
   });
 });

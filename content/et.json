@@ -726,5 +726,133 @@
     "doneTitle": "Refleksioon esitatud",
     "doneBody": "Aitäh. Sinu refleksioon on salvestatud ja see läheb lõpuraportisse.",
     "notFound": "Seda linki ei leitud."
+  },
+  "bingo": {
+    "_TODO_Raimo": [
+      "card.eyebrow ja card.allTypes on töönimed, kinnita või muuda",
+      "card.button on töönimi, kinnita või muuda",
+      "emails.card.subject ja emails.contact.subject on töönimed",
+      "squares[].keyword on mustand, kinnita või muuda"
+    ],
+    "squares": [
+      {
+        "text": "Istunud koosolekul, mis oleks võinud olla e-kiri.",
+        "keyword": "Koosolek"
+      },
+      {
+        "text": "Kirjutanud e-kirja teemareaga KIIRE asjast, mis on seisnud minu postkastis kolm nädalat.",
+        "keyword": "KIIRE"
+      },
+      {
+        "text": "Lubanud midagi „enne aasta lõppu“ ja ...see on ikka veel tegemata.",
+        "keyword": "Lubadus"
+      },
+      {
+        "text": "Vastanud e-kirjaga inimesele, kes istub kõrvallauas.",
+        "keyword": "Kõrvallaud"
+      },
+      {
+        "text": "Tahtnud oma kalendrit vaadates kõigele ühe nupuga „delete“ vajutada.",
+        "keyword": "Delete"
+      },
+      {
+        "text": "Öelnud „räägime sellest pärast puhkust“ ja siis ei ole rääkinud.",
+        "keyword": "Pärast puhkust"
+      },
+      {
+        "text": "Tormanud hooga uut projekti, ettevõtmist tegema, ehkki vana saba lohiseb...siiani.",
+        "keyword": "Uus projekt"
+      },
+      {
+        "text": "Mõelnud, et peaksin kedagi kiitma ja siis jätnud selle tegemata, sest „elu“ tuli vahele.",
+        "keyword": "Kiitmata"
+      },
+      {
+        "text": "Avastanud keset tööpäeva, et ei tea, mis kell ja päev on.",
+        "keyword": "Mis päev on?"
+      }
+    ],
+    "types": {
+      "LUMEHELVES": {
+        "name": "LUMEHELVES",
+        "range": "0 kuni 3 ruutu",
+        "tagline": "Sul oli rahulik aasta. Kolleegid vaatavad sind kahtlustavalt.",
+        "body": [
+          "Märkisid ruudustikul üpris vähe sündmusi. Oled sa kindel, et sa sel aastal üldse tööl käisid? Tõenäoliselt siiski käisid ja sul läks lihtsalt hästi, mis on juhi aasta kohta pigem haruldane. Ja natukene isegi kahtlane. Kolleegide arvates.",
+          "Rahulikku aastat on lihtne võtta iseenesestmõistetavana, kuni jaanuar toob „uue hoo“ ja tuttavad pahanduse tekitajad tagasi. Enne seda tasub ehk üles kirjutada, mis sul sel aastal toimis, mis läks hästi ja miks. Sest järgmisel aastal pole võib-olla aega seda uuesti välja mõelda."
+        ],
+        "gift": "Kingi endale vähemalt 2 tühja pärastlõunat jaanuari kalendris. Pane kalendrisse „kinni, isiklikel põhjustel“ ja ära seleta kellelegi, mida sa siis teed. Kui keegi ikkagi küsib ja imestab, siis ütle, et sul on tähtis koosolek kõige olulisema inimesega - iseendaga."
+      },
+      "GLOGIKEETJA": {
+        "name": "GLÖGIKEETJA",
+        "range": "4 kuni 5 ruutu",
+        "tagline": "Päris tavaline juhiaasta. Väikese kaneeli ja nelgi lisandiga.",
+        "body": [
+          "Märkisid mitu ruutu, aga siiski mitte kõiki. See on täpselt see tase, kuhu enamik juhte on aasta lõpuks jõudnud. Mõned projektid läksid käest ära, teised sujusid täitsa hästi ja ülejäänud olid kuskil vahepeal, enam-vähem.",
+          "Glögi on hea selle poolest, et selle valmistamisel ei tohi kiirustada. Sinu aasta oli sarnane: midagi ei keenud otseselt üle, aga midagi ei saanud ka päris ise valmis, väike kuumutamine tuleb ikka kasuks."
+        ],
+        "gift": "Kingi endale uueks aastaks üks rutiinne koosolek vähem. Vali jaanuari kalendrist üks korduv koosolek, mille mõttekusele mõeldes sa tavaliselt ohkad ja mida saad kustutada või vähemalt lühendada. Tee see enne, kui jaanuar algab. Noh, kui see koosolek on selline, nagu sa arvad, siis keegi teine ei pane seda tähele. Aga sina paned."
+      },
+      "POHJAPODER": {
+        "name": "PÕHJAPÕDER",
+        "range": "6 kuni 7 ruutu",
+        "tagline": "Vedasid kelku terve aasta ja keegi ei ole küsinud, kas su jalad on väsinud.",
+        "body": [
+          "Märkisid enamiku ruutudest. Sinu aasta oli täis asju, mis tulid kusagilt ja kellegilt ja said need kuidagi ka tehtud. Tavaliselt enam-vähem just siis, kui keegi arvas, et need võiks juba ka valmis olla. Põhjapõder jookseb kogu aasta ühtlases tempos ja teda tänatakse harva, sest kõik vaatavad pigem seda, kes istub saanis. Aasta lõpus läheb lihtsalt põhjapõdra tempo veel kiiremaks, muud midagi.",
+          "Muuseas, kui sa ei ole kellelegi öelnud, kui palju sa tegelikult oled aasta jooksul pakke laiali vedanud, siis tõenäoliselt ei tea seda keegi."
+        ],
+        "gift": "Kingi endale nädal ilma uute lubadusteta. Vali jaanuarist üks nädal, kus sa ei ütle ühelegi uuele asjale jah, enne kui oled selle mõttega ühe öö ära maganud. Hommik on õhtust targem, päriselt. Kui keegi nõuab kohe vastust, ütle, et kahju küll, aga ei saa. Sul on tehtud kokkulepe kõige olulisema inimesega sinu elus - iseendaga."
+      },
+      "PAKAPIKK": {
+        "name": "PÄKAPIKK",
+        "range": "8 kuni 9 ruutu",
+        "tagline": "Töökoda töötas sel aastal ööpäev läbi. Sina olid enamasti selle töökoja ainus töötaja.",
+        "body": [
+          "Märkisid peaaegu kõik ruudud. Sinu aasta oli sellist sorti, kus kalender, postkast ja sinu sisemine hääl jooksid kõik samaaegselt ajaga võidu. Iga päev lisandus uusi pakke, tehtud sai palju, ent pakkidel lõppu ei paista. Isegi praegu, aasta lõpus mitte. Päkapikud teevad palju ära, aga neil on raske märgata, millal on õige aeg töökoda kinni panna.",
+          "Kui pakke tuleb kogu aeg juurde, on osa neist tavaliselt kellegi teise omad. Aga ka seda märkab päkapikk alles hiljem. Kui üldse."
+        ],
+        "gift": "Kingi endale üks „ei“, mida oled kuude viisi edasi lükanud. Ütle see „ei“ enne jõule ja pane kalendrisse kuupäev järgmisel aastal, millal sa kontrollid, kas see „ei“ on ka püsima jäänud. Esimene „ei“ on kõige raskem, teine on juba veidi kergem, kolmas aga tavaline, igapäevase elu osa."
+      }
+    },
+    "card": {
+      "eyebrow": "SINU SELLE AASTA JUHI ELU",
+      "scoreSuffix": "ruutu üheksast",
+      "ownWords": "SINU AASTA, SINU SÕNADEGA",
+      "wordsToSelf": "SINU SÕNAD ENDALE",
+      "gift": "KINGITUS ENDALE",
+      "allTypes": "KÕIK NELI JUHI ELU",
+      "you": "SINA",
+      "starters": [
+        "Sel aastal oli mul raske, kui",
+        "Ka teistel on aeg-ajalt raske, kui",
+        "Ma tegin sel hetkel parima, mida oskasin, ja ütlen endale:"
+      ],
+      "button": "Kopeeri link ja saada kolleegile",
+      "shareUrl": "https://radicalsimplicity.eu/tagasivaade",
+      "shareHint": "TODO: Raimo",
+      "closing": [
+        "Aitäh, et oled.",
+        "Elu on ilus"
+      ],
+      "signature": "Raimo",
+      "footer": [
+        "See on meelelahutus, mitte mõõtmine. Ruudustik ei tea sinu töö kohta midagi, mida sa ise ei tea.",
+        "Raimo Ülavere · radicalsimplicity.eu · Vasta sellele kirjale, kui tahad midagi öelda."
+      ]
+    },
+    "emails": {
+      "card": {
+        "subject": "Sinu juhi tüüp: {type}"
+      },
+      "contact": {
+        "subject": "Kontaktisoov aasta juhi vormilt: {name}",
+        "body": [
+          "Keegi täitis aasta juhi vormi ja soovib, et võtaksid ühendust.",
+          "Nimi: {name}",
+          "E-post: {email}",
+          "Tüüp: {type}, {marked} ruutu üheksast"
+        ]
+      }
+    }
   }
 }

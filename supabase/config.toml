@@ -46,3 +46,9 @@ verify_jwt = false
 # Reached with the final report token.
 [functions.get-final-by-token]
 verify_jwt = false
+
+# Tally calls this. Its own signature is the authority, not a JWT, and Tally
+# does not send one. Without this line Supabase answers 401 before the function
+# sees the request, the same reason stripe-webhook has it.
+[functions.bingo-submit]
+verify_jwt = false

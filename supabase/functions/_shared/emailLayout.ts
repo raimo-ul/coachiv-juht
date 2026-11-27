@@ -14,23 +14,23 @@
 // block, and a drawn wordmark because a remote logo image is blocked by
 // default in most clients.
 
-const BG = "#F3F2EF";
-const CARD = "#FFFFFF";
-const FG = "#0F0F0F";
-const MUTED = "#6A6862";
-const BORDER = "#2B2B2B";
-const GREEN = "#00FA96";
-const GREEN_INK = "#06281B"; // the green, darkened enough to read as text
+export const BG = "#F3F2EF";
+export const CARD = "#FFFFFF";
+export const FG = "#0F0F0F";
+export const MUTED = "#6A6862";
+export const BORDER = "#2B2B2B";
+export const GREEN = "#00FA96";
+export const GREEN_INK = "#06281B"; // the green, darkened enough to read as text
 
-const HEAD = "'Bebas Neue', 'Arial Narrow', Impact, sans-serif";
-const BODY = "'DM Sans', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif";
+export const HEAD = "'Bebas Neue', 'Arial Narrow', Impact, sans-serif";
+export const BODY = "'DM Sans', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif";
 
 export const esc = (s: unknown) =>
   String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;")
     .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 
 /** The wordmark, drawn rather than fetched: a remote logo image would be blocked. */
-const logo = (name: string) => `
+export const logo = (name: string) => `
   <div style="margin-bottom:26px">
     <span style="display:inline-block;width:10px;height:10px;background:${GREEN};vertical-align:middle;border:2px solid ${BORDER}"></span>
     <span style="font-family:${HEAD};font-size:17px;letter-spacing:0.14em;color:${FG};vertical-align:middle;margin-left:8px">${esc(name.toUpperCase())}</span>

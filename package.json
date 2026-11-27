@@ -10,7 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "sync:content": "node scripts/sync-content.mjs",
-    "deploy:functions": "node scripts/sync-content.mjs && supabase functions deploy submit-test --project-ref xdoniywdqrwbmatjttdo && supabase functions deploy get-report-by-token --project-ref xdoniywdqrwbmatjttdo && supabase functions deploy get-report-ai --project-ref xdoniywdqrwbmatjttdo"
+    "deploy:functions": "node scripts/sync-content.mjs && supabase functions deploy submit-test --project-ref xdoniywdqrwbmatjttdo && supabase functions deploy get-report-by-token --project-ref xdoniywdqrwbmatjttdo && supabase functions deploy get-report-ai --project-ref xdoniywdqrwbmatjttdo && supabase functions deploy bingo-submit --project-ref xdoniywdqrwbmatjttdo"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
